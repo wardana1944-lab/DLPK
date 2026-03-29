@@ -7,9 +7,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0F172A">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" href="./icon_dlpk.png">
-    <link rel="apple-touch-icon" href="./icon_dlpk.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon_dlpk.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon_dlpk.png">
+    <link rel="apple-touch-icon-precomposed" href="icon_dlpk.png">
+    <meta name="apple-mobile-web-app-title" content="DLPK E v12">
     <title>DLPK E v12 - Official Update</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -74,6 +76,7 @@
             <button onclick="switchPage('dashboard')" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="dashboard"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</button>
             <button onclick="switchPage('students')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="students"><i data-lucide="users" class="w-4 h-4"></i> Data Siswa</button>
             <button onclick="switchPage('attendance')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="attendance"><i data-lucide="calendar-check" class="w-4 h-4"></i> Absensi</button>
+            <button onclick="switchPage('journal')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="journal"><i data-lucide="book-open" class="w-4 h-4"></i> Jurnal Harian</button>
             <button onclick="switchPage('grades')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="grades"><i data-lucide="award" class="w-4 h-4"></i> Nilai Pelajaran</button>
             
             <button onclick="switchPage('print')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200" data-page="print"><i data-lucide="printer" class="w-4 h-4"></i> Cetak Dokumen</button>
@@ -177,6 +180,35 @@
                 </div>
             </div>
 
+            <div id="page-journal" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4 md:mb-6 gap-4">
+                    <div class="flex flex-col"><h3 class="text-xl md:text-2xl font-black text-slate-900 tracking-tighter">Jurnal Harian</h3><p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Kegiatan Belajar Mengajar</p></div>
+                    <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto"><button onclick="prevJournal()" class="p-2 md:p-3 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shadow-sm border border-slate-200"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><span id="journal-date-label" class="font-black text-xs md:text-sm uppercase tracking-widest text-blue-700 bg-blue-50/50 px-4 md:px-8 py-2 md:py-3 rounded-xl shadow-inner border border-blue-100/50 min-w-[200px] text-center">TANGGAL</span><button onclick="nextJournal()" class="p-2 md:p-3 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shadow-sm border border-slate-200"><i data-lucide="chevron-right" class="w-4 h-4"></i></button></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="glass-card p-6 border-slate-200 animate-fade-in-up">
+                            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 border-b pb-2">Input Jurnal Baru</h4>
+                            <div class="space-y-4">
+                                <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1 block">Mapel</label><select id="jrn-mapel" class="w-full border-2 border-slate-100 rounded-xl p-3 text-sm font-bold text-slate-700 bg-slate-50/50 focus:bg-white transition-all"></select></div>
+                                <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1 block">Capaian Pembelajaran (CP)</label><textarea id="jrn-cp" rows="3" class="w-full border-2 border-slate-100 rounded-xl p-3 text-sm font-bold text-slate-700 bg-slate-50/50 focus:bg-white transition-all" placeholder="Masukkan CP..."></textarea></div>
+                                <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1 block">Materi Pokok</label><textarea id="jrn-materi" rows="3" class="w-full border-2 border-slate-100 rounded-xl p-3 text-sm font-bold text-slate-700 bg-slate-50/50 focus:bg-white transition-all" placeholder="Masukkan Materi..."></textarea></div>
+                                <input type="hidden" id="jrn-edit-id">
+                                <button onclick="saveJournalEntry()" id="btn-save-jrn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-[.2em] shadow-xl shadow-slate-900/20 hover:scale-[1.02] active:scale-95 transition-all">Simpan Jurnal</button>
+                                <button onclick="cancelEditJournal()" id="btn-cancel-jrn" class="hidden w-full bg-slate-200 text-slate-600 py-3 rounded-xl font-black text-xs uppercase tracking-[.2em] mt-2 transition-all">Batal Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="glass-card overflow-hidden border-slate-100 shadow-xl shadow-slate-200/50">
+                            <div class="px-6 py-4 bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest flex justify-between items-center"><span>Daftar Mengajar Hari Ini</span><i data-lucide="list-checks" class="w-4 h-4 text-blue-400"></i></div>
+                            <div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b border-slate-100"><tr><th class="px-6 py-4 text-[9px] font-black text-slate-400 uppercase">Mapel</th><th class="px-6 py-4 text-[9px] font-black text-slate-400 uppercase">CP</th><th class="px-6 py-4 text-[9px] font-black text-slate-400 uppercase">Materi</th><th class="px-6 py-4 text-[9px] font-black text-slate-400 uppercase text-center">Aksi</th></tr></thead><tbody id="journal-day-list" class="divide-y divide-slate-50"></tbody></table></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="page-attendance" class="hidden space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-4 md:mb-6 gap-4">
                     <div class="flex flex-col"><h3 class="text-xl md:text-2xl font-black text-slate-900 tracking-tighter">Log Absensi</h3><p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Pencatatan Kehadiran Harian</p></div>
@@ -186,6 +218,9 @@
                 <div class="glass-card p-4 md:p-6 bg-gradient-to-r from-slate-50 to-white border-slate-200/60 flex flex-col md:flex-row flex-wrap items-start md:items-end gap-3 md:gap-5 shadow-sm">
                     <div class="space-y-2 w-full md:w-auto"><label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Pilih Tanggal</label><input type="date" id="quick-date" onchange="updateQuickDay()" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"></div>
                     <div class="px-6 py-3 bg-slate-800 rounded-xl h-[48px] flex w-full md:w-auto items-center justify-center font-black text-[11px] text-white shadow-md tracking-widest uppercase" id="quick-day-name">HARI</div>
+                    <div class="space-y-2 w-full md:w-auto flex-1 md:min-w-[200px]"><label class="text-[10px] font-black text-rose-500 uppercase tracking-widest pl-1">Ket. Libur (Jika Libur)</label><input type="text" id="quick-ket-libur" placeholder="Contoh: Libur Hari Raya" class="w-full border-2 border-rose-100 rounded-xl p-3 text-sm font-bold text-rose-700 outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all bg-white"></div>
+                    <button onclick="jumpToDate()" class="bg-slate-900 border-2 border-slate-900 hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-slate-900/20 transition-all transform hover:-translate-y-0.5">OK / SUBMIT</button>
+                    <button onclick="deleteAttendanceDay()" class="bg-white border-2 border-rose-500 text-rose-600 hover:bg-rose-50 px-6 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-sm transition-all transform hover:-translate-y-0.5" title="Hapus Data Tanggal Ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     <div class="h-[1px] md:h-10 w-full md:w-[1px] bg-slate-200 md:mx-2 my-2 md:my-0"></div>
                     <button onclick="bulkAbsen('H')" class="w-full md:w-auto bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="check-circle" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Hadir Masal</button>
                     <button onclick="bulkAbsen('L')" class="w-full md:w-auto bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-rose-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="x-circle" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Libur</button>
@@ -227,7 +262,7 @@
                             <h4 class="text-[11px] font-black text-indigo-700 uppercase mb-4 tracking-widest">3. Jurnal Harian</h4>
                             <select id="print-month-jurnal" class="w-full border-2 border-slate-100 p-3.5 rounded-xl mb-6 text-sm outline-none bg-slate-50 font-bold text-slate-700 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all"></select>
                         </div>
-                        <button onclick="alert('Format Jurnal Masih Diproses')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Jurnal Per Bulan</button>
+                        <button onclick="downloadJournalPDFByMonth()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Jurnal Per Bulan</button>
                     </div>
                     <div class="p-8 glass-card border-t-4 border-emerald-600 shadow-lg shadow-emerald-600/5 group hover:border-emerald-500 transition-all flex flex-col justify-between">
                         <div>
@@ -383,6 +418,8 @@
         let students = [];
         let attendanceData = {};
         let gradesData = {};
+        let journalData = {};
+        let currentJournalDate = new Date();
 
         let currentMonth = new Date(2026, 0, 1);
         const subjects = ["BAHASA INDONESIA", "PENDIDIKAN PANCASILA", "MATEMATIKA", "SENI RUPA", "IPAS", "BAHASA JAWA"];
@@ -400,6 +437,10 @@
         };
 
         function loadFirebaseData() {
+            db.ref('journal').on('value', snap => {
+                journalData = snap.val() || {};
+                if(document.getElementById('page-journal').classList.contains('hidden') === false) renderJournalDay();
+            });
             db.ref('/').on('value', (snapshot) => {
                 const data = snapshot.val() || {};
                 
@@ -475,13 +516,14 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.querySelector(`[data-page="${p}"]`)?.classList.add('active');
             
-            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'ATTENDANCE LOG', 'grades': 'ACADEMIC GRADES', 'print': 'PRINT CENTER', 'settings': 'SYSTEM SETTINGS' };
-            const crumbs = { 'dashboard': 'Overview', 'students': 'Student List', 'attendance': 'Daily Log', 'grades': 'Class Report', 'print': 'Documents', 'settings': 'Identity' };
+            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'ATTENDANCE LOG', 'journal': 'DAILY JOURNAL', 'grades': 'ACADEMIC GRADES', 'print': 'PRINT CENTER', 'settings': 'SYSTEM SETTINGS' };
+            const crumbs = { 'dashboard': 'Overview', 'students': 'Student List', 'attendance': 'Daily Log', 'journal': 'Activities', 'grades': 'Class Report', 'print': 'Documents', 'settings': 'Identity' };
             document.getElementById('page-title').innerText = titles[p] || p.toUpperCase();
             document.getElementById('breadcrumb-active').innerText = crumbs[p] || 'Overview';
             
             if(p === 'students') renderSiswa();
             if(p === 'attendance') renderAbsen();
+            if(p === 'journal') renderJournalDay();
             if(p === 'grades') renderNilai();
             if(p === 'print') populatePrintMenu();
             lucide.createIcons();
@@ -493,6 +535,93 @@
                 }
             }
         }
+
+        function renderJournalDay() {
+            const y = currentJournalDate.getFullYear(), m = currentJournalDate.getMonth() + 1, d = currentJournalDate.getDate();
+            const dateKey = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            document.getElementById('journal-date-label').innerText = new Intl.DateTimeFormat('id-ID', { dateStyle: 'full' }).format(currentJournalDate);
+            
+            const combo = document.getElementById('jrn-mapel');
+            if(combo) combo.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            
+            const dayLogs = journalData[dateKey] || {};
+            const list = document.getElementById('journal-day-list');
+            if(!list) return;
+            list.innerHTML = Object.entries(dayLogs).map(([id, log]) => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-black text-[10px] text-blue-700 uppercase tracking-tighter">${log.mapel}</td>
+                    <td class="px-6 py-4 text-[10px] font-bold text-slate-600 italic leading-relaxed max-w-xs text-wrap whitespace-normal">${log.cp}</td>
+                    <td class="px-6 py-4 text-[10px] font-bold text-slate-800 leading-relaxed max-w-xs text-wrap whitespace-normal">${log.materi}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-3">
+                            <button onclick="editJournalEntry('${dateKey}', '${id}')" class="text-amber-500 hover:scale-110 transition-transform" title="Edit Jurnal"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                            <button onclick="deleteJournalEntry('${dateKey}', '${id}')" class="text-rose-500 hover:scale-110 transition-transform" title="Hapus Jurnal"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            if(Object.keys(dayLogs).length === 0) list.innerHTML = `<tr><td colspan="4" class="px-6 py-10 text-center italic text-slate-400 font-bold text-xs uppercase tracking-widest">Belum ada jurnal untuk hari ini</td></tr>`;
+            lucide.createIcons();
+        }
+
+        function editJournalEntry(dateKey, id) {
+            const entry = journalData[dateKey][id];
+            document.getElementById('jrn-mapel').value = entry.mapel;
+            document.getElementById('jrn-cp').value = entry.cp;
+            document.getElementById('jrn-materi').value = entry.materi;
+            document.getElementById('jrn-edit-id').value = id;
+            
+            const btnSave = document.getElementById('btn-save-jrn');
+            btnSave.innerText = "Update Jurnal";
+            btnSave.classList.remove('bg-slate-900');
+            btnSave.classList.add('bg-amber-600');
+            document.getElementById('btn-cancel-jrn').classList.remove('hidden');
+        }
+
+        function cancelEditJournal() {
+            document.getElementById('jrn-cp').value = "";
+            document.getElementById('jrn-materi').value = "";
+            document.getElementById('jrn-edit-id').value = "";
+            
+            const btnSave = document.getElementById('btn-save-jrn');
+            btnSave.innerText = "Simpan Jurnal";
+            btnSave.classList.add('bg-slate-900');
+            btnSave.classList.remove('bg-amber-600');
+            document.getElementById('btn-cancel-jrn').classList.add('hidden');
+        }
+
+        function saveJournalEntry() {
+            const y = currentJournalDate.getFullYear(), m = currentJournalDate.getMonth() + 1, d = currentJournalDate.getDate();
+            const dateKey = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            const mapel = document.getElementById('jrn-mapel').value;
+            const cp = document.getElementById('jrn-cp').value;
+            const materi = document.getElementById('jrn-materi').value;
+            const editId = document.getElementById('jrn-edit-id').value;
+            
+            if(!cp || !materi) { alert("CP dan Materi harus diisi!"); return; }
+            
+            if(editId) {
+                db.ref(`journal/${dateKey}/${editId}`).update({ mapel, cp, materi }).then(() => {
+                    cancelEditJournal();
+                    alert("Jurnal KBM berhasil diperbarui!");
+                });
+            } else {
+                db.ref(`journal/${dateKey}`).push({ mapel, cp, materi }).then(() => {
+                    document.getElementById('jrn-cp').value = "";
+                    document.getElementById('jrn-materi').value = "";
+                    alert("Jurnal KBM berhasil disimpan!");
+                });
+            }
+        }
+
+        function deleteJournalEntry(dateKey, id) {
+            if(confirm("Hapus catatan jurnal ini?")) {
+                db.ref(`journal/${dateKey}/${id}`).remove();
+            }
+        }
+
+        function prevJournal() { currentJournalDate.setDate(currentJournalDate.getDate() - 1); renderJournalDay(); }
+        function nextJournal() { currentJournalDate.setDate(currentJournalDate.getDate() + 1); renderJournalDay(); }
 
         function bukaModalSiswa() {
             document.getElementById('m-siswa-title').innerText = "Registrasi Siswa Baru";
@@ -583,6 +712,66 @@
             lucide.createIcons();
         }
 
+        function changeMonth(dir) {
+            currentMonth.setMonth(currentMonth.getMonth() + dir);
+            renderAbsen();
+        }
+
+        function jumpToDate() {
+            const dateInput = document.getElementById('quick-date').value;
+            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            const date = new Date(dateInput);
+            currentMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            renderAbsen();
+        }
+
+        function updateQuickDay() {
+            const dateInput = document.getElementById('quick-date').value;
+            if (!dateInput) return;
+            const date = new Date(dateInput);
+            const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
+            const dayLabel = document.getElementById('quick-day-name');
+            if (dayLabel) dayLabel.innerText = days[date.getDay()];
+        }
+
+        function bulkAbsen(val) {
+            const dateInput = document.getElementById('quick-date').value;
+            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            const date = new Date(dateInput);
+            const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
+            const monthKey = `${y}-${m.toString().padStart(2, '0')}`;
+            const ketLibur = document.getElementById('quick-ket-libur').value;
+            
+            if (confirm(`Setel semua siswa ${val === 'H' ? 'HADIR' : 'LIBUR'} pada tanggal ${d}/${m}/${y}?`)) {
+                students.forEach(s => {
+                    db.ref(`attendance/${monthKey}/${s.name}/${d}`).set(val);
+                });
+                if(val === 'L' && ketLibur) {
+                    db.ref(`attendance/${monthKey}/holidays/${d}`).set(ketLibur);
+                }
+                alert("Berhasil diperbarui masal!");
+                document.getElementById('quick-ket-libur').value = "";
+                renderAbsen();
+            }
+        }
+
+        function deleteAttendanceDay() {
+            const dateInput = document.getElementById('quick-date').value;
+            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            const date = new Date(dateInput);
+            const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
+            const monthKey = `${y}-${m.toString().padStart(2, '0')}`;
+            
+            if (confirm(`Hapus seluruh data absensi dan keterangan libur pada tanggal ${d}/${m}/${y}?`)) {
+                students.forEach(s => {
+                    db.ref(`attendance/${monthKey}/${s.name}/${d}`).remove();
+                });
+                db.ref(`attendance/${monthKey}/holidays/${d}`).remove();
+                alert("Data tanggal tersebut berhasil dihapus bersih!");
+                renderAbsen();
+            }
+        }
+
         function saveAbsen(studentName, day, value) {
             const y = currentMonth.getFullYear(), m = currentMonth.getMonth() + 1;
             const monthKey = `${y}-${m.toString().padStart(2, '0')}`;
@@ -593,17 +782,58 @@
             const y = currentMonth.getFullYear(), m = currentMonth.getMonth();
             const monthKey = `${y}-${(m+1).toString().padStart(2, '0')}`;
             const lastDay = new Date(y, m + 1, 0).getDate();
+            const monthName = new Intl.DateTimeFormat('id-ID',{month:'long'}).format(currentMonth).toUpperCase();
+            const holidays = (attendanceData[monthKey] && attendanceData[monthKey].holidays) ? attendanceData[monthKey].holidays : {};
+            
             document.getElementById('month-label').innerText = new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(currentMonth);
-            let head = `<tr class="border-b"><th class="px-8 py-4 sticky left-0 bg-slate-50/80 backdrop-blur-sm z-10 min-w-[200px] text-[10px] font-black uppercase text-slate-400">NAMA SISWA</th>`;
-            for(let i=1; i<=lastDay; i++) head += `<th class="th-absen">${i}</th>`;
-            document.getElementById('abs-head').innerHTML = head + `</tr>`;
-            document.getElementById('abs-body').innerHTML = students.map(s => {
+            
+            // Header: Bulan, Hari (Nama), dan Tanggal
+            let head = `<tr class="border-b">
+                <th rowspan="3" class="px-8 py-4 sticky left-0 bg-slate-50/80 backdrop-blur-sm z-20 min-w-[200px] text-[10px] font-black uppercase text-slate-400 border-r border-slate-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">NAMA SISWA</th>
+                <th colspan="${lastDay}" class="text-center py-2 bg-slate-900 text-white text-[9px] font-black tracking-[.2em] uppercase border-b border-slate-700">${monthName} ${y}</th>
+            </tr>`;
+            
+            // Baris Nama Hari (SEN, SEL, etc)
+            head += `<tr class="border-b">`;
+            const shortDays = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
+            for(let i=1; i<=lastDay; i++) {
+                const dayIndex = new Date(y, m, i).getDay();
+                const dayName = shortDays[dayIndex];
+                const isSun = dayIndex === 0;
+                const isLibur = holidays[i];
+                head += `<th class="th-absen ${isSun || isLibur ? 'text-rose-500 bg-rose-50' : 'text-slate-500'} font-bold" style="font-size: 8px; width: 35px; height: 30px;" title="${isLibur || ''}">${isLibur ? 'LIB' : dayName}</th>`;
+            }
+            head += `</tr>`;
+            
+            // Baris Angka Tanggal (1, 2, etc)
+            head += `<tr class="border-b">`;
+            for(let i=1; i<=lastDay; i++) {
+                const dayIndex = new Date(y, m, i).getDay();
+                const isSun = dayIndex === 0;
+                const isLibur = holidays[i];
+                head += `<th class="th-absen ${isSun || isLibur ? 'text-rose-600 bg-rose-100/50' : 'text-blue-700 bg-blue-50/30'} font-black" style="width: 35px; height: 35px;" title="${isLibur || ''}">${i}</th>`;
+            }
+            head += `</tr>`;
+            
+            document.getElementById('abs-head').innerHTML = head;
+            
+            document.getElementById('abs-body').innerHTML = students.map((s, sIdx) => {
                 let cells = '';
                 for(let i=1; i<=lastDay; i++) {
+                    const isSun = new Date(y, m, i).getDay() === 0;
+                    const isLibur = holidays[i];
                     let val = (attendanceData[monthKey] && attendanceData[monthKey][s.name] && attendanceData[monthKey][s.name][i]) ? attendanceData[monthKey][s.name][i] : '-';
-                    cells += `<td class="td-absen hover:bg-slate-50 transition-colors"><select onchange="saveAbsen('${s.name}', '${i}', this.value)" class="absen-select"><option value="-" ${val==='-'?'selected':''}>-</option><option value="H" class="text-emerald-600" ${val==='H'?'selected':''}>H</option><option value="S" ${val==='S'?'selected':''}>S</option><option value="I" ${val==='I'?'selected':''}>I</option><option value="A" class="text-rose-600" ${val==='A'?'selected':''}>A</option></select></td>`;
+                    let content = `<select onchange="saveAbsen('${s.name}', '${i}', this.value)" class="absen-select ${isSun || isLibur ? 'text-rose-600' : ''}"><option value="-" ${val==='-'?'selected':''}>-</option><option value="H" class="text-emerald-600" ${val==='H'?'selected':''}>H</option><option value="S" ${val==='S'?'selected':''}>S</option><option value="I" ${val==='I'?'selected':''}>I</option><option value="A" class="text-rose-600" ${val==='A'?'selected':''}>A</option><option value="L" ${val==='L'?'selected':''}>L</option></select>`;
+                    
+                    if (isLibur && sIdx === 0) {
+                        content = `<div class="flex flex-col items-center justify-center h-full"><span class="text-[7px] font-black text-rose-700 leading-none">L</span><div style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 7px; color: #B91C1C; font-weight: 800; white-space: nowrap; margin-top: 2px;">${isLibur}</div></div>`;
+                    } else if (isLibur) {
+                        content = `<div class="flex flex-col items-center justify-center h-full"><span class="text-[7px] font-black text-rose-700 leading-none">L</span></div>`;
+                    }
+                    
+                    cells += `<td class="td-absen ${isSun || isLibur ? 'bg-rose-50/50' : ''} hover:bg-slate-50 transition-colors">${content}</td>`;
                 }
-                return `<tr><td class="px-8 py-2 font-black sticky left-0 bg-white border-r border-slate-50 text-[10px] uppercase text-slate-800">${s.name}</td>${cells}</tr>`;
+                return `<tr><td class="px-8 py-2 font-black sticky left-0 bg-white border-r border-slate-50 text-[10px] uppercase text-slate-800 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">${s.name}</td>${cells}</tr>`;
             }).join('');
         }
 
@@ -673,11 +903,13 @@
         }
 
         function getPdfHeader(doc, title) {
-            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text(config.sekolah.nama.toUpperCase(), 105, 20, {align: "center"});
-            doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.text(`${config.sekolah.alamat} | NPSN: ${config.sekolah.npsn}`, 105, 25, {align: "center"});
-            doc.line(20, 28, 190, 28);
-            doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text(title, 105, 38, {align: "center"});
-            doc.setFontSize(8); doc.text(`${config.guru.kelas} | Guru: ${config.guru.nama}`, 105, 43, {align: "center"});
+            const width = doc.internal.pageSize.getWidth();
+            const centerX = width / 2;
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text(config.sekolah.nama.toUpperCase(), centerX, 20, {align: "center"});
+            doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.text(`${config.sekolah.alamat} | NPSN: ${config.sekolah.npsn}`, centerX, 25, {align: "center"});
+            doc.setLineWidth(0.5); doc.line(20, 28, width - 20, 28);
+            doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text(title, centerX, 38, {align: "center"});
+            doc.setFontSize(8); doc.text(`${config.guru.kelas} | Guru: ${config.guru.nama}`, centerX, 43, {align: "center"});
         }
 
         function downloadStudentPDF() {
@@ -687,6 +919,7 @@
                 head: [['NO', 'NAMA LENGKAP', 'NISN/NI', 'TEMPAT, TGL LAHIR', 'AGAMA', 'ALAMAT', 'AYAH', 'IBU']],
                 body: students.map(s => [s.no, s.name, `${s.nisn}/${s.ni}`, `${s.tempat_lahir || '-'}, ${s.tanggal_lahir || '-'}`, s.agama, s.alamat, s.ayah, s.ibu]),
                 startY: 50, 
+                startY: 45, 
                 styles: { fontSize: 8 },
                 headStyles: {fillColor: [15, 23, 42]} 
             });
@@ -701,6 +934,7 @@
             const y = currentMonth.getFullYear(); 
             const monthKey = `${y}-${(mIdx+1).toString().padStart(2, '0')}`;
             const lastDay = new Date(y, mIdx + 1, 0).getDate();
+            const holidays = (attendanceData[monthKey] && attendanceData[monthKey].holidays) ? attendanceData[monthKey].holidays : {};
 
             const { jsPDF } = window.jspdf; const doc = new jsPDF('l', 'mm', 'a4');
             getPdfHeader(doc, `REKAP ABSENSI BULAN: ${mText.toUpperCase()} ${y}`);
@@ -713,8 +947,14 @@
             const bodyData = students.map((s, idx) => {
                 const row = [s.no || (idx+1), s.name];
                 for(let i=1; i<=lastDay; i++) {
-                    let val = (attendanceData[monthKey] && attendanceData[monthKey][s.name] && attendanceData[monthKey][s.name][i]) ? attendanceData[monthKey][s.name][i] : '-';
-                    row.push(val);
+                    const dayIdx = new Date(y, mIdx, i).getDay();
+                    const isWeekend = (dayIdx === 0 || dayIdx === 6);
+                    if (isWeekend || holidays[i]) {
+                        row.push('');
+                    } else {
+                        let val = (attendanceData[monthKey] && attendanceData[monthKey][s.name] && attendanceData[monthKey][s.name][i]) ? attendanceData[monthKey][s.name][i] : '-';
+                        row.push(val);
+                    }
                 }
                 return row;
             });
@@ -722,22 +962,99 @@
             doc.autoTable({ 
                 head: [headRow], 
                 body: bodyData, 
-                startY: 50,
-                styles: { fontSize: 6, cellPadding: 1 },
+                startY: 45,
+                styles: { fontSize: 5, cellPadding: 0.5, halign: 'center' },
                 headStyles: { fillColor: [15, 23, 42], halign: 'center' },
                 columnStyles: {
-                    0: { cellWidth: 8, halign: 'center' },
-                    1: { cellWidth: 35 }
+                    0: { cellWidth: 6 },
+                    1: { cellWidth: 30, halign: 'left' }
+                },
+                didParseCell: function (data) {
+                    if (data.section === 'body' && data.column.index >= 2) {
+                        const day = data.column.index - 1;
+                        const dayIdx = new Date(y, mIdx, day).getDay();
+                        const isWeekend = (dayIdx === 0 || dayIdx === 6);
+                        if (isWeekend || holidays[day]) {
+                            data.cell.styles.fillColor = [254, 226, 226]; // Light red
+                            data.cell.styles.textColor = [185, 28, 28]; // Dark red
+                        }
+                    }
+                },
+                didDrawCell: function (data) {
+                    if (data.section === 'body' && data.column.index >= 2) {
+                        const day = data.column.index - 1;
+                        const dayIdx = new Date(y, mIdx, day).getDay();
+                        const isWeekend = (dayIdx === 0 || dayIdx === 6);
+                        if ((isWeekend || holidays[day]) && data.row.index === 0) {
+                            doc.saveGraphicsState();
+                            doc.setFontSize(4); doc.setFont("helvetica", "bold");
+                            doc.setTextColor(185, 28, 28);
+                            let txt = holidays[day] ? holidays[day].toUpperCase() : (dayIdx === 0 ? "MINGGU" : "SABTU");
+                            const x = data.cell.x + (data.cell.width / 2) + 1.2;
+                            const y_pos = data.cell.y + 2.5;
+                            doc.text(txt, x, y_pos, { angle: -90 });
+                            doc.restoreGraphicsState();
+                        }
+                    }
                 }
             });
             doc.save(`Absensi_${mText}_${y}.pdf`);
+        }
+
+        function downloadJournalPDFByMonth() {
+            const monthSelect = document.getElementById('print-month-jurnal');
+            const mIdx = parseInt(monthSelect.value);
+            const mText = monthSelect.options[monthSelect.selectedIndex].text;
+            const y = currentMonth.getFullYear();
+            const monthKey = `${y}-${(mIdx+1).toString().padStart(2, '0')}`;
+            
+            const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
+            getPdfHeader(doc, `JURNAL MENGAJAR HARIAN GURU - BULAN: ${mText.toUpperCase()} ${y}`);
+            
+            const tableData = [];
+            const lastDay = new Date(y, mIdx + 1, 0).getDate();
+            
+            for(let i=1; i<=lastDay; i++) {
+                const dateKey = `${monthKey}-${i.toString().padStart(2, '0')}`;
+                const logs = journalData[dateKey] ? Object.values(journalData[dateKey]) : [];
+                const dayName = new Intl.DateTimeFormat('id-ID', {weekday: 'long'}).format(new Date(y, mIdx, i));
+                
+                if (logs.length > 0) {
+                    logs.forEach((log, lIdx) => {
+                        tableData.push([
+                            lIdx === 0 ? `${dayName},\n${i}/${mIdx+1}/${y}` : '',
+                            log.mapel,
+                            log.cp,
+                            log.materi
+                        ]);
+                    });
+                } else {
+                    const isWeekend = new Date(y, mIdx, i).getDay() === 0 || new Date(y, mIdx, i).getDay() === 6;
+                    if(!isWeekend) tableData.push([`${dayName}, ${i}/${mIdx+1}/${y}`, '-', '-', '-']);
+                }
+            }
+
+            doc.autoTable({
+                head: [['Hari, Tanggal', 'Mapel', 'CP', 'Materi / Kegiatan']],
+                body: tableData,
+                startY: 50,
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [79, 70, 229] },
+                columnStyles: {
+                    0: { cellWidth: 35, fontStyle: 'bold' },
+                    1: { cellWidth: 30, fontStyle: 'bold' },
+                    2: { cellWidth: 55 },
+                    3: { cellWidth: 55 }
+                }
+            });
+            doc.save(`Jurnal_${mText}_${y}.pdf`);
         }
 
         function downloadSingleGradePDF() {
             const sub = document.getElementById('print-mapel-select').value;
             const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
             getPdfHeader(doc, `LAPORAN NILAI: ${sub.toUpperCase()}`);
-            doc.autoTable({ html: `#table-grade-${sub.replace(/\s/g,'')} table`, startY: 50, headStyles: {fillColor: [16, 185, 129]} });
+            doc.autoTable({ html: `#table-grade-${sub.replace(/\s/g,'')} table`, startY: 45, headStyles: {fillColor: [16, 185, 129]} });
             doc.save(`Nilai_${sub}.pdf`);
         }
 
