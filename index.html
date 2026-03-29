@@ -9,9 +9,13 @@
     <meta name="theme-color" content="#0F172A">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="icon_dlpk.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon_dlpk.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon_dlpk.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icon_dlpk.png">
     <link rel="apple-touch-icon-precomposed" href="icon_dlpk.png">
+    <link rel="shortcut icon" href="icon_dlpk.png">
     <meta name="apple-mobile-web-app-title" content="DLPK E v12">
+    <meta name="application-name" content="DLPK E v12">
     <title>DLPK E v12 - Official Update</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -111,10 +115,6 @@
             </div>
             
             <div class="flex items-center gap-3 md:gap-6">
-                <!-- Tombol Install PWA -->
-                <button id="install-btn" class="hidden bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-3 py-1.5 md:px-5 md:py-2 rounded-xl text-[9px] md:text-[10px] font-black uppercase shadow-lg shadow-emerald-200 transition-all flex items-center gap-2 animate-bounce">
-                    <i data-lucide="download" class="w-3 h-3 md:w-4 md:h-4"></i> <span class="hidden sm:inline">Instal ke Laptop/HP</span><span class="sm:hidden">Instal</span>
-                </button>
                 <div class="h-8 md:h-10 w-[1px] bg-slate-200 hidden sm:block"></div>
                 <div class="flex flex-col text-right hidden sm:flex">
                     <span id="header-identity-sch" class="text-[10px] md:text-xs font-extrabold text-slate-900 uppercase tracking-tighter italic whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] md:max-w-xs">...</span>
@@ -359,43 +359,6 @@
     </div>
 
     <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then((reg) => {
-                    console.log('SW terdaftar: ', reg.scope);
-                }).catch(err => {
-                    console.log('SW gagal: ', err);
-                });
-            });
-        }
-
-        // Tangani Prompt Instalasi Aplikasi
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Menampilkan tombol "Instal Aplikasi" di layar atas
-            const installBtn = document.getElementById('install-btn');
-            installBtn.classList.remove('hidden');
-            
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt(); // Munculkan popup instalasi Chrome
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        installBtn.classList.add('hidden'); // Sembunyikan kalau berhasil
-                    }
-                    deferredPrompt = null;
-                }
-            });
-        });
-
-        // Deteksi jika aplikasi sudah sukses terinstal berjalan secara standalone
-        window.addEventListener('appinstalled', (evt) => {
-            document.getElementById('install-btn').classList.add('hidden');
-        });
-
         // Konfigurasi Firebase untuk akun email wahyuwrdn110@gmail.com
         const firebaseConfig = {
             apiKey: "AIzaSyDKh5WPlMgFAIwqSndrqfLxGTl0IABbLLA",
