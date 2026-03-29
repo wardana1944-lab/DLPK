@@ -26,7 +26,12 @@
         .absen-select { appearance: none; background: transparent; width: 100%; text-align: center; font-size: 10px; font-weight: bold; cursor: pointer; border: none; outline: none; }
         .th-absen { min-width: 35px; text-align: center; font-size: 10px; border: 1px solid #E2E8F0; background: #F8FAFC; }
         .td-absen { width: 35px; height: 35px; border: 1px solid #E2E8F0; }
-        #opening-screen { position: fixed; inset: 0; background: #0F172A; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease-out; }
+        #opening-screen { position: fixed; inset: 0; background: #0F172A; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .pulse-icon { width: 110px; height: 110px; border-radius: 25%; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(56, 189, 248, 0.2); animation: pulseFloat 2.5s infinite ease-in-out; margin-bottom: 24px; object-fit: cover; }
+        .loading-bar { width: 140px; height: 3px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; position: relative; margin-top: 20px; }
+        .loading-bar::after { content: ''; position: absolute; top: 0; left: -50%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, #38BDF8, transparent); animation: loadingSweep 1.5s infinite ease-in-out; }
+        @keyframes pulseFloat { 0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(56, 189, 248, 0.1); } 50% { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 60px rgba(56, 189, 248, 0.4); } }
+        @keyframes loadingSweep { 0% { left: -50%; } 100% { left: 100%; } }
         
         .header-glass {
             background: rgba(255, 255, 255, 0.8);
@@ -38,7 +43,10 @@
 <body class="h-full flex">
 
     <div id="opening-screen">
-        <h1 class="text-white text-2xl font-black tracking-tighter uppercase">DLPK<span class="text-blue-500">E</span> v12</h1>
+        <img src="icon_dlpk.png" alt="DLPK Icon" class="pulse-icon">
+        <h1 class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 text-3xl font-black tracking-tighter uppercase">DLPK<span class="text-white">E</span></h1>
+        <p class="text-slate-400 text-[9px] uppercase tracking-[0.4em] mt-3 font-bold opacity-80">Synchronizing Data</p>
+        <div class="loading-bar"></div>
     </div>
 
     <aside class="w-64 bg-white border-r flex flex-col z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
@@ -263,7 +271,11 @@
 
         window.onload = () => {
             loadFirebaseData();
-            setTimeout(() => { document.getElementById('opening-screen').style.display='none'; }, 800);
+            setTimeout(() => { 
+                const screen = document.getElementById('opening-screen');
+                screen.style.opacity = '0';
+                setTimeout(() => screen.style.display = 'none', 600);
+            }, 1800);
             switchPage('dashboard');
         };
 
