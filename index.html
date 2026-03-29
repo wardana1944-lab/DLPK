@@ -2,7 +2,7 @@
 <html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1366">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -20,9 +20,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; overflow: hidden; }
-        .sidebar-link.active { background-color: #F1F5F9; color: #2563EB; border-right: 4px solid #2563EB; }
-        .glass-card { background: white; border: 1px solid #E2E8F0; border-radius: 1rem; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F1F5F9; overflow: hidden; }
+        .sidebar-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sidebar-link:hover { background-color: #F8FAFC; transform: translateX(4px); }
+        .sidebar-link.active { background-color: #EFF6FF; color: #2563EB; border-right: 4px solid #2563EB; font-weight: 800; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .glass-card { background: white; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 1.25rem; box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .glass-card:hover { box-shadow: 0 20px 40px -5px rgba(15, 23, 42, 0.08); }
         .absen-select { appearance: none; background: transparent; width: 100%; text-align: center; font-size: 10px; font-weight: bold; cursor: pointer; border: none; outline: none; }
         .th-absen { min-width: 35px; text-align: center; font-size: 10px; border: 1px solid #E2E8F0; background: #F8FAFC; }
         .td-absen { width: 35px; height: 35px; border: 1px solid #E2E8F0; }
@@ -34,10 +37,17 @@
         @keyframes loadingSweep { 0% { left: -50%; } 100% { left: 100%; } }
         
         .header-glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
     </style>
 </head>
 <body class="h-full flex">
@@ -49,7 +59,7 @@
         <div class="loading-bar"></div>
     </div>
 
-    <aside class="w-64 bg-white border-r flex flex-col z-30 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+    <aside class="w-72 bg-white border-r border-slate-200/60 flex flex-col z-30 shadow-[10px_0_40px_rgba(0,0,0,0.03)] relative">
         <div class="p-8 border-b border-slate-50 flex items-center gap-3">
             <div class="w-10 h-10 bg-gradient-to-tr from-blue-700 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200"><i data-lucide="graduation-cap" class="w-6 h-6"></i></div>
             <div class="flex flex-col">
@@ -78,7 +88,7 @@
     </aside>
 
     <main class="flex-1 flex flex-col overflow-hidden">
-        <header class="h-20 header-glass flex items-center px-10 justify-between sticky top-0 z-20">
+        <header class="h-24 header-glass flex items-center px-10 justify-between sticky top-0 z-20 shadow-sm">
             <div class="flex flex-col">
                 <h2 id="page-title" class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-0.5">DASHBOARD</h2>
                 <div class="flex items-center gap-2 text-slate-400">
@@ -108,15 +118,16 @@
         <div class="flex-1 overflow-auto p-10" id="main-scroll-area">
             
             <div id="page-dashboard" class="space-y-6">
-                <div class="glass-card p-10 bg-gradient-to-br from-slate-900 to-slate-800 text-white border-none shadow-2xl mb-8 relative overflow-hidden">
+                <div class="glass-card p-12 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-none shadow-[0_20px_50px_rgba(15,23,42,0.3)] mb-8 relative overflow-hidden">
                     <div class="relative z-10">
-                        <h1 id="dash-welcome" class="text-4xl font-extrabold mb-2 italic tracking-tighter">Selamat Datang!</h1>
-                        <p class="text-slate-400 max-w-md text-sm leading-relaxed">Kelola data akademik, absensi, dan nilai siswa dengan sistem terintegrasi DLPK E.</p>
+                        <h1 id="dash-welcome" class="text-5xl font-black mb-3 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Selamat Datang!</h1>
+                        <p class="text-slate-300 max-w-lg text-sm leading-relaxed font-medium">Kelola data akademik, absensi, dan nilai siswa dengan sistem terintegrasi yang lebih cepat, aman, dan profesional.</p>
                     </div>
-                    <i data-lucide="graduation-cap" class="absolute right-[-20px] bottom-[-20px] w-64 h-64 text-white/5 -rotate-12"></i>
+                    <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none"></div>
+                    <i data-lucide="graduation-cap" class="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 text-white/10 -rotate-12 transform transition-transform duration-700 hover:rotate-0 hover:scale-110 pointer-events-none"></i>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-2 gap-8">
                     <div class="glass-card p-6 border-l-4 border-blue-600 shadow-sm hover:shadow-md transition-shadow">
                         <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                             <i data-lucide="user" class="w-3 h-3 text-blue-600"></i> Profil Tenaga Pendidik
@@ -141,10 +152,10 @@
             </div>
 
             <div id="page-students" class="hidden space-y-6">
-                <div class="flex justify-between items-center"><h3 class="text-xl font-bold text-slate-900 tracking-tighter">Database Siswa</h3><button onclick="bukaModalSiswa()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase shadow-lg shadow-blue-100 transition-all">+ Registrasi Siswa</button></div>
+                <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><div class="flex flex-col"><h3 class="text-2xl font-black text-slate-900 tracking-tighter">Database Siswa</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manajemen Data Induk Siswa</p></div><button onclick="bukaModalSiswa()" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3.5 rounded-xl text-xs font-black uppercase shadow-xl shadow-blue-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="user-plus" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Registrasi Siswa</button></div>
                 <div class="glass-card overflow-x-auto border-slate-100">
-                    <table class="w-full text-left text-[11px] whitespace-nowrap" id="table-students">
-                        <thead class="bg-slate-50/50 border-b border-slate-100">
+                    <table class="w-full text-left text-[11px] whitespace-nowrap border-collapse border-spacing-0" id="table-students">
+                        <thead class="bg-slate-50/80 border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="px-6 py-4 font-black text-slate-400 uppercase">NO</th><th class="px-6 py-4 font-black text-slate-400 uppercase">NAMA LENGKAP</th>
                                 <th class="px-6 py-4 font-black text-slate-400 uppercase">NISN/NI</th><th class="px-6 py-4 font-black text-slate-400 uppercase">TEMPAT, TGL LAHIR</th>
@@ -159,60 +170,104 @@
             </div>
 
             <div id="page-attendance" class="hidden space-y-6">
-                <div class="glass-card p-6 bg-slate-50/50 border-slate-100 flex flex-wrap items-end gap-4 shadow-sm">
-                    <div class="space-y-1"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pilih Tanggal</label><input type="date" id="quick-date" onchange="updateQuickDay()" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"></div>
-                    <div class="px-4 py-2 bg-white border border-slate-200 rounded-xl h-[45px] flex items-center font-black text-[10px] text-blue-600 shadow-sm" id="quick-day-name uppercase">HARI</div>
-                    <button onclick="bulkAbsen('H')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-emerald-50 transition-all">Hadir Masal</button>
-                    <button onclick="bulkAbsen('L')" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-rose-50 transition-all">Libur</button>
+                <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-col"><h3 class="text-2xl font-black text-slate-900 tracking-tighter">Log Absensi</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Pencatatan Kehadiran Harian</p></div>
+                    <div class="flex items-center gap-4"><button onclick="changeMonth(-1)" class="p-3 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shadow-sm border border-slate-200"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><span id="month-label" class="font-black text-sm uppercase tracking-widest text-blue-700 bg-blue-50/50 px-8 py-3 rounded-xl shadow-inner border border-blue-100/50 min-w-[180px] text-center">JANUARI 2026</span><button onclick="changeMonth(1)" class="p-3 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shadow-sm border border-slate-200"><i data-lucide="chevron-right" class="w-4 h-4"></i></button></div>
                 </div>
-                <div class="flex items-center gap-4"><button onclick="changeMonth(-1)" class="p-2 border rounded-xl hover:bg-white"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><span id="month-label" class="font-black text-xs uppercase tracking-widest text-slate-700 bg-white px-6 py-2 rounded-xl shadow-sm border border-slate-100">Januari 2026</span><button onclick="changeMonth(1)" class="p-2 border rounded-xl hover:bg-white"><i data-lucide="chevron-right" class="w-4 h-4"></i></button></div>
-                <div class="glass-card overflow-x-auto border-slate-100"><table class="w-full text-left border-collapse" id="table-attendance"><thead id="abs-head"></thead><tbody id="abs-body" class="divide-y divide-slate-50"></tbody></table></div>
+                
+                <div class="glass-card p-6 bg-gradient-to-r from-slate-50 to-white border-slate-200/60 flex flex-wrap items-end gap-5 shadow-sm">
+                    <div class="space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Pilih Tanggal</label><input type="date" id="quick-date" onchange="updateQuickDay()" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"></div>
+                    <div class="px-6 py-3 bg-slate-800 rounded-xl h-[48px] flex items-center font-black text-[11px] text-white shadow-md tracking-widest" id="quick-day-name uppercase">HARI</div>
+                    <div class="h-10 w-[1px] bg-slate-200 mx-2"></div>
+                    <button onclick="bulkAbsen('H')" class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="check-circle" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Hadir Masal</button>
+                    <button onclick="bulkAbsen('L')" class="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-rose-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="x-circle" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Libur</button>
+                </div>
+                
+                <div class="glass-card overflow-x-auto border-slate-200/60 shadow-md"><table class="w-full text-left border-collapse" id="table-attendance"><thead id="abs-head"></thead><tbody id="abs-body" class="divide-y divide-slate-100"></tbody></table></div>
             </div>
 
             <div id="page-grades" class="hidden space-y-8">
-                <h3 class="text-xl font-bold uppercase italic tracking-tighter text-slate-900">Rekapitulasi Nilai Pelajaran</h3>
+                <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-col"><h3 class="text-2xl font-black text-slate-900 tracking-tighter">Rekapitulasi Nilai</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manajemen Nilai Pelajaran</p></div>
+                </div>
                 <div id="grade-modules" class="space-y-12"></div>
             </div>
 
             <div id="page-print" class="hidden space-y-8">
-                <h3 class="text-xl font-bold uppercase italic border-b border-slate-100 pb-4 tracking-tighter text-slate-900">Panel Cetak Dokumen</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="p-8 glass-card border-t-4 border-slate-900 shadow-xl shadow-slate-900/5">
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-6 tracking-[0.2em]">1. Master Data Siswa</h4>
-                        <button onclick="downloadStudentPDF()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-2xl font-black text-[10px] uppercase shadow-xl transition-all">Cetak Data Siswa</button>
+                <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-col"><h3 class="text-2xl font-black text-slate-900 tracking-tighter">Panel Cetak Dokumen</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ekspor Data Sistem Ke PDF</p></div>
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="p-8 glass-card border-t-4 border-slate-900 shadow-lg shadow-slate-900/5 group hover:border-slate-800 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 mb-4 group-hover:bg-slate-900 group-hover:text-white transition-colors"><i data-lucide="users" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-slate-700 uppercase mb-6 tracking-widest">1. Master Data Siswa</h4>
+                        </div>
+                        <button onclick="downloadStudentPDF()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Data Siswa</button>
                     </div>
-                    <div class="p-8 glass-card border-t-4 border-blue-600 shadow-xl shadow-blue-600/5">
-                        <h4 class="text-[10px] font-black text-blue-600 uppercase mb-6 tracking-[0.2em]">2. Laporan Absensi</h4>
-                        <select id="print-month-absen" class="w-full border border-slate-100 p-4 rounded-2xl mb-4 text-sm outline-none bg-slate-50 font-semibold"></select>
-                        <button onclick="downloadAbsenPDFByMonth()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black text-[10px] uppercase shadow-xl transition-all">Cetak Absensi Per Bulan</button>
+                    <div class="p-8 glass-card border-t-4 border-blue-600 shadow-lg shadow-blue-600/5 group hover:border-blue-500 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-blue-700 uppercase mb-4 tracking-widest">2. Laporan Absensi</h4>
+                            <select id="print-month-absen" class="w-full border-2 border-slate-100 p-3.5 rounded-xl mb-6 text-sm outline-none bg-slate-50 font-bold text-slate-700 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all"></select>
+                        </div>
+                        <button onclick="downloadAbsenPDFByMonth()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Absensi Per Bulan</button>
                     </div>
-                    <div class="p-8 glass-card border-t-4 border-indigo-600 shadow-xl shadow-indigo-600/5">
-                        <h4 class="text-[10px] font-black text-indigo-600 uppercase mb-6 tracking-[0.2em]">3. Jurnal Harian</h4>
-                        <select id="print-month-jurnal" class="w-full border border-slate-100 p-4 rounded-2xl mb-4 text-sm outline-none bg-slate-50 font-semibold"></select>
-                        <button onclick="alert('Format Jurnal Masih Diproses')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-black text-[10px] uppercase shadow-xl transition-all">Cetak Jurnal Per Bulan</button>
+                    <div class="p-8 glass-card border-t-4 border-indigo-600 shadow-lg shadow-indigo-600/5 group hover:border-indigo-500 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i data-lucide="book-open" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-indigo-700 uppercase mb-4 tracking-widest">3. Jurnal Harian</h4>
+                            <select id="print-month-jurnal" class="w-full border-2 border-slate-100 p-3.5 rounded-xl mb-6 text-sm outline-none bg-slate-50 font-bold text-slate-700 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all"></select>
+                        </div>
+                        <button onclick="alert('Format Jurnal Masih Diproses')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Jurnal Per Bulan</button>
                     </div>
-                    <div class="p-8 glass-card border-t-4 border-emerald-600 shadow-xl shadow-emerald-600/5">
-                        <h4 class="text-[10px] font-black text-emerald-600 uppercase mb-6 tracking-[0.2em]">4. Rekapitulasi Nilai</h4>
-                        <select id="print-mapel-select" class="w-full border border-slate-100 p-4 rounded-2xl mb-4 text-sm outline-none bg-slate-50 font-semibold"></select>
-                        <button onclick="downloadSingleGradePDF()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-[10px] uppercase shadow-xl transition-all">Cetak Nilai Per Mapel</button>
+                    <div class="p-8 glass-card border-t-4 border-emerald-600 shadow-lg shadow-emerald-600/5 group hover:border-emerald-500 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors"><i data-lucide="award" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-emerald-700 uppercase mb-4 tracking-widest">4. Rekapitulasi Nilai</h4>
+                            <select id="print-mapel-select" class="w-full border-2 border-slate-100 p-3.5 rounded-xl mb-6 text-sm outline-none bg-slate-50 font-bold text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all"></select>
+                        </div>
+                        <button onclick="downloadSingleGradePDF()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md transition-all transform group-hover:-translate-y-1">Cetak Nilai Per Mapel</button>
+                    </div>
+                    
+                    <div class="p-8 glass-card border-t-4 border-amber-500 shadow-lg shadow-amber-500/5 group hover:border-amber-400 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 mb-4 group-hover:bg-amber-500 group-hover:text-white transition-colors"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-amber-700 uppercase mb-4 tracking-widest">5. Rapor Tengah Semester (PTS)</h4>
+                            <select id="print-pts-siswa" class="w-full border-2 border-slate-200 p-4 rounded-xl mb-6 text-sm outline-none bg-white font-bold text-slate-800 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all"></select>
+                        </div>
+                        <button onclick="cetakRapor('pts')" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg shadow-amber-500/30 transition-all transform group-hover:-translate-y-1"><i data-lucide="printer" class="w-4 h-4 inline-block justify-center mr-1.5 -mt-0.5"></i> Cetak Rapor PTS</button>
+                    </div>
+
+                    <div class="p-8 glass-card border-t-4 border-purple-600 shadow-lg shadow-purple-600/5 group hover:border-purple-500 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i data-lucide="book-open-check" class="w-5 h-5"></i></div>
+                            <h4 class="text-[11px] font-black text-purple-700 uppercase mb-4 tracking-widest">6. Rapor Akhir Semester (PAS)</h4>
+                            <select id="print-pas-siswa" class="w-full border-2 border-slate-200 p-4 rounded-xl mb-6 text-sm outline-none bg-white font-bold text-slate-800 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"></select>
+                        </div>
+                        <button onclick="cetakRapor('pas')" class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg shadow-purple-600/30 transition-all transform group-hover:-translate-y-1"><i data-lucide="printer" class="w-4 h-4 inline-block justify-center mr-1.5 -mt-0.5"></i> Cetak Rapor PAS</button>
                     </div>
                 </div>
             </div>
 
             <div id="page-settings" class="hidden space-y-6">
-                <div class="flex justify-between items-center"><h3 class="text-xl font-bold uppercase italic text-slate-900 tracking-tighter">Identity Settings</h3><button onclick="saveSettings()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-2xl text-[10px] font-black uppercase shadow-xl shadow-blue-100 transition-all">Save Changes</button></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="glass-card p-8 space-y-4 border-slate-100">
-                        <h4 class="font-black border-b border-slate-50 pb-4 uppercase text-[10px] text-blue-600 tracking-widest">Identitas Guru</h4>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Nama & Gelar</label><input type="text" id="set-guru-nama" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"></div>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">NIP / ID</label><input type="text" id="set-guru-nip" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"></div>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Wali Kelas</label><input type="text" id="set-guru-kelas" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"></div>
+                <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <div class="flex flex-col"><h3 class="text-2xl font-black text-slate-900 tracking-tighter">System Settings</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Konfigurasi Identitas Sistem</p></div>
+                    <button onclick="saveSettings()" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3.5 rounded-xl text-[10px] font-black uppercase shadow-xl shadow-blue-600/20 transition-all transform hover:-translate-y-0.5"><i data-lucide="save" class="w-4 h-4 inline-block mr-2 -mt-0.5"></i>Save Changes</button>
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="glass-card p-8 space-y-5 border-slate-100/80 bg-gradient-to-br from-white to-slate-50/50">
+                        <h4 class="font-black border-b border-slate-200/60 pb-4 uppercase text-[11px] text-blue-700 tracking-widest flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i> Identitas Guru</h4>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Nama & Gelar</label><input type="text" id="set-guru-nama" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"></div>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">NIP / ID</label><input type="text" id="set-guru-nip" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"></div>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Wali Kelas</label><input type="text" id="set-guru-kelas" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"></div>
                     </div>
-                    <div class="glass-card p-8 space-y-4 border-slate-100">
-                        <h4 class="font-black border-b border-slate-50 pb-4 uppercase text-[10px] text-slate-800 tracking-widest">Identitas Sekolah</h4>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Nama Sekolah</label><input type="text" id="set-sch-nama" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-slate-500/20 transition-all"></div>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">NPSN</label><input type="text" id="set-sch-npsn" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-slate-500/20 transition-all"></div>
-                        <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Alamat Resmi</label><textarea id="set-sch-alamat" class="w-full border border-slate-200 p-3 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-slate-500/20 transition-all" rows="2"></textarea></div>
+                    <div class="glass-card p-8 space-y-5 border-slate-100/80 bg-gradient-to-br from-white to-slate-50/50">
+                        <h4 class="font-black border-b border-slate-200/60 pb-4 uppercase text-[11px] text-slate-800 tracking-widest flex items-center gap-2"><i data-lucide="school" class="w-4 h-4"></i> Identitas Sekolah</h4>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Nama Sekolah</label><input type="text" id="set-sch-nama" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all bg-white"></div>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">NPSN</label><input type="text" id="set-sch-npsn" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all bg-white"></div>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Kota / Tempat Terbit (Contoh: Pengkol)</label><input type="text" id="set-sch-tempat" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all bg-white"></div>
+                        <div><label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Alamat Resmi Lengkap</label><textarea id="set-sch-alamat" class="w-full border-2 border-slate-200 p-3.5 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all bg-white" rows="2"></textarea></div>
                     </div>
                 </div>
             </div>
@@ -220,32 +275,42 @@
     </main>
 
     <div id="m-siswa" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-xl p-10 space-y-6 shadow-2xl border border-white/20">
-            <h3 class="font-black border-b border-slate-50 pb-6 uppercase italic tracking-tighter text-xl" id="m-siswa-title">Registrasi Siswa Baru</h3>
+        <div class="bg-white rounded-[2rem] w-full max-w-2xl p-8 space-y-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-white/20 transform transition-all">
+            <div class="border-b border-slate-100 pb-5">
+                <h3 class="font-black text-2xl tracking-tighter text-slate-900" id="m-siswa-title">Registrasi Siswa Baru</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Formulir Pangkalan Data</p>
+            </div>
             <input type="hidden" id="in-id" value="">
-            <div class="grid grid-cols-4 gap-4">
-                <div class="col-span-1 space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">No</label><input type="text" id="in-no" placeholder="01" class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
-                <div class="col-span-3 space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Nama Lengkap</label><input type="text" id="in-nama" placeholder="Masukkan nama..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
+            
+            <div class="grid grid-cols-4 gap-5">
+                <div class="col-span-1 space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">No. Urut</label><input type="text" id="in-no" placeholder="01" class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
+                <div class="col-span-3 space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Lengkap Siswa</label><input type="text" id="in-nama" placeholder="Masukkan nama..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">NISN</label><input type="text" id="in-nisn" placeholder="00123..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">No. Induk</label><input type="text" id="in-ni" placeholder="2024..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
+            
+            <div class="grid grid-cols-2 gap-5">
+                <div class="space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nomor Induk Siswa Nasional (NISN)</label><input type="text" id="in-nisn" placeholder="00123..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
+                <div class="space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nomor Induk (NI) Lokal</label><input type="text" id="in-ni" placeholder="2024..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Tempat Lahir</label><input type="text" id="in-tempat-lahir" placeholder="Jakarta..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Tanggal Lahir</label><input type="date" id="in-tanggal-lahir" class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
+            
+            <div class="grid grid-cols-2 gap-5">
+                <div class="space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Kota / Tempat Lahir</label><input type="text" id="in-tempat-lahir" placeholder="Jakarta..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
+                <div class="space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Tanggal Lahir</label><input type="date" id="in-tanggal-lahir" class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Agama</label><select id="in-agama" class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none bg-slate-50"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Budha">Budha</option></select></div>
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Ayah</label><input type="text" id="in-ayah" placeholder="Nama ayah..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
+            
+            <div class="grid grid-cols-3 gap-5">
+                <div class="col-span-1 space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Agama</label><select id="in-agama" class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-white"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Budha">Budha</option></select></div>
+                <div class="col-span-1 space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Ayah</label><input type="text" id="in-ayah" placeholder="Nama ayah..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
+                <div class="col-span-1 space-y-1.5"><label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Ibu</label><input type="text" id="in-ibu" placeholder="Nama ibu..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"></div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Ibu</label><input type="text" id="in-ibu" placeholder="Nama ibu..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none"></div>
-                <div class="space-y-1"><label class="text-[9px] font-black text-slate-400 uppercase ml-1">Alamat</label><textarea id="in-alamat" placeholder="Jl. Raya..." class="w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold outline-none" rows="1"></textarea></div>
+            
+            <div class="space-y-1.5">
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Alamat Tempat Tinggal Lengkap</label>
+                <textarea id="in-alamat" placeholder="Jl. Raya..." class="w-full border-2 border-slate-200 p-3 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" rows="2"></textarea>
             </div>
-            <div class="flex gap-4 pt-6">
-                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-4 bg-slate-100 rounded-2xl text-[10px] font-black uppercase text-slate-500 hover:bg-slate-200 transition-all">Batal</button>
-                <button onclick="saveSiswa()" class="flex-1 py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all">Simpan Database</button>
+            
+            <div class="flex gap-4 pt-4">
+                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-3.5 bg-slate-100 rounded-xl text-[10px] font-black uppercase text-slate-600 hover:bg-slate-200 hover:text-slate-800 transition-all">Batal</button>
+                <button onclick="saveSiswa()" class="flex-[2] py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl text-[10px] font-black uppercase shadow-lg shadow-blue-500/30 hover:from-blue-700 hover:to-blue-800 transition-all transform hover:-translate-y-0.5"><i data-lucide="save" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i> Simpan Database</button>
             </div>
         </div>
     </div>
@@ -304,7 +369,7 @@
 
         let config = {
             guru: { nama: "Ibu Sari, S.Pd", nip: "19880712 201503 2 003", kelas: "Wali Kelas 5A" },
-            sekolah: { nama: "SDN Harapan Bangsa", npsn: "20234567", alamat: "Jl. Pendidikan No. 12, Jakarta" }
+            sekolah: { nama: "SDN Harapan Bangsa", npsn: "20234567", alamat: "Jl. Pendidikan No. 12, Jakarta", tempat: "Pengkol" }
         };
 
         let students = [];
@@ -363,6 +428,7 @@
             document.getElementById('set-guru-kelas').value = config.guru.kelas;
             document.getElementById('set-sch-nama').value = config.sekolah.nama;
             document.getElementById('set-sch-npsn').value = config.sekolah.npsn;
+            document.getElementById('set-sch-tempat').value = config.sekolah.tempat || 'Pengkol';
             document.getElementById('set-sch-alamat').value = config.sekolah.alamat;
         }
 
@@ -372,6 +438,7 @@
             config.guru.kelas = document.getElementById('set-guru-kelas').value;
             config.sekolah.nama = document.getElementById('set-sch-nama').value;
             config.sekolah.npsn = document.getElementById('set-sch-npsn').value;
+            config.sekolah.tempat = document.getElementById('set-sch-tempat').value;
             config.sekolah.alamat = document.getElementById('set-sch-alamat').value;
             
             db.ref('config').set(config).then(() => {
@@ -472,7 +539,7 @@
         }
 
         function renderSiswa() {
-            document.getElementById('student-list').innerHTML = students.map((s, index) => `<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+            document.getElementById('student-list').innerHTML = students.map((s, index) => `<tr class="border-b border-slate-100 hover:bg-blue-50/40 transition-colors group">
                 <td class="px-6 py-4 font-black text-slate-300 pointer-events-none">${s.no || index + 1}</td>
                 <td class="px-6 py-4 font-extrabold uppercase text-slate-800 tracking-tighter pointer-events-none">${s.name}</td>
                 <td class="px-6 py-4 font-mono font-bold text-slate-400 text-[10px] pointer-events-none">${s.nisn}/${s.ni}</td>
@@ -534,9 +601,22 @@
                 let trs = students.map(s => {
                     let s_grades = (gradesData[sub] && gradesData[sub][s.name]) ? gradesData[sub][s.name] : {};
                     let na = calculateNA(s_grades, cfg.ph);
-                    return `<tr class="border-b border-slate-50"><td class="px-6 py-3 font-extrabold text-[11px] uppercase text-slate-800 tracking-tighter">${s.name}</td>${cfg.ph.map((p, i)=>`<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'ph${i}', this.value)" class="w-10 h-8 border border-slate-200 rounded-lg text-center text-[10px] font-bold" value="${s_grades['ph'+i]||0}"></td>`).join('')}<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pts', this.value)" class="w-10 h-8 border border-blue-100 rounded-lg text-center text-[10px] font-bold bg-blue-50/30" value="${s_grades['pts']||0}"></td><td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pas', this.value)" class="w-10 h-8 border border-blue-100 rounded-lg text-center text-[10px] font-bold bg-blue-50/30" value="${s_grades['pas']||0}"></td><td class="text-center font-black text-emerald-600 text-[11px] bg-emerald-50/50">${na}</td></tr>`;
+                    return `<tr class="border-b border-slate-100 hover:bg-blue-50/40 transition-colors">
+                        <td class="px-6 py-3 font-extrabold text-[11px] uppercase text-slate-800 tracking-tighter">${s.name}</td>
+                        ${cfg.ph.map((p, i)=>`<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'ph${i}', this.value)" class="w-10 h-8 border border-slate-200 rounded-lg text-center text-[10px] font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" value="${s_grades['ph'+i]||0}"></td>`).join('')}
+                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pts', this.value)" class="w-10 h-8 border border-blue-200 rounded-lg text-center text-[10px] font-bold text-blue-800 bg-blue-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" value="${s_grades['pts']||0}"></td>
+                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pas', this.value)" class="w-10 h-8 border border-blue-200 rounded-lg text-center text-[10px] font-bold text-blue-800 bg-blue-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" value="${s_grades['pas']||0}"></td>
+                        <td class="text-center font-black text-emerald-700 text-[11px] bg-emerald-50/80 border-l border-emerald-100">${na}</td>
+                    </tr>`;
                 }).join('');
-                container.innerHTML += `<div class="glass-card overflow-hidden shadow-xl shadow-slate-200/50 border-slate-100" id="table-grade-${sub.replace(/\s/g,'')}"><div class="px-6 py-4 bg-slate-900 text-white flex justify-between items-center"><div class="flex flex-col"><span class="font-black text-[10px] uppercase italic tracking-[0.2em] opacity-60">Mata Pelajaran</span><span class="font-black text-sm uppercase italic tracking-tighter">${sub}</span></div><button onclick="addPh('${sub}')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-[9px] uppercase font-black shadow-lg transition-all">+ Add PH</button></div><table class="w-full text-[10px]">${th}<tbody>${trs}</tbody></table></div>`;
+                container.innerHTML += `<div class="glass-card overflow-hidden shadow-lg shadow-slate-200/50 border-slate-200/80" id="table-grade-${sub.replace(/\s/g,'')}">
+                    <div class="px-6 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex justify-between items-center border-b border-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-blue-300"><i data-lucide="book-open" class="w-4 h-4"></i></div>
+                            <div class="flex flex-col"><span class="font-black text-[9px] uppercase tracking-widest text-slate-400">Mata Pelajaran</span><span class="font-black text-sm uppercase tracking-tighter text-white">${sub}</span></div>
+                        </div>
+                        <button onclick="addPh('${sub}')" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-xl text-[10px] uppercase font-black shadow-lg shadow-blue-500/20 transition-all transform hover:-translate-y-0.5 border border-blue-400/30 flex items-center gap-1.5"><i data-lucide="plus" class="w-3 h-3"></i> Tambah Penilaian</button>
+                    </div><div class="overflow-x-auto"><table class="w-full text-[10px] border-collapse">${th}<tbody>${trs}</tbody></table></div></div>`;
             });
         }
 
@@ -556,6 +636,11 @@
             document.getElementById('print-month-absen').innerHTML = months.map((m, i) => `<option value="${i}">${m}</option>`).join('');
             document.getElementById('print-month-jurnal').innerHTML = months.map((m, i) => `<option value="${i}">${m}</option>`).join('');
             document.getElementById('print-mapel-select').innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            
+            let selRapor = `<option value="ALL">- CETAK SEMUA SISWA (MASSAL) -</option>`;
+            selRapor += students.map(s => `<option value="${s.id}">${s.name} (${s.nisn||'-'})</option>`).join('');
+            document.getElementById('print-pts-siswa').innerHTML = selRapor;
+            document.getElementById('print-pas-siswa').innerHTML = selRapor;
         }
 
         function getPdfHeader(doc, title) {
@@ -593,6 +678,84 @@
             getPdfHeader(doc, `LAPORAN NILAI: ${sub.toUpperCase()}`);
             doc.autoTable({ html: `#table-grade-${sub.replace(/\s/g,'')} table`, startY: 50, headStyles: {fillColor: [16, 185, 129]} });
             doc.save(`Nilai_${sub}.pdf`);
+        }
+
+        function cetakRapor(tipe) {
+            if (students.length === 0) {
+                alert("Belum ada data siswa untuk dicetak!");
+                return;
+            }
+            const pSiswa = tipe === 'pts' ? document.getElementById('print-pts-siswa').value : document.getElementById('print-pas-siswa').value;
+            let targetStudents = pSiswa === 'ALL' ? students : students.filter(x => x.id === pSiswa);
+            if(targetStudents.length === 0) return;
+
+            const { jsPDF } = window.jspdf; 
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const titleStr = tipe === 'pts' ? "LAPORAN PENILAIAN TENGAH SEMESTER (PTS)" : "LAPORAN PENILAIAN AKHIR SEMESTER (PAS)";
+            const today = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
+
+            targetStudents.forEach((s, index) => {
+                if (index > 0) doc.addPage();
+                
+                doc.setFontSize(14); doc.setFont("helvetica", "bold"); 
+                doc.text(config.sekolah.nama.toUpperCase(), 105, 20, {align: "center"});
+                doc.setFontSize(9); doc.setFont("helvetica", "normal"); 
+                doc.text(`${config.sekolah.alamat} | NPSN: ${config.sekolah.npsn}`, 105, 25, {align: "center"});
+                doc.setLineWidth(0.5); doc.line(20, 28, 190, 28);
+                
+                doc.setFontSize(12); doc.setFont("helvetica", "bold"); 
+                doc.text(titleStr, 105, 38, {align: "center"});
+                
+                doc.setFontSize(10); doc.setFont("helvetica", "normal");
+                const bioStartX = 20; let bioY = 50;
+                doc.text(`Nama Peserta Didik`, bioStartX, bioY); doc.text(`: ${s.name}`, bioStartX + 40, bioY); bioY += 6;
+                doc.text(`NISN / NI`, bioStartX, bioY); doc.text(`: ${s.nisn||'-'} / ${s.ni||'-'}`, bioStartX + 40, bioY); bioY += 6;
+                doc.text(`Kelas`, bioStartX, bioY); doc.text(`: ${config.guru.kelas}`, bioStartX + 40, bioY); bioY += 6;
+                doc.text(`Semester`, bioStartX, bioY); doc.text(`: ${tipe === 'pts' ? 'Ganjil / Genap (Tengah)' : 'Ganjil / Genap (Akhir)'}`, bioStartX + 40, bioY); bioY += 6;
+                
+                const tableData = [];
+                subjects.forEach((sub, i) => {
+                    let subGrades = (gradesData[sub] && gradesData[sub][s.name]) ? gradesData[sub][s.name] : {};
+                    let val = Number(subGrades[tipe] || 0);
+                    let predikat = val >= 90 ? 'A (Sangat Baik)' : (val >= 80 ? 'B (Baik)' : (val >= 70 ? 'C (Cukup)' : 'D (Perlu Bimbingan)'));
+                    tableData.push([i + 1, sub, val, predikat]);
+                });
+                
+                doc.autoTable({
+                    startY: bioY + 5,
+                    head: [['No', 'Mata Pelajaran', 'Nilai', 'Predikat']],
+                    body: tableData,
+                    headStyles: { fillColor: [15, 23, 42], textColor: [255,255,255], halign: 'center' },
+                    columnStyles: {
+                        0: { halign: 'center', cellWidth: 15 },
+                        1: { halign: 'left' },
+                        2: { halign: 'center', cellWidth: 30, fontStyle: 'bold' },
+                        3: { halign: 'center', cellWidth: 50, fontStyle: 'italic' }
+                    },
+                    margin: { left: 20, right: 20 },
+                    theme: 'grid',
+                    styles: { fontSize: 10, cellPadding: 4 }
+                });
+                
+                let finalY = doc.lastAutoTable.finalY + 20;
+                if (finalY + 40 > 280) { doc.addPage(); finalY = 30; }
+                
+                let tempatCetak = config.sekolah.tempat || 'Pengkol';
+                
+                doc.setFont("helvetica", "normal");
+                doc.text("Mengetahui,", 30, finalY);
+                doc.text("Orang Tua / Wali,", 30, finalY + 5);
+                doc.text("( ................................... )", 25, finalY + 30);
+                
+                doc.text(`${tempatCetak}, ${today}`, 130, finalY);
+                doc.text("Guru Kelas,", 130, finalY + 5);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${config.guru.nama}`, 130, finalY + 30);
+                doc.setFont("helvetica", "normal");
+                doc.text(`NIP. ${config.guru.nip||'-'}`, 130, finalY + 35);
+            });
+            
+            doc.save(`Rapor_${tipe.toUpperCase()}_${pSiswa === 'ALL' ? 'Massal' : targetStudents[0].name.replace(/\s+/g, '_')}.pdf`);
         }
     </script>
 </body>
