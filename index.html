@@ -7,7 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0F172A">
-    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="icon_dlpk.png">
     <link rel="icon" type="image/png" sizes="32x32" href="icon_dlpk.png">
     <link rel="icon" type="image/png" sizes="16x16" href="icon_dlpk.png">
@@ -359,6 +358,15 @@
     </div>
 
     <script>
+        // Mematikan dan menghapus Service Worker (PWA) jika sebelumnya pernah terdaftar
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+
         // Konfigurasi Firebase untuk akun email wahyuwrdn110@gmail.com
         const firebaseConfig = {
             apiKey: "AIzaSyDKh5WPlMgFAIwqSndrqfLxGTl0IABbLLA",
