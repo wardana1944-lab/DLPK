@@ -273,6 +273,85 @@
             box-shadow: 0 4px 8px rgba(255, 102, 0, 0.3);
         }
         .btn-primary:active { transform: translateY(0); }
+
+        /* Modern Toast Notifications */
+        #toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            min-width: 300px;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            transform: translateX(120%);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+        }
+        .toast-success::before { background: var(--accent); }
+        .toast-error::before { background: #EF4444; }
+        .toast-info::before { background: var(--primary); }
+        
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .toast-success .toast-icon { background: var(--primary-light); color: var(--accent); }
+        .toast-error .toast-icon { background: #FEF2F2; color: #EF4444; }
+        .toast-info .toast-icon { background: var(--primary-light); color: var(--primary); }
+        
+        .toast-content { flex: 1; }
+        .toast-title { font-weight: 800; font-size: 0.85rem; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.02em; }
+        .toast-message { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
+        
+        .toast-close {
+            color: #CBD5E1;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px;
+        }
+        .toast-close:hover { color: var(--text-main); }
+
+        @keyframes toastProgress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.05);
+            animation: toastProgress linear forwards;
+        }
     </style>
 </head>
 <body class="h-full flex">
@@ -801,6 +880,7 @@
         </div>
     </div>
 
+    <div id="toast-container"></div>
     <script>
         // Mematikan dan menghapus Service Worker (PWA) jika sebelumnya pernah terdaftar
         if ('serviceWorker' in navigator) {
@@ -824,6 +904,49 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // Modern Toast Notification System
+        function showToast(message, type = 'success', duration = 4000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: 'check-circle',
+                error: 'alert-circle',
+                info: 'info'
+            };
+            
+            const titles = {
+                success: 'Berhasil',
+                error: 'Kesalahan',
+                info: 'Informasi'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon"><i data-lucide="${icons[type]}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${titles[type]}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <div class="toast-close" onclick="this.parentElement.remove()"><i data-lucide="x" class="w-4 h-4"></i></div>
+                <div class="toast-progress" style="animation-duration: ${duration}ms"></div>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, duration);
+        }
 
         let config = {
             guru: { nama: "Ibu Sari, S.Pd", nip: "19880712 201503 2 003", kelas: "Wali Kelas 5A" },
@@ -928,7 +1051,7 @@
             config.sekolah.alamat = document.getElementById('set-sch-alamat').value;
             
             db.ref('config').set(config).then(() => {
-                alert("Identitas berhasil disimpan rapi ke Firebase untuk akun wahyuwrdn110@gmail.com!");
+                showToast("Identitas berhasil disimpan rapi ke Firebase untuk akun wahyuwrdn110@gmail.com!");
                 updateUIFromConfig();
             });
         }
@@ -1059,18 +1182,18 @@
             const materi = document.getElementById('jrn-materi').value;
             const editId = document.getElementById('jrn-edit-id').value;
             
-            if(!cp || !materi) { alert("CP dan Materi harus diisi!"); return; }
+            if(!cp || !materi) { showToast("CP dan Materi harus diisi!", "error"); return; }
             
             if(editId) {
                 db.ref(`journal/${dateKey}/${editId}`).update({ mapel, cp, materi }).then(() => {
                     cancelEditJournal();
-                    alert("Jurnal KBM berhasil diperbarui!");
+                    showToast("Jurnal KBM berhasil diperbarui!");
                 });
             } else {
                 db.ref(`journal/${dateKey}`).push({ mapel, cp, materi }).then(() => {
                     document.getElementById('jrn-cp').value = "";
                     document.getElementById('jrn-materi').value = "";
-                    alert("Jurnal KBM berhasil disimpan!");
+                    showToast("Jurnal KBM berhasil disimpan!");
                 });
             }
         }
@@ -1121,7 +1244,7 @@
         function hapusSiswa(id) {
             if (confirm("Apakah Anda yakin ingin menghapus data siswa ini? Semua data terkait (absensi, nilai) untuk siswa ini tetap utuh hingga dihapus manual.")) {
                 db.ref(`students/${id}`).remove().then(() => {
-                    alert("Data Siswa Berhasil Dihapus!");
+                    showToast("Data Siswa Berhasil Dihapus!", "info");
                     renderSiswa();
                 });
             }
@@ -1145,13 +1268,13 @@
             if (id) {
                 db.ref(`students/${id}`).update(newStudent).then(() => {
                     document.getElementById('m-siswa').classList.add('hidden');
-                    alert("Data Siswa Berhasil Diperbarui!");
+                    showToast("Data Siswa Berhasil Diperbarui!");
                     renderSiswa();
                 });
             } else {
                 db.ref('students').push(newStudent).then(() => {
                     document.getElementById('m-siswa').classList.add('hidden');
-                    alert("Data Siswa Berhasil Disimpan Rapi!");
+                    showToast("Data Siswa Berhasil Disimpan Rapi!");
                     renderSiswa();
                 });
             }
@@ -1182,7 +1305,7 @@
 
         function jumpToDate() {
             const dateInput = document.getElementById('quick-date').value;
-            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            if (!dateInput) { showToast("Pilih tanggal terlebih dahulu!", "info"); return; }
             const date = new Date(dateInput);
             currentMonth = new Date(date.getFullYear(), date.getMonth(), 1);
             renderAbsen();
@@ -1199,7 +1322,7 @@
 
         function bulkAbsen(val) {
             const dateInput = document.getElementById('quick-date').value;
-            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            if (!dateInput) { showToast("Pilih tanggal terlebih dahulu!", "info"); return; }
             const date = new Date(dateInput);
             const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
             const monthKey = `${y}-${m.toString().padStart(2, '0')}`;
@@ -1212,7 +1335,7 @@
                 if(val === 'L' && ketLibur) {
                     db.ref(`attendance/${monthKey}/holidays/${d}`).set(ketLibur);
                 }
-                alert("Berhasil diperbarui masal!");
+                showToast("Berhasil diperbarui masal!");
                 document.getElementById('quick-ket-libur').value = "";
                 renderAbsen();
             }
@@ -1220,7 +1343,7 @@
 
         function deleteAttendanceDay() {
             const dateInput = document.getElementById('quick-date').value;
-            if (!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
+            if (!dateInput) { showToast("Pilih tanggal terlebih dahulu!", "info"); return; }
             const date = new Date(dateInput);
             const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
             const monthKey = `${y}-${m.toString().padStart(2, '0')}`;
@@ -1230,7 +1353,7 @@
                     db.ref(`attendance/${monthKey}/${s.name}/${d}`).remove();
                 });
                 db.ref(`attendance/${monthKey}/holidays/${d}`).remove();
-                alert("Data tanggal tersebut berhasil dihapus bersih!");
+                showToast("Data tanggal tersebut berhasil dihapus bersih!", "info");
                 renderAbsen();
             }
         }
@@ -1616,7 +1739,7 @@
         }
 
         function cetakRapor(tipe) {
-            if (students.length === 0) { alert("Belum ada data siswa!"); return; }
+            if (students.length === 0) { showToast("Belum ada data siswa!", "error"); return; }
             const pSiswa = tipe === 'pts' ? document.getElementById('print-pts-siswa').value : document.getElementById('print-pas-siswa').value;
             let targetStudents = pSiswa === 'ALL' ? students : students.filter(x => x.id === pSiswa);
             if(targetStudents.length === 0) return;
