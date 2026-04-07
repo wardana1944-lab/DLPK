@@ -13,9 +13,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icon_dlpk.png">
     <link rel="apple-touch-icon-precomposed" href="icon_dlpk.png">
     <link rel="shortcut icon" href="icon_dlpk.png">
-    <meta name="apple-mobile-web-app-title" content="DLPK E v12">
-    <meta name="application-name" content="DLPK E v12">
-    <title>DLPK E v12 - Official Update</title>
+    <meta name="apple-mobile-web-app-title" content="DLPK">
+    <meta name="application-name" content="DLPK">
+    <title>DLPK - Integrated Class Management</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -27,20 +27,21 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
         :root {
-            /* Bagian yang Diubah */
-            --primary: #0A1931;       /* Deep Navy Blue (Warna Utama/Header) */
-            --primary-light: #F5F7FA; /* Super Light Grey (Background kartu/aksen halus) */
-            --secondary: #000000;     /* Hitam Pekat (Untuk teks judul gelap atau elemen inversi) */
-            --accent: #FF6600;        /* Vibrant Orange (Warna Aksi/CTA/Tombol Penting) */
-            --surface: #FFFFFF;       /* Putih Bersih (Background konten utama) */
-            --background: #FFFFFF;   /* Putih Bersih (Latar belakang halaman penuh) */
-            --text-main: #111111;     /* Hampir Hitam (Untuk keterbacaan teks utama yang tajam) */
-            --text-muted: #666666;    /* Abu-abu Sedang (Teks sekunder/label) */
-            --border: #E6E6E6;        /* Abu-abu Sangat Muda (Garis perbatasan halus) */
-            
-            /* Variabel Tambahan (Opsional untuk State) */
-            --accent-hover: #E65C00; /* Orange yang sedikit lebih gelap untuk hover button */
-            --glass: rgba(255, 255, 255, 0.7);
+            /* Clean Modern Theme - Off-white & Deep Charcoal */
+            --background: #F4F7F9;     /* Off-white */
+            --surface: #FFFFFF;        /* Pure White */
+            --primary: #00CEC9;        /* Teal Cerah */
+            --accent: #00CEC9;         /* Teal Cerah */
+            --text-main: #1A1C20;      /* Deep Charcoal */
+            --text-muted: #4A4A4A;     /* Dark Grey */
+            --border: #E2E8F0;         /* Slate 200 */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+            /* Accents for Print Buttons */
+            --mustard: #F39C12;        /* Vibrant Orange-Yellow */
+            --orange: #E67E22;         /* Strong Orange */
+            --green: #27AE60;          /* Deep Emerald Green */
         }
 
         body { 
@@ -50,64 +51,71 @@
             overflow: hidden; 
             -webkit-font-smoothing: antialiased;
             font-size: 13px;
+            line-height: 1.5;
         }
 
-        /* Sidebar Modernization */
+        /* Sidebar - Modern & Clean */
+        #main-sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+        }
         .sidebar-link { 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.2s ease; 
             color: var(--text-muted);
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 2px;
-            padding: 0.65rem 1rem;
+            padding: 0.7rem 1rem;
         }
         .sidebar-link:hover { 
-            background-color: var(--primary-light); 
-            color: var(--primary);
-            transform: translateX(4px); 
+            background-color: #F1F5F9; 
+            color: var(--text-main);
         }
         .sidebar-link.active { 
-            background-color: var(--primary); 
+            background: var(--primary); 
             color: white; 
             font-weight: 700; 
-            box-shadow: 0 4px 10px -2px rgba(10, 25, 49, 0.3);
-            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 206, 201, 0.2);
         }
-        .sidebar-link i { width: 1.15rem; height: 1.15rem; transition: transform 0.3s ease; }
-        .sidebar-link:hover i { transform: scale(1.1); }
+        .sidebar-link i { width: 1.25rem; height: 1.25rem; }
 
-        /* Modern Glass Card */
+        /* Modern Content Card - Strict Containment */
         .glass-card { 
             background: var(--surface); 
             border: 1px solid var(--border); 
-            border-radius: 0.75rem; 
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            border-radius: 1rem; 
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden; /* Strict containment */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .glass-card:hover { 
-            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.04);
-            border-color: #CBD5E1;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
-        /* Enhanced Tables */
+        /* Responsive Tables */
         .modern-table { width: 100%; border-collapse: separate; border-spacing: 0; }
         .modern-table th { 
-            background: #F1F5F9; 
-            font-weight: 800; 
+            background: #F8FAFC; 
+            font-weight: 700; 
             text-transform: uppercase; 
-            font-size: 0.6rem; 
-            letter-spacing: 0.08em; 
-            color: var(--text-main);
-            padding: 0.75rem 1rem;
+            font-size: 0.65rem; 
+            letter-spacing: 0.05em; 
+            color: var(--text-muted);
+            padding: 1rem;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 10;
         }
         .modern-table td { 
-            padding: 0.75rem 1rem; 
+            padding: 1rem; 
             border-bottom: 1px solid #F1F5F9; 
             font-size: 0.75rem;
-            transition: background 0.2s ease;
+            color: var(--text-main);
         }
         .modern-table tr:hover td { background-color: #F8FAFC; }
 
@@ -118,163 +126,195 @@
             width: 100%; 
             height: 100%; 
             text-align: center; 
-            font-size: 0.7rem; 
-            font-weight: 900; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
             cursor: pointer; 
             border: none; 
             outline: none; 
-            transition: all 0.2s;
+            color: inherit;
         }
         .td-absen { 
-            width: 38px; 
-            min-width: 38px;
-            height: 38px; 
+            width: 40px; 
+            min-width: 40px;
+            height: 40px; 
             border: 1px solid var(--border); 
             padding: 0 !important;
-            transition: all 0.2s;
         }
         .td-absen.is-holiday { 
-            background-color: #EF4444 !important; 
+            background: #FF7675 !important; 
             color: white !important; 
         }
-        .td-absen.is-holiday select { 
-            color: white !important; 
-        }
-        .td-absen:hover:not(.is-holiday) { background-color: var(--primary-light) !important; }
         
         .th-absen-header {
-            width: 38px;
-            min-width: 38px;
+            width: 40px;
+            min-width: 40px;
             text-align: center;
-            font-weight: 900;
+            font-weight: 800;
             font-size: 0.6rem;
             border-right: 1px solid var(--border);
         }
-        .th-absen-header.is-holiday {
-            background-color: #DC2626 !important;
-            color: white !important;
-            border-color: #B91C1C !important;
-        }
 
-        /* Opening Screen Upgrade */
+        /* Opening Screen */
         #opening-screen { 
             position: fixed; 
             inset: 0; 
-            background: var(--primary); 
+            background: radial-gradient(circle at center, #ffffff 0%, #f4f7f9 100%);
             z-index: 9999; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow: hidden;
+        }
+        #opening-screen::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.03;
+            animation: moveBg 20s linear infinite;
+        }
+        @keyframes moveBg {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-5%, -5%); }
         }
         .pulse-icon { 
-            width: 120px; 
-            height: 120px; 
-            border-radius: 30px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
-            animation: pulseFloat 3s infinite ease-in-out; 
+            width: 140px; 
+            height: 140px; 
+            border-radius: 32px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); 
+            animation: float 4s ease-in-out infinite; 
             margin-bottom: 32px; 
-            object-fit: cover; 
-            border: 4px solid rgba(255, 255, 255, 0.1);
+            border: 4px solid white;
+            background: white;
+            z-index: 10;
+        }
+        .opening-content {
+            text-align: center;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .loading-container {
+            margin-top: 40px;
+            width: 280px;
+            position: relative;
         }
         .loading-bar { 
-            width: 200px; 
-            height: 4px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border-radius: 10px; 
+            width: 100%; 
+            height: 6px; 
+            background: rgba(0, 0, 0, 0.03); 
+            border-radius: 20px; 
             overflow: hidden; 
             position: relative; 
-            margin-top: 24px; 
+            border: 1px solid rgba(0, 0, 0, 0.02);
         }
         .loading-bar::after { 
             content: ''; 
             position: absolute; 
             top: 0; 
-            left: -50%; 
-            width: 50%; 
+            left: -100%; 
+            width: 100%; 
             height: 100%; 
-            background: linear-gradient(90deg, transparent, var(--accent), transparent); 
-            animation: loadingSweep 2s infinite ease-in-out; 
+            background: linear-gradient(90deg, transparent, var(--primary), #00eee9, transparent); 
+            animation: loadingSweep 2s cubic-bezier(0.65, 0, 0.35, 1) infinite; 
+        }
+        .loading-text {
+            margin-top: 16px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            animation: fadeText 2s ease-in-out infinite;
+        }
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--text-main) 0%, var(--primary) 50%, var(--text-main) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
         }
 
-        @keyframes pulseFloat { 
-            0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); } 
-            50% { transform: translateY(-15px) scale(1.05); filter: brightness(1.2); } 
+        @keyframes float { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-20px) rotate(2deg); } 
         }
-        @keyframes loadingSweep { 0% { left: -50%; } 100% { left: 100%; } }
+        @keyframes loadingSweep { 
+            0% { left: -100%; } 
+            100% { left: 100%; } 
+        }
+        @keyframes fadeText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
         
         .header-glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
         }
         
-        /* Modern Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--background); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { 
             background: #CBD5E1; 
-            border-radius: 20px; 
-            border: 2px solid var(--background);
+            border-radius: 10px; 
         }
-        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
-
-        /* Section Transitions */
-        .page-transition {
-            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .page-exit {
-            animation: fadeOut 0.2s ease-in;
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         /* Modern Inputs */
         .modern-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            background: var(--surface);
-            transition: all 0.2s;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-main);
+            transition: border-color 0.2s ease;
             font-weight: 500;
         }
         .modern-input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.1);
         }
 
-        /* Custom Button */
+        /* Teal Primary Button */
         .btn-primary {
-            background: var(--accent);
+            background: var(--primary);
             color: white;
-            padding: 0.65rem 1.25rem;
-            border-radius: 8px;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.7rem;
-            transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(255, 102, 0, 0.2);
+            letter-spacing: 0.03em;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
         }
         .btn-primary:hover {
-            background: var(--accent-hover);
+            filter: brightness(0.95);
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(255, 102, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 206, 201, 0.2);
         }
         .btn-primary:active { transform: translateY(0); }
 
-        /* Modern Toast Notifications */
+        /* Mobile Responsive Utilities */
+        @media (max-width: 768px) {
+            .glass-card { padding: 1.25rem !important; }
+            .modern-table th, .modern-table td { padding: 0.75rem 0.5rem; }
+            h1 { font-size: 1.75rem !important; }
+            h2 { font-size: 1.25rem !important; }
+        }
+        /* Toast Notifications */
         #toast-container {
             position: fixed;
             top: 24px;
@@ -290,12 +330,12 @@
             min-width: 300px;
             max-width: 400px;
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: var(--shadow-lg);
             border: 1px solid var(--border);
             transform: translateX(120%);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -303,35 +343,22 @@
             overflow: hidden;
         }
         .toast.show { transform: translateX(0); }
-        .toast::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 6px;
-        }
-        .toast-success::before { background: var(--accent); }
-        .toast-error::before { background: #EF4444; }
-        .toast-info::before { background: var(--primary); }
-        
         .toast-icon {
             width: 40px;
             height: 40px;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            background: #F8FAFC;
+            color: var(--primary);
         }
-        .toast-success .toast-icon { background: var(--primary-light); color: var(--accent); }
-        .toast-error .toast-icon { background: #FEF2F2; color: #EF4444; }
-        .toast-info .toast-icon { background: var(--primary-light); color: var(--primary); }
-        
+        .toast-success .toast-icon { color: #2ECC71; }
+        .toast-error .toast-icon { color: #FF7675; }
         .toast-content { flex: 1; }
-        .toast-title { font-weight: 800; font-size: 0.85rem; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.02em; }
-        .toast-message { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; line-height: 1.4; }
-        
+        .toast-title { font-weight: 800; font-size: 0.85rem; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase; }
+        .toast-message { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
         .toast-close {
             color: #CBD5E1;
             cursor: pointer;
@@ -339,50 +366,49 @@
             padding: 4px;
         }
         .toast-close:hover { color: var(--text-main); }
-
-        @keyframes toastProgress {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
         .toast-progress {
             position: absolute;
             bottom: 0;
             left: 0;
             height: 3px;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--primary);
             animation: toastProgress linear forwards;
         }
+        @keyframes toastProgress { from { width: 100%; } to { width: 0%; } }
     </style>
 </head>
 <body class="h-full flex">
 
     <div id="opening-screen">
-        <img src="./icon_dlpk.png" alt="DLPK Icon" class="pulse-icon">
-        <h1 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 text-3xl font-black tracking-tighter uppercase">DLPK<span class="text-[var(--accent)]">E</span></h1>
-        <p class="text-slate-400 text-[9px] uppercase tracking-[0.4em] mt-3 font-bold opacity-80">Synchronizing Data</p>
-        <div class="loading-bar"></div>
+        <div class="opening-content">
+            <img src="./icon_dlpk.png" alt="DLPK Icon" class="pulse-icon">
+            <h1 class="text-[var(--text-main)] text-5xl font-black tracking-tighter uppercase shimmer-text">DLPK</h1>
+            <div class="loading-container">
+                <div class="loading-bar"></div>
+                <div class="loading-text" id="loading-status">Menginisialisasi Sistem</div>
+            </div>
+        </div>
     </div>
 
     <!-- Add Overlay for Mobile -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
 
-    <aside id="main-sidebar" class="w-72 bg-white border-r border-slate-200/60 flex flex-col z-50 shadow-[20px_0_40px_rgba(15,23,42,0.02)] absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 h-full">
+    <aside id="main-sidebar" class="w-72 bg-[var(--surface)] border-r border-[var(--border)] flex flex-col z-50 shadow-sm absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 h-full">
         <div class="p-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white shadow-lg shadow-slate-200 rotate-3 transition-transform hover:rotate-0">
+            <div class="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white shadow-lg rotate-3 transition-transform hover:rotate-0">
                 <i data-lucide="graduation-cap" class="w-6 h-6"></i>
             </div>
             <div class="flex flex-col">
-                <span class="text-lg font-extrabold text-slate-900 tracking-tight leading-none uppercase">DLPK<span class="text-[var(--accent)]">E</span></span>
-                <span class="text-[8px] font-bold text-slate-400 tracking-[0.2em] uppercase mt-1">Academic Suite v12</span>
+                <span class="text-lg font-extrabold text-[var(--text-main)] tracking-tight leading-none uppercase">DLPK</span>
             </div>
         </div>
         
         <div class="px-6">
-            <div class="h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+            <div class="h-[1px] bg-[var(--border)]"></div>
         </div>
 
         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            <p class="px-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">Main Menu</p>
+            <p class="px-4 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Main Menu</p>
             <button onclick="switchPage('dashboard')" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="dashboard">
                 <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
             </button>
@@ -400,7 +426,7 @@
             </button>
             
             <div class="pt-4 pb-1">
-                <p class="px-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">System</p>
+                <p class="px-4 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">System</p>
             </div>
             
             <button onclick="switchPage('print')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="print">
@@ -412,16 +438,16 @@
         </nav>
 
         <div class="p-4">
-            <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex items-center gap-3">
+            <div class="bg-[#F8FAFC] border border-[var(--border)] p-3 rounded-xl flex items-center gap-3">
                 <div class="relative">
-                    <div class="w-8 h-8 bg-[var(--primary-light)] rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xs">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xs shadow-sm">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
-                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--accent)] border-2 border-white rounded-full"></div>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--primary)] border-2 border-white rounded-full"></div>
                 </div>
                 <div class="flex flex-col min-w-0">
-                    <span class="text-[10px] font-bold text-slate-900 truncate uppercase" id="side-guru-nama">...</span>
-                    <span class="text-[8px] font-bold text-[var(--primary)] uppercase tracking-wider">Admin</span>
+                    <span class="text-[10px] font-bold text-[var(--text-main)] truncate uppercase" id="side-guru-nama">...</span>
+                    <span class="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Admin</span>
                 </div>
             </div>
         </div>
@@ -430,25 +456,25 @@
     <main class="flex-1 flex flex-col overflow-hidden bg-[var(--background)]">
         <header class="h-20 header-glass flex items-center px-4 md:px-10 justify-between sticky top-0 z-20 shadow-sm">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="p-2 bg-slate-100/80 hover:bg-slate-200 rounded-lg md:hidden text-slate-700 transition-all active:scale-95">
+                <button onclick="toggleSidebar()" class="p-2 bg-white hover:bg-slate-50 rounded-lg md:hidden text-[var(--text-main)] border border-[var(--border)] transition-all active:scale-95">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
                 <div class="flex flex-col">
                     <h2 id="page-title" class="text-[10px] font-black text-[var(--primary)] uppercase tracking-[0.3em] mb-0.5 mt-1 md:mt-0">DASHBOARD</h2>
-                    <div class="flex items-center gap-2 text-slate-400">
+                    <div class="flex items-center gap-2 text-[var(--text-muted)]">
                         <i data-lucide="home" class="w-3 h-3 hidden sm:block"></i>
-                        <span id="breadcrumb-active" class="text-[9px] font-bold text-slate-800 uppercase tracking-widest">Overview</span>
+                        <span id="breadcrumb-active" class="text-[9px] font-bold text-[var(--text-main)] uppercase tracking-widest">Overview</span>
                     </div>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
                 <div class="hidden lg:flex flex-col text-right">
-                    <span id="header-identity-sch" class="text-[10px] font-extrabold text-slate-900 uppercase tracking-tight italic">...</span>
-                    <span id="header-identity-guru" class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.1em] mt-0.5">...</span>
+                    <span id="header-identity-sch" class="text-[10px] font-extrabold text-[var(--text-main)] uppercase tracking-tight italic">...</span>
+                    <span id="header-identity-guru" class="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-[0.1em] mt-0.5">...</span>
                 </div>
-                <div class="h-8 w-[1px] bg-slate-200/60 hidden sm:block"></div>
-                <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-lg transition-all">
+                <div class="h-8 w-[1px] bg-[var(--border)] hidden sm:block"></div>
+                <div class="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white shadow-lg transition-all">
                     <i data-lucide="user-check" class="w-5 h-5"></i>
                 </div>
             </div>
@@ -457,17 +483,17 @@
         <div class="flex-1 overflow-auto p-4 md:p-8" id="main-scroll-area">
             
             <div id="page-dashboard" class="space-y-8 page-transition">
-                <!-- Welcome Section -->
-                <div class="relative overflow-hidden bg-[var(--primary)] p-8 md:p-14 rounded-[2.5rem] shadow-2xl shadow-slate-900/10 border border-slate-800 text-center md:text-left group">
+                <!-- Welcome Section - Hero with Ice Blue Gradient -->
+                <div class="relative overflow-hidden bg-[var(--background-hero)] p-8 md:p-14 rounded-[2.5rem] shadow-sm border border-[var(--border)] text-center md:text-left group">
                     <!-- Decorative Elements -->
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-700"></div>
-                    <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-[var(--accent)]/5 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-700"></div>
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-white/40 rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
+                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-[var(--primary)]/5 rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
                     
                     <div class="relative z-10">
-                        <h1 id="dash-welcome" class="text-3xl md:text-5xl font-black tracking-tight leading-tight text-white">
-                            Selamat Datang, <span class="text-[var(--accent)]">...</span>
+                        <h1 id="dash-welcome" class="text-3xl md:text-5xl font-black tracking-tight leading-tight text-[var(--text-main)]">
+                            Selamat Datang, <span class="text-[var(--primary)]">...</span>
                         </h1>
-                        <p class="text-blue-100/60 mt-4 text-sm md:text-base font-medium max-w-2xl">
+                        <p class="text-[var(--text-muted)] mt-4 text-sm md:text-base font-medium max-w-2xl">
                             Sistem Informasi Administrasi Kelas Digital (DLPK) v12. Kelola data akademik Anda dengan lebih efisien dan profesional.
                         </p>
                     </div>
@@ -476,29 +502,29 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Teacher Identity -->
                     <div class="glass-card p-8 space-y-6">
-                        <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-sm"><i data-lucide="user" class="w-6 h-6"></i></div>
-                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Identitas Guru</h3>
+                        <div class="flex items-center gap-4 pb-4 border-b border-[var(--border)]">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-sm border border-[var(--border)]"><i data-lucide="user" class="w-6 h-6"></i></div>
+                            <h3 class="text-sm font-black text-[var(--text-main)] uppercase tracking-widest">Identitas Guru</h3>
                         </div>
                         <div class="space-y-4">
-                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nama Lengkap</span><span id="dash-guru-nama" class="text-xs font-bold text-slate-700">...</span></div>
-                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">NIP / ID</span><span id="dash-guru-nip" class="text-xs font-bold text-slate-700">...</span></div>
-                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Jabatan</span><span id="dash-guru-kelas" class="text-xs font-bold text-[var(--primary)] uppercase">...</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Nama Lengkap</span><span id="dash-guru-nama" class="text-xs font-bold text-[var(--text-main)]">...</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">NIP / ID</span><span id="dash-guru-nip" class="text-xs font-bold text-[var(--text-main)] font-mono">...</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Jabatan</span><span id="dash-guru-kelas" class="text-xs font-bold text-[var(--primary)] uppercase">...</span></div>
                         </div>
                     </div>
 
                     <!-- School Identity -->
                     <div class="glass-card p-8 space-y-6">
-                        <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-sm"><i data-lucide="school" class="w-6 h-6"></i></div>
-                            <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Identitas Sekolah</h3>
+                        <div class="flex items-center gap-4 pb-4 border-b border-[var(--border)]">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-sm border border-[var(--border)]"><i data-lucide="school" class="w-6 h-6"></i></div>
+                            <h3 class="text-sm font-black text-[var(--text-main)] uppercase tracking-widest">Identitas Sekolah</h3>
                         </div>
                         <div class="space-y-4">
-                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nama Sekolah</span><span id="dash-sch-nama" class="text-xs font-bold text-slate-700">...</span></div>
-                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">NPSN</span><span id="dash-sch-npsn" class="text-xs font-bold text-slate-700 font-mono">...</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Nama Sekolah</span><span id="dash-sch-nama" class="text-xs font-bold text-[var(--text-main)]">...</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">NPSN</span><span id="dash-sch-npsn" class="text-xs font-bold text-[var(--text-main)] font-mono">...</span></div>
                             <div class="flex justify-between items-start gap-4">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">Alamat</span>
-                                <span id="dash-sch-alamat" class="text-xs font-bold text-slate-500 text-right leading-relaxed italic">...</span>
+                                <span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest shrink-0">Alamat</span>
+                                <span id="dash-sch-alamat" class="text-xs font-bold text-[var(--text-main)] text-right leading-relaxed italic">...</span>
                             </div>
                         </div>
                     </div>
@@ -506,22 +532,22 @@
             </div>
 
             <div id="page-students" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-inner">
+                        <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-inner border border-[var(--border)]">
                             <i data-lucide="users" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Database Siswa</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Manajemen Data Induk & Registrasi</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Database Siswa</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Manajemen Data Induk & Registrasi</p>
                         </div>
                     </div>
-                    <button onclick="bukaModalSiswa()" class="w-full md:w-auto bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-orange-200 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3">
+                    <button onclick="bukaModalSiswa()" class="w-full md:w-auto btn-primary flex items-center justify-center gap-3">
                         <i data-lucide="user-plus" class="w-5 h-5"></i> Registrasi Siswa
                     </button>
                 </div>
 
-                <div class="glass-card overflow-hidden border-slate-100">
+                <div class="glass-card overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="modern-table w-full text-left" id="table-students">
                             <thead>
@@ -537,61 +563,61 @@
                                     <th class="text-center">Opsi</th>
                                 </tr>
                             </thead>
-                            <tbody id="student-list" class="divide-y divide-slate-50"></tbody>
+                            <tbody id="student-list"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
             <div id="page-journal" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)]">
+                        <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="book-open" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Jurnal Harian</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Laporan Kegiatan Belajar Mengajar</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Jurnal Harian</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Laporan Kegiatan Belajar Mengajar</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
-                        <button onclick="prevJournal()" class="p-3 bg-white text-slate-600 rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm border border-slate-200 active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-[var(--border)] shadow-sm">
+                        <button onclick="prevJournal()" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                         <span id="journal-date-label" class="font-black text-xs uppercase tracking-widest text-[var(--primary)] px-6 min-w-[220px] text-center">TANGGAL</span>
-                        <button onclick="nextJournal()" class="p-3 bg-white text-slate-600 rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm border border-slate-200 active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="nextJournal()" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div class="lg:col-span-4">
-                        <div class="glass-card p-8 border-slate-200 sticky top-28">
-                            <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
-                                <div class="w-8 h-8 rounded-lg bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)]"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
-                                <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest">Input Jurnal Baru</h4>
+                        <div class="glass-card p-8 border-[var(--border)] sticky top-28">
+                            <div class="flex items-center gap-3 mb-8 pb-4 border-b border-[var(--border)]">
+                                <div class="w-8 h-8 rounded-lg bg-[#F8FAFC] flex items-center justify-center text-[var(--primary)] border border-[var(--border)]"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
+                                <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest">Input Jurnal Baru</h4>
                             </div>
                             <div class="space-y-6">
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Mata Pelajaran</label>
-                                    <select id="jrn-mapel" class="modern-input font-bold text-slate-700"></select>
+                                    <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Mata Pelajaran</label>
+                                    <select id="jrn-mapel" class="modern-input font-bold text-[var(--text-main)]"></select>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Capaian Pembelajaran (CP)</label>
-                                    <textarea id="jrn-cp" rows="4" class="modern-input font-medium text-slate-700 text-sm" placeholder="Deskripsikan CP..."></textarea>
+                                    <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Capaian Pembelajaran (CP)</label>
+                                    <textarea id="jrn-cp" rows="4" class="modern-input font-medium text-[var(--text-main)] text-sm" placeholder="Deskripsikan CP..."></textarea>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Materi Pokok</label>
-                                    <textarea id="jrn-materi" rows="4" class="modern-input font-medium text-slate-700 text-sm" placeholder="Tuliskan materi..."></textarea>
+                                    <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Materi Pokok</label>
+                                    <textarea id="jrn-materi" rows="4" class="modern-input font-medium text-[var(--text-main)] text-sm" placeholder="Tuliskan materi..."></textarea>
                                 </div>
                                 <input type="hidden" id="jrn-edit-id">
                                 <button onclick="saveJournalEntry()" id="btn-save-jrn" class="w-full btn-primary py-4 text-xs">Simpan Jurnal</button>
-                                <button onclick="cancelEditJournal()" id="btn-cancel-jrn" class="hidden w-full bg-slate-100 text-slate-600 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest mt-3 transition-all">Batal Edit</button>
+                                <button onclick="cancelEditJournal()" id="btn-cancel-jrn" class="hidden w-full bg-slate-50 text-[var(--text-muted)] py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest mt-3 transition-all border border-[var(--border)]">Batal Edit</button>
                             </div>
                         </div>
                     </div>
                     <div class="lg:col-span-8">
-                        <div class="glass-card overflow-hidden border-slate-100 shadow-xl shadow-slate-200/20">
-                            <div class="px-8 py-5 bg-slate-900 text-white font-black text-[11px] uppercase tracking-[0.2em] flex justify-between items-center">
+                        <div class="glass-card overflow-hidden">
+                            <div class="px-8 py-5 bg-[#F8FAFC] text-[var(--text-main)] font-black text-[11px] uppercase tracking-[0.2em] flex justify-between items-center border-b border-[var(--border)]">
                                 <span>Daftar Mengajar Hari Ini</span>
-                                <i data-lucide="list-checks" class="w-5 h-5 text-[var(--accent)]"></i>
+                                <i data-lucide="list-checks" class="w-5 h-5 text-[var(--primary)]"></i>
                             </div>
                             <div class="overflow-x-auto">
                                 <table class="modern-table w-full">
@@ -603,7 +629,7 @@
                                             <th class="text-center w-24">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="journal-day-list" class="divide-y divide-slate-100"></tbody>
+                                    <tbody id="journal-day-list"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -612,45 +638,45 @@
             </div>
 
             <div id="page-attendance" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)]">
+                        <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="calendar-check" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Presensi Digital</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Pencatatan Kehadiran Siswa Real-time</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Presensi Digital</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Pencatatan Kehadiran Siswa Real-time</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
-                        <button onclick="changeMonth(-1)" class="p-3 bg-white text-slate-600 rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm border border-slate-200 active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-[var(--border)] shadow-sm">
+                        <button onclick="changeMonth(-1)" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                         <span id="month-label" class="font-black text-xs uppercase tracking-widest text-[var(--primary)] px-6 min-w-[220px] text-center">BULAN</span>
-                        <button onclick="changeMonth(1)" class="p-3 bg-white text-slate-600 rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm border border-slate-200 active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="changeMonth(1)" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                     </div>
                 </div>
                 
-                <div class="glass-card p-8 bg-slate-50/50 border-slate-200/60 shadow-inner">
+                <div class="glass-card p-8 bg-white/50 border-[var(--border)]">
                     <div class="flex flex-col lg:flex-row items-end gap-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 w-full">
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1 block">Lompat ke Tanggal</label>
-                                <input type="date" id="quick-date" onchange="updateQuickDay()" class="modern-input font-bold text-slate-700">
+                                <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest pl-1 block">Lompat ke Tanggal</label>
+                                <input type="date" id="quick-date" onchange="updateQuickDay()" class="modern-input font-bold text-[var(--text-main)]">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1 block">Status Hari</label>
-                                <div class="bg-slate-900 text-white h-[52px] rounded-xl flex items-center justify-center font-black text-xs tracking-[0.2em] uppercase shadow-lg shadow-slate-200" id="quick-day-name">PILIH TANGGAL</div>
+                                <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest pl-1 block">Status Hari</label>
+                                <div class="bg-[var(--primary)] text-white min-h-[46px] rounded-xl flex items-center justify-center text-center px-4 font-black text-xs tracking-[0.1em] uppercase shadow-lg shadow-[#00CEC9]/10" id="quick-day-name">PILIH TANGGAL</div>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black text-rose-500 uppercase tracking-widest pl-1 block">Keterangan Libur (Opsional)</label>
-                                <input type="text" id="quick-ket-libur" placeholder="Contoh: Libur Nasional" class="modern-input border-rose-100 focus:border-rose-500 focus:ring-rose-500/10 text-rose-700 font-bold">
+                                <input type="text" id="quick-ket-libur" placeholder="Contoh: Libur Nasional" class="modern-input border-rose-100 focus:border-rose-500 text-rose-600 font-bold bg-rose-50/30">
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-3 w-full lg:w-auto">
                             <button onclick="jumpToDate()" class="btn-primary flex-1 lg:flex-none py-4 px-8">Terapkan</button>
-                            <button onclick="deleteAttendanceDay()" class="bg-white border-2 border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white p-3.5 rounded-xl transition-all active:scale-90 shadow-sm" title="Hapus Data Tanggal"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-                            <div class="w-[1px] h-12 bg-slate-200 hidden lg:block mx-2"></div>
-                            <button onclick="bulkAbsen('H')" class="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-orange-200 transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Hadir Semua</button>
-                            <button onclick="bulkAbsen('L')" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-200 transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> Setel Libur</button>
+                            <button onclick="deleteAttendanceDay()" class="bg-white border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white p-3.5 rounded-xl transition-all active:scale-90 shadow-sm" title="Hapus Data Tanggal"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                            <div class="w-[1px] h-12 bg-[var(--border)] hidden lg:block mx-2"></div>
+                            <button onclick="bulkAbsen('H')" class="bg-[#F8FAFC] border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Hadir Semua</button>
+                            <button onclick="bulkAbsen('L')" class="bg-[#F8FAFC] border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> Setel Libur</button>
                         </div>
                     </div>
                 </div>
@@ -677,14 +703,14 @@
             </div>
 
             <div id="page-grades" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)]">
+                        <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="award" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Rekapitulasi Nilai</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Manajemen Hasil Belajar & E-Rapor</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Rekapitulasi Nilai</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Manajemen Hasil Belajar & E-Rapor</p>
                         </div>
                     </div>
                 </div>
@@ -692,14 +718,14 @@
             </div>
 
             <div id="page-print" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[var(--primary)] rounded-2xl flex items-center justify-center text-white shadow-lg">
                             <i data-lucide="printer" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Pusat Cetak Dokumen</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Ekspor Data Akademik & Rapor Digital</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Pusat Cetak Dokumen</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Ekspor Data Akademik & Rapor Digital</p>
                         </div>
                     </div>
                 </div>
@@ -708,23 +734,23 @@
                     <!-- Master Data -->
                     <div class="glass-card p-6 border-t-4 border-[var(--primary)] flex flex-col group">
                         <div class="mb-6">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="users" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest mb-2">1. Database Siswa</h4>
-                            <p class="text-[10px] font-medium text-slate-400 leading-relaxed uppercase tracking-wider">Seluruh data induk siswa format PDF resmi.</p>
+                            <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest mb-2">1. Database Siswa</h4>
+                            <p class="text-[10px] font-medium text-[var(--text-muted)] leading-relaxed uppercase tracking-wider">Seluruh data induk siswa format PDF resmi.</p>
                         </div>
-                        <button onclick="downloadStudentPDF()" class="mt-auto btn-primary py-3.5 bg-[var(--primary)] hover:bg-[var(--primary)] shadow-none">Cetak Master Data</button>
+                        <button onclick="downloadStudentPDF()" class="mt-auto btn-primary py-3.5 shadow-none">Cetak Master Data</button>
                     </div>
 
                     <!-- Absensi -->
                     <div class="glass-card p-6 border-t-4 border-[var(--primary)] flex flex-col group">
                         <div class="mb-4">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="calendar-check" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-[var(--primary)] uppercase tracking-widest mb-3">2. Laporan Presensi</h4>
-                            <select id="print-month-absen" class="modern-input py-2 text-xs font-bold text-slate-700"></select>
+                            <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest mb-3">2. Laporan Presensi</h4>
+                            <select id="print-month-absen" class="modern-input py-2 text-xs font-bold text-[var(--text-main)]"></select>
                         </div>
                         <button onclick="downloadAbsenPDFByMonth()" class="mt-auto btn-primary py-3.5">Cetak Presensi</button>
                     </div>
@@ -732,51 +758,51 @@
                     <!-- Jurnal -->
                     <div class="glass-card p-6 border-t-4 border-[var(--primary)] flex flex-col group">
                         <div class="mb-4">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--primary)] mb-4 group-hover:bg-[var(--primary)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="book-open" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-[var(--primary)] uppercase tracking-widest mb-3">3. Jurnal Harian</h4>
-                            <select id="print-month-jurnal" class="modern-input py-2 text-xs font-bold text-slate-700"></select>
+                            <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest mb-3">3. Jurnal Harian</h4>
+                            <select id="print-month-jurnal" class="modern-input py-2 text-xs font-bold text-[var(--text-main)]"></select>
                         </div>
-                        <button onclick="downloadJournalPDFByMonth()" class="mt-auto btn-primary py-3.5 bg-[var(--primary)] hover:bg-[var(--primary)]">Cetak Jurnal</button>
+                        <button onclick="downloadJournalPDFByMonth()" class="mt-auto btn-primary py-3.5">Cetak Jurnal</button>
                     </div>
 
                     <!-- Nilai -->
-                    <div class="glass-card p-6 border-t-4 border-[var(--accent)] flex flex-col group">
+                    <div class="glass-card p-6 border-t-4 border-[var(--mustard)] flex flex-col group">
                         <div class="mb-4">
-                            <div class="w-12 h-12 bg-[var(--primary-light)] rounded-xl flex items-center justify-center text-[var(--accent)] mb-4 group-hover:bg-[var(--accent)] group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--mustard)] mb-4 group-hover:bg-[var(--mustard)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="award" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-[var(--accent)] uppercase tracking-widest mb-3">4. Rekapitulasi Nilai</h4>
-                            <select id="print-mapel-select" class="modern-input py-2 text-xs font-bold text-slate-700"></select>
+                            <h4 class="text-xs font-black text-[var(--mustard)] uppercase tracking-widest mb-3">4. Rekapitulasi Nilai</h4>
+                            <select id="print-mapel-select" class="modern-input py-2 text-xs font-bold text-[var(--text-main)]"></select>
                         </div>
-                        <button onclick="downloadSingleGradePDF()" class="mt-auto btn-primary py-3.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)]">Cetak Nilai</button>
+                        <button onclick="downloadSingleGradePDF()" class="mt-auto bg-[var(--mustard)] text-white py-3.5 rounded-xl font-extrabold text-[10px] uppercase tracking-widest shadow-sm hover:brightness-110 transition-all border-none">Cetak Nilai</button>
                     </div>
 
                     <!-- Rapor PTS -->
-                    <div class="glass-card p-6 border-t-4 border-rose-600 flex flex-col group">
+                    <div class="glass-card p-6 border-t-4 border-[var(--orange)] flex flex-col group">
                         <div class="mb-4">
-                            <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 group-hover:bg-rose-600 group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--orange)] mb-4 group-hover:bg-[var(--orange)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="file-text" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-rose-800 uppercase tracking-widest mb-3">5. Rapor PTS</h4>
-                            <select id="print-pts-siswa" class="modern-input py-2 text-xs font-bold text-slate-700"></select>
+                            <h4 class="text-xs font-black text-[var(--orange)] uppercase tracking-widest mb-3">5. Rapor PTS</h4>
+                            <select id="print-pts-siswa" class="modern-input py-2 text-xs font-bold text-[var(--text-main)]"></select>
                         </div>
-                        <button onclick="cetakRapor('pts')" class="mt-auto btn-primary py-3.5 bg-rose-600 hover:bg-rose-700 flex items-center justify-center gap-2">
+                        <button onclick="cetakRapor('pts')" class="mt-auto bg-[var(--orange)] text-white py-3.5 rounded-xl font-extrabold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:brightness-110 transition-all border-none">
                             <i data-lucide="printer" class="w-4 h-4"></i> Rapor PTS
                         </button>
                     </div>
 
                     <!-- Rapor PAS -->
-                    <div class="glass-card p-6 border-t-4 border-violet-600 flex flex-col group">
+                    <div class="glass-card p-6 border-t-4 border-[var(--green)] flex flex-col group">
                         <div class="mb-4">
-                            <div class="w-12 h-12 bg-violet-50 rounded-xl flex items-center justify-center text-violet-600 mb-4 group-hover:bg-violet-600 group-hover:text-white transition-all">
+                            <div class="w-12 h-12 bg-[#F8FAFC] rounded-xl flex items-center justify-center text-[var(--green)] mb-4 group-hover:bg-[var(--green)] group-hover:text-white transition-all border border-[var(--border)]">
                                 <i data-lucide="book-open-check" class="w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-black text-violet-800 uppercase tracking-widest mb-3">6. Rapor PAS</h4>
-                            <select id="print-pas-siswa" class="modern-input py-2 text-xs font-bold text-slate-700"></select>
+                            <h4 class="text-xs font-black text-[var(--green)] uppercase tracking-widest mb-3">6. Rapor PAS</h4>
+                            <select id="print-pas-siswa" class="modern-input py-2 text-xs font-bold text-[var(--text-main)]"></select>
                         </div>
-                        <button onclick="cetakRapor('pas')" class="mt-auto btn-primary py-3.5 bg-violet-600 hover:bg-violet-700 flex items-center justify-center gap-2">
+                        <button onclick="cetakRapor('pas')" class="mt-auto bg-[var(--green)] text-white py-3.5 rounded-xl font-extrabold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:brightness-110 transition-all border-none">
                             <i data-lucide="printer" class="w-4 h-4"></i> Rapor PAS
                         </button>
                     </div>
@@ -784,14 +810,14 @@
             </div>
 
             <div id="page-settings" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-[var(--primary-light)] rounded-2xl flex items-center justify-center text-[var(--primary)]">
+                        <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="settings" class="w-7 h-7"></i>
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Pengaturan Sistem</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Konfigurasi Identitas & Database</p>
+                            <h3 class="text-2xl font-black text-[var(--text-main)] tracking-tight">Pengaturan Sistem</h3>
+                            <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Konfigurasi Identitas & Database</p>
                         </div>
                     </div>
                     <button onclick="saveSettings()" class="w-full md:w-auto btn-primary py-4 px-10 flex items-center justify-center gap-3">
@@ -801,30 +827,30 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="glass-card p-8 space-y-8">
-                        <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
-                            <div class="w-10 h-10 rounded-xl bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)]"><i data-lucide="user" class="w-5 h-5"></i></div>
-                            <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest">Identitas Pendidik</h4>
+                        <div class="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
+                            <div class="w-10 h-10 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[var(--primary)] border border-[var(--border)]"><i data-lucide="user" class="w-5 h-5"></i></div>
+                            <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest">Identitas Pendidik</h4>
                         </div>
                         <div class="space-y-6">
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Nama Lengkap & Gelar</label><input type="text" id="set-guru-nama" class="modern-input font-bold text-slate-700"></div>
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">NIP / ID Pegawai</label><input type="text" id="set-guru-nip" class="modern-input font-bold text-slate-700"></div>
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Jabatan / Wali Kelas</label><input type="text" id="set-guru-kelas" class="modern-input font-bold text-slate-700"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Nama Lengkap & Gelar</label><input type="text" id="set-guru-nama" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">NIP / ID Pegawai</label><input type="text" id="set-guru-nip" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Jabatan / Wali Kelas</label><input type="text" id="set-guru-kelas" class="modern-input font-bold text-[var(--text-main)]"></div>
                         </div>
                     </div>
 
                     <div class="glass-card p-8 space-y-8">
-                        <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
-                            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-900"><i data-lucide="school" class="w-5 h-5"></i></div>
-                            <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest">Identitas Satuan Pendidikan</h4>
+                        <div class="flex items-center gap-3 pb-4 border-b border-[var(--border)]">
+                            <div class="w-10 h-10 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[var(--text-main)] border border-[var(--border)]"><i data-lucide="school" class="w-5 h-5"></i></div>
+                            <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest">Identitas Satuan Pendidikan</h4>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Nama Sekolah</label><input type="text" id="set-sch-nama" class="modern-input font-bold text-slate-700"></div>
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">NPSN</label><input type="text" id="set-sch-npsn" class="modern-input font-bold text-slate-700"></div>
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Tahun Ajaran</label><input type="text" id="set-sch-tahun" placeholder="2025/2026" class="modern-input font-bold text-slate-700"></div>
-                            <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Nama Kepala Sekolah</label><input type="text" id="set-sch-ks-nama" class="modern-input font-bold text-slate-700"></div>
-                            <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">NIP Kepala Sekolah</label><input type="text" id="set-sch-ks-nip" class="modern-input font-bold text-slate-700"></div>
-                            <div><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Kota Penerbitan</label><input type="text" id="set-sch-tempat" class="modern-input font-bold text-slate-700"></div>
-                            <div class="md:col-span-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Alamat Resmi</label><textarea id="set-sch-alamat" class="modern-input font-medium text-slate-700 text-sm" rows="3"></textarea></div>
+                            <div class="md:col-span-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Nama Sekolah</label><input type="text" id="set-sch-nama" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">NPSN</label><input type="text" id="set-sch-npsn" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Tahun Ajaran</label><input type="text" id="set-sch-tahun" placeholder="2025/2026" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div class="md:col-span-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Nama Kepala Sekolah</label><input type="text" id="set-sch-ks-nama" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div class="md:col-span-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">NIP Kepala Sekolah</label><input type="text" id="set-sch-ks-nip" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Kota Penerbitan</label><input type="text" id="set-sch-tempat" class="modern-input font-bold text-[var(--text-main)]"></div>
+                            <div class="md:col-span-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Alamat Resmi</label><textarea id="set-sch-alamat" class="modern-input font-medium text-[var(--text-main)] text-sm" rows="3"></textarea></div>
                         </div>
                     </div>
                 </div>
@@ -832,47 +858,47 @@
         </div>
     </main>
 
-    <div id="m-siswa" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-center justify-center p-4 backdrop-blur-xl">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-10 space-y-8 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] border border-white/20 transform transition-all">
-            <div class="border-b border-slate-100 pb-6 flex justify-between items-start">
+    <div id="m-siswa" class="hidden fixed inset-0 bg-slate-900/40 z-[60] flex items-center justify-center p-4 backdrop-blur-xl">
+        <div class="bg-[var(--surface)] rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-10 space-y-8 shadow-2xl border border-[var(--border)] transform transition-all relative">
+            <div class="border-b border-[var(--border)] pb-6 flex justify-between items-start">
                 <div>
-                    <h3 class="font-black text-2xl tracking-tight text-slate-900" id="m-siswa-title">Registrasi Siswa Baru</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Formulir Data Induk Kependidikan</p>
+                    <h3 class="font-black text-2xl tracking-tight text-[var(--text-main)]" id="m-siswa-title">Registrasi Siswa Baru</h3>
+                    <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Formulir Data Induk Kependidikan</p>
                 </div>
-                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                    <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
+                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="p-2 hover:bg-[#F8FAFC] rounded-full transition-colors text-[var(--text-muted)]">
+                    <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <input type="hidden" id="in-id" value="">
             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">No. Urut</label><input type="text" id="in-no" placeholder="01" class="modern-input font-bold text-center"></div>
-                <div class="col-span-1 md:col-span-3 space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Lengkap Siswa</label><input type="text" id="in-nama" placeholder="Contoh: Ahmad Fauzi" class="modern-input font-bold"></div>
+                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">No. Urut</label><input type="text" id="in-no" placeholder="01" class="modern-input font-bold text-center"></div>
+                <div class="col-span-1 md:col-span-3 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nama Lengkap Siswa</label><input type="text" id="in-nama" placeholder="Contoh: Ahmad Fauzi" class="modern-input font-bold"></div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">NISN (Nasional)</label><input type="text" id="in-nisn" placeholder="00123..." class="modern-input font-bold"></div>
-                <div class="space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nomor Induk (NI) Lokal</label><input type="text" id="in-ni" placeholder="2024..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">NISN (Nasional)</label><input type="text" id="in-nisn" placeholder="00123..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nomor Induk (NI) Lokal</label><input type="text" id="in-ni" placeholder="2024..." class="modern-input font-bold"></div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Tempat Lahir</label><input type="text" id="in-tempat-lahir" placeholder="Jakarta" class="modern-input font-bold"></div>
-                <div class="space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Tanggal Lahir</label><input type="date" id="in-tanggal-lahir" class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Tempat Lahir</label><input type="text" id="in-tempat-lahir" placeholder="Jakarta" class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Tanggal Lahir</label><input type="date" id="in-tanggal-lahir" class="modern-input font-bold"></div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Agama</label><select id="in-agama" class="modern-input font-bold"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Budha">Budha</option></select></div>
-                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Ayah</label><input type="text" id="in-ayah" placeholder="Nama ayah..." class="modern-input font-bold"></div>
-                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nama Ibu</label><input type="text" id="in-ibu" placeholder="Nama ibu..." class="modern-input font-bold"></div>
+                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Agama</label><select id="in-agama" class="modern-input font-bold"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Budha">Budha</option></select></div>
+                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nama Ayah</label><input type="text" id="in-ayah" placeholder="Nama ayah..." class="modern-input font-bold"></div>
+                <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nama Ibu</label><input type="text" id="in-ibu" placeholder="Nama ibu..." class="modern-input font-bold"></div>
             </div>
             
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Alamat Lengkap</label>
+                <label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Alamat Lengkap</label>
                 <textarea id="in-alamat" placeholder="Jl. Raya No. 123..." class="modern-input font-medium text-sm" rows="3"></textarea>
             </div>
             
             <div class="flex gap-4 pt-6">
-                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-4 bg-slate-100 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-200 hover:text-slate-800 transition-all">Batal</button>
+                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-4 bg-slate-50 rounded-2xl text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all border border-[var(--border)]">Batal</button>
                 <button onclick="saveSiswa()" class="flex-[2] py-4 btn-primary text-xs flex items-center justify-center gap-3">
                     <i data-lucide="save" class="w-5 h-5"></i> Simpan Ke Database
                 </button>
@@ -965,12 +991,26 @@
         subjects.forEach(s => gradeConfigs[s] = { ph: ['PH 1'] });
 
         window.onload = () => {
+            const statusText = document.getElementById('loading-status');
+            const steps = ["Menghubungkan Database", "Memuat Data Siswa", "Sinkronisasi Presensi", "Menyiapkan Dashboard"];
+            let step = 0;
+            const statusInterval = setInterval(() => {
+                if (step < steps.length) {
+                    statusText.innerText = steps[step];
+                    step++;
+                } else {
+                    clearInterval(statusInterval);
+                }
+            }, 500);
+
             loadFirebaseData();
             setTimeout(() => { 
                 const screen = document.getElementById('opening-screen');
+                screen.style.transition = 'all 0.8s cubic-bezier(0.65, 0, 0.35, 1)';
                 screen.style.opacity = '0';
-                setTimeout(() => screen.style.display = 'none', 600);
-            }, 1800);
+                screen.style.transform = 'scale(1.1)';
+                setTimeout(() => screen.style.display = 'none', 800);
+            }, 2500);
             switchPage('dashboard');
         };
 
@@ -1374,7 +1414,8 @@
             document.getElementById('month-label').innerText = new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(currentMonth);
             
             let head = `<tr class="border-b">
-                <th rowspan="2" class="px-6 py-4 sticky left-0 bg-slate-50/95 backdrop-blur-md z-20 text-[10px] font-black uppercase text-slate-500 border-r border-slate-200 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px;">NAMA SISWA</th>
+                <th rowspan="2" class="px-2 py-4 sticky left-0 bg-white z-20 text-[10px] font-black uppercase text-slate-500 border-r border-slate-200" style="width: 50px; min-width: 50px;">NO</th>
+                <th rowspan="2" class="px-6 py-4 sticky left-[50px] bg-white z-20 text-[10px] font-black uppercase text-slate-500 border-r border-slate-200 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px;">NAMA SISWA</th>
                 <th colspan="${lastDay}" class="text-center py-2 bg-slate-900 text-white text-[9px] font-black tracking-[.2em] uppercase border-b border-slate-700">${monthName} ${y}</th>
                 <th colspan="4" class="text-center py-2 bg-[var(--primary)] text-white text-[9px] font-black tracking-[.2em] uppercase border-b border-slate-700">REKAPITULASI</th>
             </tr>`;
@@ -1436,7 +1477,11 @@
                 cells += `<td class="text-center font-black text-[var(--primary)] bg-[var(--primary-light)] border-l border-slate-100 text-[10px]">${rekap.I || '-'}</td>`;
                 cells += `<td class="text-center font-black text-rose-700 bg-[var(--primary-light)] border-l border-slate-100 text-[10px]">${rekap.A || '-'}</td>`;
 
-                return `<tr><td class="px-6 py-2 font-black sticky left-0 bg-white border-r border-slate-200 text-[10px] uppercase text-slate-800 z-10 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.name}</td>${cells}</tr>`;
+                return `<tr>
+                    <td class="px-2 py-2 font-black sticky left-0 bg-white border-r border-slate-200 text-[10px] text-center text-slate-800 z-10" style="width: 50px; min-width: 50px;">${s.no || (sIdx + 1)}</td>
+                    <td class="px-6 py-2 font-black sticky left-[50px] bg-white border-r border-slate-200 text-[10px] uppercase text-slate-800 z-10 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.name}</td>
+                    ${cells}
+                </tr>`;
             }).join('');
         }
 
@@ -1465,9 +1510,9 @@
                     let na = calculateNA(s_grades, cfg.ph);
                     return `<tr class="border-b border-slate-100 hover:bg-[var(--primary-light)] transition-colors">
                         <td class="px-6 py-3 font-extrabold text-[11px] uppercase text-slate-800 tracking-tighter">${s.name}</td>
-                        ${cfg.ph.map((p, i)=>`<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'ph${i}', this.value)" class="w-10 h-8 border border-slate-200 rounded-lg text-center text-[10px] font-bold text-slate-700 outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['ph'+i]||0}"></td>`).join('')}
-                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pts', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-[var(--primary)] bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pts']||0}"></td>
-                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pas', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-[var(--primary)] bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pas']||0}"></td>
+                        ${cfg.ph.map((p, i)=>`<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'ph${i}', this.value)" class="w-10 h-8 border border-slate-200 rounded-lg text-center text-[10px] font-bold text-black outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['ph'+i]||0}"></td>`).join('')}
+                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pts', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-black bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pts']||0}"></td>
+                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pas', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-black bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pas']||0}"></td>
                         <td class="text-center font-black text-[var(--accent)] text-[11px] bg-[var(--accent)]/5 border-l border-[var(--border)]">${na}</td>
                     </tr>`;
                 }).join('');
