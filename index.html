@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
@@ -24,29 +24,36 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         
         :root {
-            /* Clean Modern Theme - Off-white & Deep Charcoal */
-            --background: #F4F7F9;     /* Off-white */
-            --surface: #FFFFFF;        /* Pure White */
-            --primary: #00CEC9;        /* Teal Cerah */
-            --accent: #00CEC9;         /* Teal Cerah */
-            --text-main: #1A1C20;      /* Deep Charcoal */
-            --text-muted: #4A4A4A;     /* Dark Grey */
-            --border: #E2E8F0;         /* Slate 200 */
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            /* Futuristic Dark Theme */
+            --background: #0B1220;
+            --surface: #0F172A;
+            --surface2: #111827;
+            --primary: #00D4FF;
+            --accent: #3B82F6;
+            --purple: #7C3AED;
+            --magenta: #A855F7;
+            --text-main: #E5E7EB;
+            --text-muted: #9CA3AF;
+            --border: rgba(255,255,255,0.08);
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+            --glow: 0 0 20px rgba(0,212,255,0.25);
+            --glow-lg: 0 0 40px rgba(0,212,255,0.35);
 
             /* Accents for Print Buttons */
-            --mustard: #F39C12;        /* Vibrant Orange-Yellow */
-            --orange: #E67E22;         /* Strong Orange */
-            --green: #27AE60;          /* Deep Emerald Green */
+            --mustard: #F39C12;
+            --orange: #E67E22;
+            --green: #27AE60;
         }
 
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--background); 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--background);
+            background-image: linear-gradient(rgba(0,212,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.02) 1px,transparent 1px);
+            background-size: 60px 60px;
             color: var(--text-main);
             overflow: hidden; 
             -webkit-font-smoothing: antialiased;
@@ -54,57 +61,77 @@
             line-height: 1.5;
         }
 
-        /* Sidebar - Modern & Clean */
+        /* Sidebar - Futuristic Dark */
         #main-sidebar {
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+            background: rgba(11,18,32,0.95);
+            border-right: 1px solid rgba(0,212,255,0.12);
+            box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
         .sidebar-link { 
-            transition: all 0.2s ease; 
-            color: var(--text-muted);
-            border-radius: 10px;
+            transition: all 0.3s ease; 
+            color: #9CA3AF;
+            border-radius: 12px;
             margin-bottom: 2px;
             padding: 0.7rem 1rem;
+            border: 1px solid transparent;
+        }
+        .sidebar-link i, .sidebar-link svg { 
+            color: inherit;
+            stroke: currentColor;
+            width: 1.25rem; 
+            height: 1.25rem;
         }
         .sidebar-link:hover { 
-            background-color: #F1F5F9; 
-            color: var(--text-main);
+            background: rgba(0,212,255,0.08);
+            color: #00D4FF;
+            border-color: rgba(0,212,255,0.2);
         }
         .sidebar-link.active { 
-            background: var(--primary); 
-            color: white; 
-            font-weight: 700; 
-            box-shadow: 0 4px 10px rgba(0, 206, 201, 0.2);
+            background: linear-gradient(135deg,rgba(0,212,255,0.18),rgba(59,130,246,0.12));
+            color: #00D4FF;
+            font-weight: 700;
+            border-color: rgba(0,212,255,0.35);
+            box-shadow: 0 0 20px rgba(0,212,255,0.15), inset 0 0 20px rgba(0,212,255,0.05);
         }
-        .sidebar-link i { width: 1.25rem; height: 1.25rem; }
 
-        /* Modern Content Card - Strict Containment */
+        /* Glass Card - Futuristic */
         .glass-card { 
-            background: var(--surface); 
-            border: 1px solid var(--border); 
-            border-radius: 1rem; 
+            background: rgba(15,23,42,0.7);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem; 
             box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             position: relative;
-            overflow: hidden; /* Strict containment */
+            overflow: hidden;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,rgba(0,212,255,0.03),transparent 60%);
+            pointer-events: none;
+        }
         .glass-card:hover { 
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg), var(--glow);
+            border-color: rgba(0,212,255,0.2);
         }
 
         /* Responsive Tables */
         .modern-table { width: 100%; border-collapse: separate; border-spacing: 0; }
         .modern-table th { 
-            background: #F8FAFC; 
+            background: rgba(0,212,255,0.05);
             font-weight: 700; 
             text-transform: uppercase; 
             font-size: 0.65rem; 
             letter-spacing: 0.05em; 
-            color: var(--text-muted);
+            color: var(--primary);
             padding: 1rem;
             border-bottom: 1px solid var(--border);
             position: sticky;
@@ -113,11 +140,11 @@
         }
         .modern-table td { 
             padding: 1rem; 
-            border-bottom: 1px solid #F1F5F9; 
+            border-bottom: 1px solid var(--border);
             font-size: 0.75rem;
             color: var(--text-main);
         }
-        .modern-table tr:hover td { background-color: #F8FAFC; }
+        .modern-table tr:hover td { background: rgba(0,212,255,0.04); }
 
         /* Attendance Select Styling */
         .absen-select { 
@@ -151,14 +178,21 @@
             text-align: center;
             font-weight: 800;
             font-size: 0.6rem;
-            border-right: 1px solid var(--border);
+            border-right: 1px solid rgba(0,212,255,0.12);
+            padding: 4px 2px;
+            color: #00D4FF;
+            background: rgba(0,212,255,0.05);
+        }
+        .absen-select option {
+            background: #0F172A;
+            color: #E5E7EB;
         }
 
-        /* Opening Screen */
+        /* Opening Screen - Dark Futuristic */
         #opening-screen { 
             position: fixed; 
             inset: 0; 
-            background: radial-gradient(circle at center, #ffffff 0%, #f4f7f9 100%);
+            background: radial-gradient(ellipse at center, #0F172A 0%, #0B1220 100%);
             z-index: 9999; 
             flex-direction: column; 
             align-items: center; 
@@ -170,9 +204,18 @@
             position: absolute;
             width: 200%;
             height: 200%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png');
-            opacity: 0.03;
+            background-image: linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);
+            background-size: 60px 60px;
             animation: moveBg 20s linear infinite;
+        }
+        #opening-screen::after {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
+            top: 50%; left: 50%; transform: translate(-50%,-50%);
+            pointer-events: none;
         }
         @keyframes moveBg {
             from { transform: translate(0, 0); }
@@ -182,11 +225,11 @@
             width: 140px; 
             height: 140px; 
             border-radius: 32px; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); 
+            box-shadow: 0 0 60px rgba(0,212,255,0.3), 0 0 120px rgba(0,212,255,0.1);
             animation: float 4s ease-in-out infinite; 
             margin-bottom: 32px; 
-            border: 4px solid white;
-            background: white;
+            border: 2px solid rgba(0,212,255,0.3);
+            background: rgba(15,23,42,0.8);
             z-index: 10;
         }
         .opening-content {
@@ -203,12 +246,11 @@
         }
         .loading-bar { 
             width: 100%; 
-            height: 6px; 
-            background: rgba(0, 0, 0, 0.03); 
+            height: 3px; 
+            background: rgba(255,255,255,0.06);
             border-radius: 20px; 
             overflow: hidden; 
             position: relative; 
-            border: 1px solid rgba(0, 0, 0, 0.02);
         }
         .loading-bar::after { 
             content: ''; 
@@ -217,20 +259,20 @@
             left: -100%; 
             width: 100%; 
             height: 100%; 
-            background: linear-gradient(90deg, transparent, var(--primary), #00eee9, transparent); 
+            background: linear-gradient(90deg, transparent, var(--primary), #7C3AED, transparent); 
             animation: loadingSweep 2s cubic-bezier(0.65, 0, 0.35, 1) infinite; 
         }
         .loading-text {
             margin-top: 16px;
             font-size: 10px;
-            font-weight: 800;
-            color: var(--text-muted);
+            font-weight: 700;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.4em;
             animation: fadeText 2s ease-in-out infinite;
         }
         .shimmer-text {
-            background: linear-gradient(90deg, var(--text-main) 0%, var(--primary) 50%, var(--text-main) 100%);
+            background: linear-gradient(90deg, #fff 0%, var(--primary) 40%, var(--magenta) 70%, #fff 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -254,16 +296,18 @@
         }
         
         .header-glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
+            background: rgba(11,18,32,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
         }
         
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { 
-            background: #CBD5E1; 
+            background: rgba(0,212,255,0.2);
             border-radius: 10px; 
         }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
@@ -272,37 +316,39 @@
         .modern-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--border);
-            background: white;
+            background: rgba(255,255,255,0.04);
             color: var(--text-main);
-            transition: border-color 0.2s ease;
+            transition: all 0.3s ease;
             font-weight: 500;
         }
         .modern-input:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.1);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1), var(--glow);
+            background: rgba(0,212,255,0.04);
         }
 
-        /* Teal Primary Button */
+        /* Primary Button - Neon Glow */
         .btn-primary {
-            background: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #0B1220;
             padding: 0.7rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 700;
+            border-radius: 12px;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
             font-size: 0.75rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.3);
         }
         .btn-primary:hover {
-            filter: brightness(0.95);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 206, 201, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,212,255,0.5);
+            filter: brightness(1.1);
         }
         .btn-primary:active { transform: translateY(0); }
 
@@ -328,18 +374,19 @@
             pointer-events: auto;
             min-width: 300px;
             max-width: 400px;
-            background: white;
-            border-radius: 12px;
+            background: rgba(15,23,42,0.95);
+            border-radius: 14px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg), var(--glow);
+            border: 1px solid rgba(0,212,255,0.2);
             transform: translateX(120%);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(20px);
         }
         .toast.show { transform: translateX(0); }
         .toast-icon {
@@ -350,27 +397,22 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            background: #F8FAFC;
+            background: rgba(0,212,255,0.1);
             color: var(--primary);
         }
-        .toast-success .toast-icon { color: #2ECC71; }
-        .toast-error .toast-icon { color: #FF7675; }
+        .toast-success .toast-icon { color: #2ECC71; background: rgba(46,204,113,0.1); }
+        .toast-error .toast-icon { color: #FF7675; background: rgba(255,118,117,0.1); }
         .toast-content { flex: 1; }
         .toast-title { font-weight: 800; font-size: 0.85rem; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase; }
         .toast-message { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
-        .toast-close {
-            color: #CBD5E1;
-            cursor: pointer;
-            transition: color 0.2s;
-            padding: 4px;
-        }
-        .toast-close:hover { color: var(--text-main); }
+        .toast-close { color: var(--text-muted); cursor: pointer; transition: color 0.2s; padding: 4px; }
+        .toast-close:hover { color: var(--primary); }
         .toast-progress {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 3px;
-            background: var(--primary);
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--magenta));
             animation: toastProgress linear forwards;
         }
         @keyframes toastProgress { from { width: 100%; } to { width: 0%; } }
@@ -398,21 +440,21 @@
         }
         .login-box {
             display: flex;
-            background: white;
+            background: rgba(11,18,32,0.9);
             width: 100%;
             max-width: 850px;
             min-height: 500px;
             border-radius: 32px;
             overflow: hidden;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.1);
-            border: 1px solid white;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.15);
             position: relative;
             z-index: 1;
+            backdrop-filter: blur(20px);
         }
-        /* Info Side (Left on Desktop) */
         .login-info-side {
             flex: 1;
-            background: var(--text-main); /* Deep Charcoal */
+            background: linear-gradient(135deg, #0B1220 0%, #0F172A 100%);
             padding: 60px;
             display: flex;
             flex-direction: column;
@@ -428,10 +470,18 @@
             right: -20%;
             width: 300px;
             height: 300px;
-            background: var(--primary);
+            background: radial-gradient(circle, rgba(0,212,255,0.15), transparent 70%);
             border-radius: 50%;
-            opacity: 0.1;
-            filter: blur(60px);
+        }
+        .login-info-side::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%);
+            border-radius: 50%;
         }
         .login-info-side h2 {
             font-size: 36px;
@@ -439,10 +489,13 @@
             line-height: 1.2;
             margin-bottom: 20px;
             letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .login-info-side p {
             font-size: 15px;
-            opacity: 0.7;
+            opacity: 0.6;
             line-height: 1.6;
             margin-bottom: 40px;
         }
@@ -450,8 +503,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.25);
             padding: 8px 16px;
             border-radius: 100px;
             font-size: 11px;
@@ -460,15 +513,16 @@
             letter-spacing: 0.1em;
             width: fit-content;
             margin-bottom: 24px;
+            color: var(--primary);
         }
-        /* Form Side (Right on Desktop) */
+        /* Form Side */
         .login-form-side {
             flex: 1;
             padding: 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: white;
+            background: rgba(15,23,42,0.6);
             position: relative;
         }
         .login-form-side::before {
@@ -478,7 +532,7 @@
             top: 15%;
             bottom: 15%;
             width: 1px;
-            background: linear-gradient(to bottom, transparent, #F1F5F9, transparent);
+            background: linear-gradient(to bottom, transparent, rgba(0,212,255,0.2), transparent);
         }
         .login-form-side h3 {
             font-size: 24px;
@@ -506,18 +560,19 @@
             width: 100%;
             padding: 16px 16px 16px 48px;
             border-radius: 16px;
-            border: 2px solid #F1F5F9;
-            background: #F8FAFC;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
             font-weight: 600;
             color: var(--text-main);
             transition: all 0.3s ease;
         }
         .login-input-wrapper input:focus {
             border-color: var(--primary);
-            background: white;
+            background: rgba(0,212,255,0.05);
             outline: none;
-            box-shadow: 0 0 0 4px rgba(0, 206, 201, 0.1);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1), var(--glow);
         }
+        .login-input-wrapper input::placeholder { color: var(--text-muted); }
         
         @media (max-width: 768px) {
             .login-box { flex-direction: column; max-width: 400px; }
@@ -549,11 +604,11 @@
                     <i data-lucide="shield-check" class="w-3 h-3"></i>
                     <span>Secure Access</span>
                 </div>
-                <h2>Halo, Rekan Pendidik!</h2>
-                <p>Selamat datang kembali di DLPK. Kelola data administrasi kelas Anda dengan lebih cerdas, rapi, dan profesional dalam satu sistem terintegrasi.</p>
+                <h2>Selamat datang di DLPK E.</h2>
+                <p>Platform cerdas untuk pendidik profesional dalam mengelola administrasi kelas secara terstruktur, efisien, dan eksklusif — semua dalam satu kendali.</p>
                 
                 <div class="mt-auto opacity-40 text-[10px] font-bold uppercase tracking-[0.2em]">
-                    DLPK Integrated System v12
+                    DAFTAR LAPORAN PERKEMBANGAN KELAS
                 </div>
             </div>
 
@@ -578,7 +633,7 @@
     <!-- Add Overlay for Mobile -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
 
-    <aside id="main-sidebar" class="hidden w-72 bg-[var(--surface)] border-r border-[var(--border)] flex flex-col z-50 shadow-sm absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 h-full">
+    <aside id="main-sidebar" class="hidden w-72 bg-[rgba(11,18,32,0.95)] border-r border-[var(--border)] flex flex-col z-50 shadow-sm absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 h-full">
         <div class="p-6 flex items-center gap-3">
             <div class="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white shadow-lg rotate-3 transition-transform hover:rotate-0">
                 <i data-lucide="graduation-cap" class="w-6 h-6"></i>
@@ -623,19 +678,19 @@
         </nav>
 
         <div class="p-4 space-y-2">
-            <div class="bg-[#F8FAFC] border border-[var(--border)] p-3 rounded-xl flex items-center gap-3">
+            <div class="bg-[rgba(0,212,255,0.06)] border border-[rgba(0,212,255,0.15)] p-3 rounded-xl flex items-center gap-3">
                 <div class="relative">
-                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xs shadow-sm">
+                    <div class="w-8 h-8 bg-[rgba(0,212,255,0.12)] rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xs border border-[rgba(0,212,255,0.25)]">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
-                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--primary)] border-2 border-white rounded-full"></div>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--primary)] border-2 border-[var(--surface)] rounded-full"></div>
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="text-[10px] font-bold text-[var(--text-main)] truncate uppercase" id="side-guru-nama">...</span>
-                    <span class="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Admin</span>
+                    <span class="text-[8px] font-bold text-[var(--primary)] uppercase tracking-wider opacity-70">Admin</span>
                 </div>
             </div>
-            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-rose-500 hover:bg-rose-50 font-bold text-[11px] uppercase tracking-widest transition-all border border-transparent hover:border-rose-100">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 font-bold text-[11px] uppercase tracking-widest transition-all border border-transparent hover:border-rose-500/30">
                 <i data-lucide="log-out" class="w-4 h-4"></i>
                 <span>Keluar Sistem</span>
             </button>
@@ -645,7 +700,7 @@
     <main class="flex-1 flex flex-col overflow-hidden bg-[var(--background)]">
         <header class="hidden h-20 header-glass flex items-center px-4 md:px-10 justify-between sticky top-0 z-20 shadow-sm">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="p-2 bg-white hover:bg-slate-50 rounded-lg md:hidden text-[var(--text-main)] border border-[var(--border)] transition-all active:scale-95">
+                <button onclick="toggleSidebar()" class="p-2 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(0,212,255,0.1)] rounded-lg md:hidden text-[var(--text-main)] border border-[var(--border)] transition-all active:scale-95">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
                 <div class="flex flex-col">
@@ -673,10 +728,10 @@
             
             <div id="page-dashboard" class="space-y-8 page-transition">
                 <!-- Welcome Section - Hero with Ice Blue Gradient -->
-                <div class="relative overflow-hidden bg-[var(--background-hero)] p-8 md:p-14 rounded-[2.5rem] shadow-sm border border-[var(--border)] text-center md:text-left group">
+                <div class="relative overflow-hidden bg-[rgba(15,23,42,0.7)] p-8 md:p-14 rounded-[2.5rem] shadow-sm border border-[var(--border)] text-center md:text-left group">
                     <!-- Decorative Elements -->
-                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-white/40 rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
-                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-[var(--primary)]/5 rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-[rgba(0,212,255,0.03)] rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
+                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-[rgba(0,212,255,0.05)] rounded-full blur-3xl transition-transform group-hover:scale-125 duration-700"></div>
                     
                     <div class="relative z-10">
                         <h1 id="dash-welcome" class="text-3xl md:text-5xl font-black tracking-tight leading-tight text-[var(--text-main)]">
@@ -721,7 +776,7 @@
             </div>
 
             <div id="page-students" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] shadow-inner border border-[var(--border)]">
                             <i data-lucide="users" class="w-7 h-7"></i>
@@ -759,7 +814,7 @@
             </div>
 
             <div id="page-journal" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="book-open" class="w-7 h-7"></i>
@@ -769,10 +824,10 @@
                             <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Laporan Kegiatan Belajar Mengajar</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-[var(--border)] shadow-sm">
-                        <button onclick="prevJournal()" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-3 bg-[rgba(255,255,255,0.04)] p-2 rounded-2xl border border-[var(--border)]">
+                        <button onclick="prevJournal()" class="p-3 bg-[rgba(255,255,255,0.06)] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                         <span id="journal-date-label" class="font-black text-xs uppercase tracking-widest text-[var(--primary)] px-6 min-w-[220px] text-center">TANGGAL</span>
-                        <button onclick="nextJournal()" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="nextJournal()" class="p-3 bg-[rgba(255,255,255,0.06)] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                     </div>
                 </div>
 
@@ -780,7 +835,7 @@
                     <div class="lg:col-span-4">
                         <div class="glass-card p-8 border-[var(--border)] sticky top-28">
                             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-[var(--border)]">
-                                <div class="w-8 h-8 rounded-lg bg-[#F8FAFC] flex items-center justify-center text-[var(--primary)] border border-[var(--border)]"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
+                                <div class="w-8 h-8 rounded-lg bg-[rgba(0,212,255,0.1)] flex items-center justify-center text-[var(--primary)] border border-[rgba(0,212,255,0.2)]"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
                                 <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest">Input Jurnal Baru</h4>
                             </div>
                             <div class="space-y-6">
@@ -798,13 +853,13 @@
                                 </div>
                                 <input type="hidden" id="jrn-edit-id">
                                 <button onclick="saveJournalEntry()" id="btn-save-jrn" class="w-full btn-primary py-4 text-xs">Simpan Jurnal</button>
-                                <button onclick="cancelEditJournal()" id="btn-cancel-jrn" class="hidden w-full bg-slate-50 text-[var(--text-muted)] py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest mt-3 transition-all border border-[var(--border)]">Batal Edit</button>
+                                <button onclick="cancelEditJournal()" id="btn-cancel-jrn" class="hidden w-full bg-[rgba(255,255,255,0.05)] text-[var(--text-muted)] hover:text-[var(--text-main)] py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest mt-3 transition-all border border-[var(--border)]">Batal Edit</button>
                             </div>
                         </div>
                     </div>
                     <div class="lg:col-span-8">
                         <div class="glass-card overflow-hidden">
-                            <div class="px-8 py-5 bg-[#F8FAFC] text-[var(--text-main)] font-black text-[11px] uppercase tracking-[0.2em] flex justify-between items-center border-b border-[var(--border)]">
+                            <div class="px-8 py-5 bg-[rgba(0,212,255,0.06)] text-[var(--primary)] font-black text-[11px] uppercase tracking-[0.2em] flex justify-between items-center border-b border-[var(--border)]">
                                 <span>Daftar Mengajar Hari Ini</span>
                                 <i data-lucide="list-checks" class="w-5 h-5 text-[var(--primary)]"></i>
                             </div>
@@ -827,7 +882,7 @@
             </div>
 
             <div id="page-attendance" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="calendar-check" class="w-7 h-7"></i>
@@ -837,14 +892,14 @@
                             <p class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1">Pencatatan Kehadiran Siswa Real-time</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-[var(--border)] shadow-sm">
-                        <button onclick="changeMonth(-1)" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-3 bg-[rgba(255,255,255,0.04)] p-2 rounded-2xl border border-[var(--border)]">
+                        <button onclick="changeMonth(-1)" class="p-3 bg-[rgba(255,255,255,0.06)] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                         <span id="month-label" class="font-black text-xs uppercase tracking-widest text-[var(--primary)] px-6 min-w-[220px] text-center">BULAN</span>
-                        <button onclick="changeMonth(1)" class="p-3 bg-[#F8FAFC] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="changeMonth(1)" class="p-3 bg-[rgba(255,255,255,0.06)] text-[var(--text-main)] rounded-xl hover:bg-[var(--primary)] hover:text-white transition-all border border-[var(--border)] active:scale-90"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                     </div>
                 </div>
                 
-                <div class="glass-card p-8 bg-white/50 border-[var(--border)]">
+                <div class="glass-card p-8 border-[var(--border)]">
                     <div class="flex flex-col lg:flex-row items-end gap-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 w-full">
                             <div class="space-y-2">
@@ -856,13 +911,13 @@
                                 <div class="bg-[var(--primary)] text-white min-h-[46px] rounded-xl flex items-center justify-center text-center px-4 font-black text-xs tracking-[0.1em] uppercase shadow-lg shadow-[#00CEC9]/10" id="quick-day-name">PILIH TANGGAL</div>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black text-rose-500 uppercase tracking-widest pl-1 block">Keterangan Libur (Opsional)</label>
-                                <input type="text" id="quick-ket-libur" placeholder="Contoh: Libur Nasional" class="modern-input border-rose-100 focus:border-rose-500 text-rose-600 font-bold bg-rose-50/30">
+                                <label class="text-[10px] font-black text-rose-400 uppercase tracking-widest pl-1 block">Keterangan Libur (Opsional)</label>
+                                <input type="text" id="quick-ket-libur" placeholder="Contoh: Libur Nasional" class="modern-input border-rose-500/30 focus:border-rose-500 text-rose-400 font-bold">
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-3 w-full lg:w-auto">
                             <button onclick="jumpToDate()" class="btn-primary flex-1 lg:flex-none py-4 px-8">Terapkan</button>
-                            <button onclick="deleteAttendanceDay()" class="bg-white border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white p-3.5 rounded-xl transition-all active:scale-90 shadow-sm" title="Hapus Data Tanggal"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                            <button onclick="deleteAttendanceDay()" class="bg-[rgba(239,68,68,0.1)] border border-rose-500 text-rose-400 hover:bg-rose-500 hover:text-white p-3.5 rounded-xl transition-all active:scale-90 shadow-sm" title="Hapus Data Tanggal"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
                             <div class="w-[1px] h-12 bg-[var(--border)] hidden lg:block mx-2"></div>
                             <button onclick="bulkAbsen('H')" class="bg-[#F8FAFC] border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Hadir Semua</button>
                             <button onclick="bulkAbsen('L')" class="bg-[#F8FAFC] border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm transition-all transform hover:-translate-y-1 flex-1 lg:flex-none flex items-center justify-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i> Setel Libur</button>
@@ -874,7 +929,7 @@
                     <div class="overflow-x-auto overflow-y-auto" style="max-height: 75vh;">
                         <table class="modern-table w-full text-left" id="table-attendance" style="min-width: 1400px; table-layout: fixed;">
                             <thead id="abs-head" class="sticky top-0 z-30"></thead>
-                            <tbody id="abs-body" class="divide-y divide-slate-100 bg-white"></tbody>
+                            <tbody id="abs-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -882,17 +937,17 @@
                 <div class="flex items-center gap-6 p-4 bg-[var(--primary-light)] rounded-2xl border border-[var(--primary-light)]">
                     <p class="text-[10px] font-black text-[var(--primary)] uppercase tracking-widest">Keterangan:</p>
                     <div class="flex flex-wrap gap-4">
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[var(--accent)]"></span><span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">H: Hadir</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">S: Sakit</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[var(--primary)]"></span><span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">I: Izin</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-rose-500"></span><span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">A: Alfa</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-400"></span><span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">L: Libur</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[var(--accent)]"></span><span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">H: Hadir</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">S: Sakit</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[var(--primary)]"></span><span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">I: Izin</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-rose-500"></span><span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">A: Alfa</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-400"></span><span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">L: Libur</span></div>
                     </div>
                 </div>
             </div>
 
             <div id="page-grades" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="award" class="w-7 h-7"></i>
@@ -907,7 +962,7 @@
             </div>
 
             <div id="page-print" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[var(--primary)] rounded-2xl flex items-center justify-center text-white shadow-lg">
                             <i data-lucide="printer" class="w-7 h-7"></i>
@@ -999,7 +1054,7 @@
             </div>
 
             <div id="page-settings" class="hidden space-y-8 page-transition">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[var(--surface)] p-8 rounded-3xl shadow-sm border border-[var(--border)] gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[rgba(15,23,42,0.8)] p-8 rounded-3xl border border-[rgba(0,212,255,0.12)] gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-[#F8FAFC] rounded-2xl flex items-center justify-center text-[var(--primary)] border border-[var(--border)]">
                             <i data-lucide="settings" class="w-7 h-7"></i>
@@ -1104,7 +1159,7 @@
             </div>
             
             <div class="flex gap-4 pt-6">
-                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-4 bg-slate-50 rounded-2xl text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all border border-[var(--border)]">Batal</button>
+                <button onclick="document.getElementById('m-siswa').classList.add('hidden')" class="flex-1 py-4 bg-[rgba(255,255,255,0.06)] rounded-2xl text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all border border-[var(--border)]">Batal</button>
                 <button onclick="saveSiswa()" class="flex-[2] py-4 btn-primary text-xs flex items-center justify-center gap-3">
                     <i data-lucide="save" class="w-5 h-5"></i> Simpan Ke Database
                 </button>
@@ -1468,19 +1523,19 @@
             const list = document.getElementById('journal-day-list');
             if(!list) return;
             list.innerHTML = Object.entries(dayLogs).map(([id, log]) => `
-                <tr class="hover:bg-slate-50 transition-colors">
+                <tr style="border-bottom:1px solid rgba(0,212,255,0.08);transition:background 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.05)'" onmouseout="this.style.background='transparent'">
                     <td class="px-6 py-4 font-black text-[10px] text-[var(--primary)] uppercase tracking-tighter">${log.mapel}</td>
-                    <td class="px-6 py-4 text-[10px] font-bold text-slate-600 italic leading-relaxed max-w-xs text-wrap whitespace-normal">${log.cp}</td>
-                    <td class="px-6 py-4 text-[10px] font-bold text-slate-800 leading-relaxed max-w-xs text-wrap whitespace-normal">${log.materi}</td>
+                    <td class="px-6 py-4 text-[10px] font-medium leading-relaxed max-w-xs text-wrap whitespace-normal" style="color:#9CA3AF;font-style:italic;">${log.cp}</td>
+                    <td class="px-6 py-4 text-[10px] font-semibold leading-relaxed max-w-xs text-wrap whitespace-normal" style="color:#E5E7EB;">${log.materi}</td>
                     <td class="px-6 py-4 text-center">
                         <div class="flex items-center justify-center gap-3">
-                            <button onclick="editJournalEntry('${dateKey}', '${id}')" class="text-amber-500 hover:scale-110 transition-transform" title="Edit Jurnal"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                            <button onclick="deleteJournalEntry('${dateKey}', '${id}')" class="text-rose-500 hover:scale-110 transition-transform" title="Hapus Jurnal"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <button onclick="editJournalEntry('${dateKey}', '${id}')" class="text-amber-400 hover:scale-110 transition-transform" title="Edit Jurnal"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                            <button onclick="deleteJournalEntry('${dateKey}', '${id}')" class="text-rose-400 hover:scale-110 transition-transform" title="Hapus Jurnal"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </div>
                     </td>
                 </tr>
             `).join('');
-            if(Object.keys(dayLogs).length === 0) list.innerHTML = `<tr><td colspan="4" class="px-6 py-10 text-center italic text-slate-400 font-bold text-xs uppercase tracking-widest">Belum ada jurnal untuk hari ini</td></tr>`;
+            if(Object.keys(dayLogs).length === 0) list.innerHTML = `<tr><td colspan="4" class="px-6 py-10 text-center font-bold text-xs uppercase tracking-widest" style="color:rgba(0,212,255,0.4);font-style:italic;">Belum ada jurnal untuk hari ini</td></tr>`;
             lucide.createIcons();
         }
 
@@ -1505,7 +1560,6 @@
             
             const btnSave = document.getElementById('btn-save-jrn');
             btnSave.innerText = "Simpan Jurnal";
-            btnSave.classList.add('bg-slate-900');
             btnSave.classList.remove('bg-amber-600');
             document.getElementById('btn-cancel-jrn').classList.add('hidden');
         }
@@ -1617,18 +1671,20 @@
         }
 
         function renderSiswa() {
-            document.getElementById('student-list').innerHTML = students.map((s, index) => `<tr class="border-b border-slate-100 hover:bg-[var(--primary-light)] transition-colors group">
-                <td class="px-6 py-4 font-black text-slate-300 pointer-events-none">${s.no || index + 1}</td>
-                <td class="px-6 py-4 font-extrabold uppercase text-slate-800 tracking-tighter pointer-events-none">${s.name}</td>
-                <td class="px-6 py-4 font-mono font-bold text-slate-400 text-[10px] pointer-events-none">${s.nisn}/${s.ni}</td>
-                <td class="px-6 py-4 italic text-slate-600 text-[10px] whitespace-nowrap pointer-events-none">${s.tempat_lahir || '-'}, ${s.tanggal_lahir || '-'}</td>
-                <td class="px-6 py-4 font-black text-[var(--primary)] text-[9px] uppercase tracking-widest pointer-events-none">${s.agama}</td>
-                <td class="px-6 py-4 italic text-slate-400 text-[10px] pointer-events-none">${s.alamat}</td>
-                <td class="px-6 py-4 font-bold text-slate-700 text-[10px] pointer-events-none">${s.ayah || '-'}</td>
-                <td class="px-6 py-4 font-bold text-slate-700 text-[10px] pointer-events-none">${s.ibu || '-'}</td>
-                <td class="px-6 py-4 flex items-center justify-center gap-2">
-                    <button onclick="editSiswa('${s.id}')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase shadow-md transition-all flex items-center gap-1"><i data-lucide="edit" class="w-3 h-3"></i> Edit</button>
-                    <button onclick="hapusSiswa('${s.id}')" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase shadow-md transition-all flex items-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> Hapus</button>
+            document.getElementById('student-list').innerHTML = students.map((s, index) => `<tr style="border-bottom:1px solid rgba(0,212,255,0.08);transition:background 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.05)'" onmouseout="this.style.background='transparent'">
+                <td class="px-6 py-4 font-black text-[10px] text-center pointer-events-none" style="color:#9CA3AF;">${s.no || index + 1}</td>
+                <td class="px-6 py-4 font-extrabold uppercase tracking-tighter pointer-events-none" style="color:#E5E7EB;font-size:11px;">${s.name}</td>
+                <td class="px-6 py-4 font-mono font-bold text-[10px] pointer-events-none" style="color:#00D4FF;">${s.nisn||'-'}/${s.ni||'-'}</td>
+                <td class="px-6 py-4 italic text-[10px] whitespace-nowrap pointer-events-none" style="color:#9CA3AF;">${s.tempat_lahir||'-'}, ${s.tanggal_lahir||'-'}</td>
+                <td class="px-6 py-4 font-black text-[9px] uppercase tracking-widest pointer-events-none" style="color:#00D4FF;">${s.agama}</td>
+                <td class="px-6 py-4 italic text-[10px] pointer-events-none" style="color:#9CA3AF;">${s.alamat||'-'}</td>
+                <td class="px-6 py-4 font-bold text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ayah||'-'}</td>
+                <td class="px-6 py-4 font-bold text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ibu||'-'}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center justify-center gap-2">
+                        <button onclick="editSiswa('${s.id}')" class="bg-amber-500/20 hover:bg-amber-500 text-amber-400 hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all border border-amber-500/30 flex items-center gap-1"><i data-lucide="edit" class="w-3 h-3"></i> Edit</button>
+                        <button onclick="hapusSiswa('${s.id}')" class="bg-rose-500/20 hover:bg-rose-500 text-rose-400 hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all border border-rose-500/30 flex items-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> Hapus</button>
+                    </div>
                 </td>
             </tr>`).join('');
             lucide.createIcons();
@@ -1709,25 +1765,29 @@
             
             document.getElementById('month-label').innerText = new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(currentMonth);
             
-            let head = `<tr class="border-b">
-                <th rowspan="2" class="px-2 py-4 sticky left-0 bg-white z-20 text-[10px] font-black uppercase text-slate-500 border-r border-slate-200" style="width: 50px; min-width: 50px;">NO</th>
-                <th rowspan="2" class="px-6 py-4 sticky left-[50px] bg-white z-20 text-[10px] font-black uppercase text-slate-500 border-r border-slate-200 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px;">NAMA SISWA</th>
-                <th colspan="${lastDay}" class="text-center py-2 bg-slate-900 text-white text-[9px] font-black tracking-[.2em] uppercase border-b border-slate-700">${monthName} ${y}</th>
-                <th colspan="4" class="text-center py-2 bg-[var(--primary)] text-white text-[9px] font-black tracking-[.2em] uppercase border-b border-slate-700">REKAPITULASI</th>
+            // Warna sticky cell
+            const stickyBg = '#0d1829';
+            const borderCol = 'rgba(0,212,255,0.12)';
+
+            let head = `<tr>
+                <th rowspan="2" style="width:50px;min-width:50px;position:sticky;left:0;z-index:20;background:${stickyBg};color:#00D4FF;font-size:9px;font-weight:900;text-transform:uppercase;padding:8px 4px;border-right:1px solid ${borderCol};border-bottom:1px solid ${borderCol};text-align:center;">NO</th>
+                <th rowspan="2" style="width:220px;min-width:220px;position:sticky;left:50px;z-index:20;background:${stickyBg};color:#E5E7EB;font-size:9px;font-weight:900;text-transform:uppercase;padding:8px 16px;border-right:2px solid rgba(0,212,255,0.3);border-bottom:1px solid ${borderCol};box-shadow:4px 0 12px rgba(0,0,0,0.4);">NAMA SISWA</th>
+                <th colspan="${lastDay}" style="text-align:center;padding:6px;background:linear-gradient(135deg,#0F172A,#1a2744);color:#00D4FF;font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid ${borderCol};">${monthName} ${y}</th>
+                <th colspan="4" style="text-align:center;padding:6px;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(59,130,246,0.2));color:#00D4FF;font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid ${borderCol};">REKAP</th>
             </tr>`;
             
-            // Baris Nama Hari & Angka Tanggal digabung atau dipisah rapi
-            head += `<tr class="border-b">`;
+            head += `<tr>`;
             for(let i=1; i<=lastDay; i++) {
                 const dayIndex = new Date(y, m, i).getDay();
                 const isHolidayDay = dayIndex === 0 || dayIndex === 6 || holidays[i];
-                head += `<th class="th-absen-header ${isHolidayDay ? 'is-holiday' : 'text-[var(--primary)] bg-[var(--primary-light)]'} font-black" style="height: 45px;" title="${holidays[i] || ''}">${i}<br><span class="text-[7px] opacity-60 font-bold">${["M","S","S","R","K","J","S"][dayIndex]}</span></th>`;
+                const bg = isHolidayDay ? 'rgba(239,68,68,0.25)' : 'rgba(0,212,255,0.05)';
+                const col = isHolidayDay ? '#fca5a5' : '#00D4FF';
+                head += `<th class="th-absen-header" style="background:${bg};color:${col};border-right:1px solid ${borderCol};border-bottom:1px solid ${borderCol};" title="${holidays[i]||''}">${i}<br><span style="font-size:7px;opacity:0.7;font-weight:700;">${["M","S","S","R","K","J","S"][dayIndex]}</span></th>`;
             }
-            // Kolom Rekap H, S, I, A
-            head += `<th class="w-10 text-center bg-[var(--primary-light)] text-[var(--accent)] font-black text-[10px] border-l border-slate-200">H</th>`;
-            head += `<th class="w-10 text-center bg-[var(--primary-light)] text-amber-700 font-black text-[10px] border-l border-slate-100">S</th>`;
-            head += `<th class="w-10 text-center bg-[var(--primary-light)] text-[var(--primary)] font-black text-[10px] border-l border-slate-100">I</th>`;
-            head += `<th class="w-10 text-center bg-[var(--primary-light)] text-rose-700 font-black text-[10px] border-l border-slate-100">A</th>`;
+            head += `<th style="width:36px;text-align:center;background:rgba(0,212,255,0.15);color:#00D4FF;font-weight:900;font-size:10px;border-left:1px solid ${borderCol};border-bottom:1px solid ${borderCol};">H</th>`;
+            head += `<th style="width:36px;text-align:center;background:rgba(251,191,36,0.12);color:#fbbf24;font-weight:900;font-size:10px;border-left:1px solid ${borderCol};border-bottom:1px solid ${borderCol};">S</th>`;
+            head += `<th style="width:36px;text-align:center;background:rgba(59,130,246,0.12);color:#60a5fa;font-weight:900;font-size:10px;border-left:1px solid ${borderCol};border-bottom:1px solid ${borderCol};">I</th>`;
+            head += `<th style="width:36px;text-align:center;background:rgba(239,68,68,0.12);color:#f87171;font-weight:900;font-size:10px;border-left:1px solid ${borderCol};border-bottom:1px solid ${borderCol};">A</th>`;
             head += `</tr>`;
             
             document.getElementById('abs-head').innerHTML = head;
@@ -1745,37 +1805,38 @@
                     else if (val === 'I') rekap.I++;
                     else if (val === 'A') rekap.A++;
 
-                    let colorClass = '';
-                    if (isHolidayDay) {
-                        colorClass = 'text-white';
-                    } else {
-                        if (val === 'H') colorClass = 'text-[var(--accent)]';
-                        else if (val === 'A') colorClass = 'text-rose-600';
-                        else colorClass = 'text-slate-600';
-                    }
+                    let colorStyle = '';
+                    if (isHolidayDay) colorStyle = 'color:#fca5a5;';
+                    else if (val === 'H') colorStyle = 'color:#34d399;';
+                    else if (val === 'S') colorStyle = 'color:#fbbf24;';
+                    else if (val === 'I') colorStyle = 'color:#60a5fa;';
+                    else if (val === 'A') colorStyle = 'color:#f87171;';
+                    else colorStyle = 'color:#9CA3AF;';
 
-                    let content = `<select onchange="saveAbsen('${s.name}', '${i}', this.value)" class="absen-select ${colorClass}"><option value="-" ${val==='-'?'selected':''}>-</option><option value="H" ${val==='H'?'selected':''}>H</option><option value="S" ${val==='S'?'selected':''}>S</option><option value="I" ${val==='I'?'selected':''}>I</option><option value="A" ${val==='A'?'selected':''}>A</option><option value="L" ${val==='L'?'selected':''}>L</option></select>`;
+                    const cellBg = isHolidayDay ? 'background:rgba(239,68,68,0.2);' : '';
+
+                    let content = `<select onchange="saveAbsen('${s.name}', '${i}', this.value)" class="absen-select" style="${colorStyle}background:transparent;"><option value="-" ${val==='-'?'selected':''}>-</option><option value="H" ${val==='H'?'selected':''}>H</option><option value="S" ${val==='S'?'selected':''}>S</option><option value="I" ${val==='I'?'selected':''}>I</option><option value="A" ${val==='A'?'selected':''}>A</option><option value="L" ${val==='L'?'selected':''}>L</option></select>`;
                     
                     if (holidays[i] && sIdx === 0) {
-                        content = `<div class="flex flex-col items-center justify-center h-full"><span class="text-[7px] font-black text-white leading-none">L</span><div style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 7px; color: white; font-weight: 800; white-space: nowrap; margin-top: 2px;">${holidays[i]}</div></div>`;
+                        content = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;"><span style="font-size:7px;font-weight:900;color:#fca5a5;">L</span><div style="writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:6px;color:#fca5a5;font-weight:800;white-space:nowrap;margin-top:2px;">${holidays[i]}</div></div>`;
                     } else if (isHolidayDay && !holidays[i]) {
-                        content = `<div class="flex flex-col items-center justify-center h-full"><span class="text-[7px] font-black text-white opacity-80 leading-none">${dayIndex === 0 ? 'M' : 'S'}</span></div>`;
+                        content = `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><span style="font-size:7px;font-weight:900;color:#fca5a5;opacity:0.8;">${dayIndex===0?'M':'S'}</span></div>`;
                     } else if (holidays[i]) {
-                        content = `<div class="flex flex-col items-center justify-center h-full"><span class="text-[7px] font-black text-white leading-none">L</span></div>`;
+                        content = `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><span style="font-size:7px;font-weight:900;color:#fca5a5;">L</span></div>`;
                     }
                     
-                    cells += `<td class="td-absen ${isHolidayDay ? 'is-holiday' : ''} hover:bg-slate-50 transition-colors">${content}</td>`;
+                    cells += `<td class="td-absen" style="${cellBg}border-right:1px solid ${borderCol};border-bottom:1px solid ${borderCol};">${content}</td>`;
                 }
                 
-                // Tambahkan kolom rekap ke baris
-                cells += `<td class="text-center font-black text-[var(--accent)] bg-[var(--primary-light)] border-l border-slate-200 text-[10px]">${rekap.H || '-'}</td>`;
-                cells += `<td class="text-center font-black text-amber-700 bg-[var(--primary-light)] border-l border-slate-100 text-[10px]">${rekap.S || '-'}</td>`;
-                cells += `<td class="text-center font-black text-[var(--primary)] bg-[var(--primary-light)] border-l border-slate-100 text-[10px]">${rekap.I || '-'}</td>`;
-                cells += `<td class="text-center font-black text-rose-700 bg-[var(--primary-light)] border-l border-slate-100 text-[10px]">${rekap.A || '-'}</td>`;
+                cells += `<td style="text-align:center;font-weight:900;color:#34d399;background:rgba(0,212,255,0.06);border-left:1px solid ${borderCol};font-size:10px;padding:4px;">${rekap.H||'-'}</td>`;
+                cells += `<td style="text-align:center;font-weight:900;color:#fbbf24;background:rgba(251,191,36,0.06);border-left:1px solid ${borderCol};font-size:10px;padding:4px;">${rekap.S||'-'}</td>`;
+                cells += `<td style="text-align:center;font-weight:900;color:#60a5fa;background:rgba(59,130,246,0.06);border-left:1px solid ${borderCol};font-size:10px;padding:4px;">${rekap.I||'-'}</td>`;
+                cells += `<td style="text-align:center;font-weight:900;color:#f87171;background:rgba(239,68,68,0.06);border-left:1px solid ${borderCol};font-size:10px;padding:4px;">${rekap.A||'-'}</td>`;
 
-                return `<tr>
-                    <td class="px-2 py-2 font-black sticky left-0 bg-white border-r border-slate-200 text-[10px] text-center text-slate-800 z-10" style="width: 50px; min-width: 50px;">${s.no || (sIdx + 1)}</td>
-                    <td class="px-6 py-2 font-black sticky left-[50px] bg-white border-r border-slate-200 text-[10px] uppercase text-slate-800 z-10 shadow-[4px_0_10px_rgba(0,0,0,0.03)]" style="width: 220px; min-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.name}</td>
+                const rowBg = sIdx % 2 === 0 ? 'rgba(15,23,42,0.6)' : 'rgba(11,18,32,0.8)';
+                return `<tr style="border-bottom:1px solid ${borderCol};">
+                    <td style="width:50px;min-width:50px;position:sticky;left:0;z-index:10;background:${stickyBg};color:#9CA3AF;font-size:10px;font-weight:900;text-align:center;padding:8px 4px;border-right:1px solid ${borderCol};">${s.no||(sIdx+1)}</td>
+                    <td style="width:220px;min-width:220px;position:sticky;left:50px;z-index:10;background:${stickyBg};color:#E5E7EB;font-size:10px;font-weight:700;text-transform:uppercase;padding:8px 16px;border-right:2px solid rgba(0,212,255,0.3);box-shadow:4px 0 12px rgba(0,0,0,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</td>
                     ${cells}
                 </tr>`;
             }).join('');
@@ -1798,28 +1859,38 @@
             const container = document.getElementById('grade-modules'); container.innerHTML = '';
             subjects.forEach(sub => {
                 const cfg = gradeConfigs[sub] || { ph: ['PH 1'] };
-                let th = `<th class="px-6 py-3 text-left uppercase tracking-widest text-[9px] font-black text-slate-400">Nama Siswa</th>`;
-                cfg.ph.forEach((p, i) => th += `<th class="text-center px-1 font-black text-[9px] text-slate-400 uppercase">${p} <button onclick="delPh('${sub}',${i})" class="text-rose-500 hover:scale-110 transition-transform">×</button></th>`);
-                th += `<th class="text-center bg-[var(--primary-light)] font-black text-[9px] text-[var(--primary)]">PTS</th><th class="text-center bg-[var(--primary-light)] font-black text-[9px] text-[var(--primary)]">PAS</th><th class="text-center bg-[var(--accent)] font-black text-[9px] text-white rounded-t-lg">NA</th>`;
-                let trs = students.map(s => {
+                let th = `<th style="padding:10px 16px;text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:9px;font-weight:900;color:#9CA3AF;border-bottom:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);">Nama Siswa</th>`;
+                cfg.ph.forEach((p, i) => th += `<th style="text-align:center;padding:10px 4px;font-weight:900;font-size:9px;color:#9CA3AF;text-transform:uppercase;border-bottom:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);">${p} <button onclick="delPh('${sub}',${i})" style="color:#f87171;font-size:12px;line-height:1;cursor:pointer;margin-left:2px;">×</button></th>`);
+                th += `<th style="text-align:center;background:rgba(0,212,255,0.1);color:#00D4FF;font-weight:900;font-size:9px;padding:10px 8px;border-bottom:1px solid rgba(0,212,255,0.2);">PTS</th>`;
+                th += `<th style="text-align:center;background:rgba(0,212,255,0.1);color:#00D4FF;font-weight:900;font-size:9px;padding:10px 8px;border-bottom:1px solid rgba(0,212,255,0.2);">PAS</th>`;
+                th += `<th style="text-align:center;background:rgba(59,130,246,0.2);color:#60a5fa;font-weight:900;font-size:9px;padding:10px 8px;border-bottom:1px solid rgba(59,130,246,0.3);">NA</th>`;
+
+                let trs = students.map((s, sIdx) => {
                     let s_grades = (gradesData[sub] && gradesData[sub][s.name]) ? gradesData[sub][s.name] : {};
                     let na = calculateNA(s_grades, cfg.ph);
-                    return `<tr class="border-b border-slate-100 hover:bg-[var(--primary-light)] transition-colors">
-                        <td class="px-6 py-3 font-extrabold text-[11px] uppercase text-slate-800 tracking-tighter">${s.name}</td>
-                        ${cfg.ph.map((p, i)=>`<td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'ph${i}', this.value)" class="w-10 h-8 border border-slate-200 rounded-lg text-center text-[10px] font-bold text-black outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['ph'+i]||0}"></td>`).join('')}
-                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pts', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-black bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pts']||0}"></td>
-                        <td class="p-1"><input type="number" onchange="saveNilai('${sub}', '${s.name}', 'pas', this.value)" class="w-10 h-8 border border-[var(--primary)]/20 rounded-lg text-center text-[10px] font-bold text-black bg-[var(--primary-light)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all" value="${s_grades['pas']||0}"></td>
-                        <td class="text-center font-black text-[var(--accent)] text-[11px] bg-[var(--accent)]/5 border-l border-[var(--border)]">${na}</td>
+                    const naColor = na >= 90 ? '#34d399' : na >= 75 ? '#60a5fa' : na >= 60 ? '#fbbf24' : '#f87171';
+                    const rowBg = sIdx % 2 === 0 ? 'rgba(15,23,42,0.5)' : 'rgba(11,18,32,0.7)';
+                    const inputStyle = `width:44px;height:32px;background:rgba(255,255,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;text-align:center;font-size:11px;font-weight:700;color:#E5E7EB;outline:none;transition:all 0.2s;`;
+                    const inputPtsPas = `width:44px;height:32px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:8px;text-align:center;font-size:11px;font-weight:700;color:#00D4FF;outline:none;transition:all 0.2s;`;
+                    return `<tr style="background:${rowBg};border-bottom:1px solid rgba(0,212,255,0.08);transition:background 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.06)'" onmouseout="this.style.background='${rowBg}'">
+                        <td style="padding:10px 16px;font-weight:700;font-size:11px;text-transform:uppercase;color:#E5E7EB;letter-spacing:.03em;white-space:nowrap;">${s.name}</td>
+                        ${cfg.ph.map((p, i)=>`<td style="padding:6px 4px;text-align:center;"><input type="number" min="0" max="100" onchange="saveNilai('${sub}','${s.name}','ph${i}',this.value)" onfocus="this.style.borderColor='#00D4FF';this.style.boxShadow='0 0 0 2px rgba(0,212,255,0.2)'" onblur="this.style.borderColor='rgba(0,212,255,0.15)';this.style.boxShadow='none'" style="${inputStyle}" value="${s_grades['ph'+i]||0}"></td>`).join('')}
+                        <td style="padding:6px 4px;text-align:center;"><input type="number" min="0" max="100" onchange="saveNilai('${sub}','${s.name}','pts',this.value)" onfocus="this.style.borderColor='#00D4FF';this.style.boxShadow='0 0 0 2px rgba(0,212,255,0.2)'" onblur="this.style.borderColor='rgba(0,212,255,0.25)';this.style.boxShadow='none'" style="${inputPtsPas}" value="${s_grades['pts']||0}"></td>
+                        <td style="padding:6px 4px;text-align:center;"><input type="number" min="0" max="100" onchange="saveNilai('${sub}','${s.name}','pas',this.value)" onfocus="this.style.borderColor='#00D4FF';this.style.boxShadow='0 0 0 2px rgba(0,212,255,0.2)'" onblur="this.style.borderColor='rgba(0,212,255,0.25)';this.style.boxShadow='none'" style="${inputPtsPas}" value="${s_grades['pas']||0}"></td>
+                        <td style="text-align:center;font-weight:900;font-size:13px;color:${naColor};background:rgba(59,130,246,0.06);border-left:1px solid rgba(0,212,255,0.12);">${na}</td>
                     </tr>`;
                 }).join('');
-                container.innerHTML += `<div class="glass-card overflow-hidden shadow-lg shadow-slate-200/50 border-slate-200/80" id="table-grade-${sub.replace(/\s/g,'')}">
-                    <div class="px-6 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex justify-between items-center border-b border-slate-700">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-[var(--accent)]"><i data-lucide="book-open" class="w-4 h-4"></i></div>
-                            <div class="flex flex-col"><span class="font-black text-[9px] uppercase tracking-widest text-slate-400">Mata Pelajaran</span><span class="font-black text-sm uppercase tracking-tighter text-white">${sub}</span></div>
+
+                container.innerHTML += `<div class="glass-card overflow-hidden" id="table-grade-${sub.replace(/\s/g,'')}">
+                    <div style="padding:16px 24px;background:linear-gradient(135deg,rgba(0,212,255,0.1),rgba(59,130,246,0.08));border-bottom:1px solid rgba(0,212,255,0.15);display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;color:#00D4FF;"><i data-lucide="book-open" style="width:16px;height:16px;"></i></div>
+                            <div><div style="font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.1em;">Mata Pelajaran</div><div style="font-size:13px;font-weight:900;color:#E5E7EB;text-transform:uppercase;letter-spacing:.03em;">${sub}</div></div>
                         </div>
-                        <button onclick="addPh('${sub}')" class="bg-[var(--primary)] hover:bg-[var(--primary)]/80 px-5 py-2 rounded-xl text-[10px] uppercase font-black shadow-lg shadow-slate-900/20 transition-all transform hover:-translate-y-0.5 border border-slate-700 flex items-center gap-1.5"><i data-lucide="plus" class="w-3 h-3"></i> Tambah Penilaian</button>
-                    </div><div class="overflow-x-auto"><table class="w-full text-[10px] border-collapse">${th}<tbody>${trs}</tbody></table></div></div>`;
+                        <button onclick="addPh('${sub}')" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;padding:8px 16px;border-radius:10px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:0 4px 12px rgba(0,212,255,0.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(0,212,255,0.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(0,212,255,0.25)'"><i data-lucide="plus" style="width:12px;height:12px;"></i> Tambah PH</button>
+                    </div>
+                    <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:10px;"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>
+                </div>`;
             });
         }
 
