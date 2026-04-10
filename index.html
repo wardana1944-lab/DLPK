@@ -894,11 +894,14 @@
                                     <th class="w-16">No</th>
                                     <th>Nama Lengkap</th>
                                     <th>NISN/NI</th>
+                                    <th>NIK</th>
                                     <th>Kelahiran</th>
                                     <th>Agama</th>
                                     <th>Alamat</th>
                                     <th>Ayah</th>
                                     <th>Ibu</th>
+                                    <th>Keterangan</th>
+                                    <th class="text-center">WA</th>
                                     <th class="text-center">Opsi</th>
                                 </tr>
                             </thead>
@@ -1345,6 +1348,18 @@
                 <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">NISN (Nasional)</label><input type="text" id="in-nisn" placeholder="00123..." class="modern-input font-bold"></div>
                 <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nomor Induk (NI) Lokal</label><input type="text" id="in-ni" placeholder="2024..." class="modern-input font-bold"></div>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">NIK Siswa</label><input type="text" id="in-nik" placeholder="3271..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Keterangan</label>
+                    <select id="in-keterangan" class="modern-input font-bold">
+                        <option value="-">-</option>
+                        <option value="Penerima KPS">Penerima KPS</option>
+                        <option value="Penerima KIP">Penerima KIP</option>
+                        <option value="Penerima PKH">Penerima PKH</option>
+                    </select>
+                </div>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Tempat Lahir</label><input type="text" id="in-tempat-lahir" placeholder="Jakarta" class="modern-input font-bold"></div>
@@ -1356,10 +1371,26 @@
                 <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nama Ayah</label><input type="text" id="in-ayah" placeholder="Nama ayah..." class="modern-input font-bold"></div>
                 <div class="col-span-1 space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Nama Ibu</label><input type="text" id="in-ibu" placeholder="Nama ibu..." class="modern-input font-bold"></div>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Lulusan Ayah</label><input type="text" id="in-lulusan-ayah" placeholder="SD / SMP / SMA / S1..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Pekerjaan Ayah</label><input type="text" id="in-pekerjaan-ayah" placeholder="Petani / PNS / Wiraswasta..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Lulusan Ibu</label><input type="text" id="in-lulusan-ibu" placeholder="SD / SMP / SMA / S1..." class="modern-input font-bold"></div>
+                <div class="space-y-2"><label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Pekerjaan Ibu</label><input type="text" id="in-pekerjaan-ibu" placeholder="IRT / PNS / Wiraswasta..." class="modern-input font-bold"></div>
+            </div>
             
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">Alamat Lengkap</label>
                 <textarea id="in-alamat" placeholder="Jl. Raya No. 123..." class="modern-input font-medium text-sm" rows="3"></textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-widest">No. WhatsApp Orang Tua</label>
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-3 rounded-xl text-xs font-black" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;">+62</span>
+                    <input type="tel" id="in-wa" placeholder="8123456789 (tanpa 0 di depan)" class="modern-input font-bold flex-1">
+                </div>
+                <p class="text-[9px] ml-1" style="color:#9CA3AF;">Isi tanpa angka 0 di depan. Contoh: 8123456789</p>
             </div>
             
             <div class="flex gap-4 pt-6">
@@ -1896,6 +1927,13 @@
             document.getElementById('in-alamat').value = "";
             document.getElementById('in-ayah').value = "";
             document.getElementById('in-ibu').value = "";
+            document.getElementById('in-wa').value = "";
+            document.getElementById('in-nik').value = "";
+            document.getElementById('in-keterangan').value = "-";
+            document.getElementById('in-lulusan-ayah').value = "";
+            document.getElementById('in-pekerjaan-ayah').value = "";
+            document.getElementById('in-lulusan-ibu').value = "";
+            document.getElementById('in-pekerjaan-ibu').value = "";
             document.getElementById('m-siswa').classList.remove('hidden');
         }
 
@@ -1914,6 +1952,13 @@
             document.getElementById('in-alamat').value = s.alamat || "";
             document.getElementById('in-ayah').value = s.ayah || "";
             document.getElementById('in-ibu').value = s.ibu || "";
+            document.getElementById('in-wa').value = s.wa || "";
+            document.getElementById('in-nik').value = s.nik || "";
+            document.getElementById('in-keterangan').value = s.keterangan || "-";
+            document.getElementById('in-lulusan-ayah').value = s.lulusan_ayah || "";
+            document.getElementById('in-pekerjaan-ayah').value = s.pekerjaan_ayah || "";
+            document.getElementById('in-lulusan-ibu').value = s.lulusan_ibu || "";
+            document.getElementById('in-pekerjaan-ibu').value = s.pekerjaan_ibu || "";
             document.getElementById('m-siswa').classList.remove('hidden');
         }
 
@@ -1938,7 +1983,14 @@
                 agama: document.getElementById('in-agama').value,
                 alamat: document.getElementById('in-alamat').value,
                 ayah: document.getElementById('in-ayah').value,
-                ibu: document.getElementById('in-ibu').value
+                ibu: document.getElementById('in-ibu').value,
+                wa: document.getElementById('in-wa').value.replace(/\D/g,'').replace(/^0+/,''),
+                nik: document.getElementById('in-nik').value,
+                keterangan: document.getElementById('in-keterangan').value,
+                lulusan_ayah: document.getElementById('in-lulusan-ayah').value,
+                pekerjaan_ayah: document.getElementById('in-pekerjaan-ayah').value,
+                lulusan_ibu: document.getElementById('in-lulusan-ibu').value,
+                pekerjaan_ibu: document.getElementById('in-pekerjaan-ibu').value
             };
             
             if (id) {
@@ -1961,11 +2013,16 @@
                 <td class="px-6 py-4 font-black text-[10px] text-center pointer-events-none" style="color:#9CA3AF;">${s.no || index + 1}</td>
                 <td class="px-6 py-4 font-extrabold uppercase tracking-tighter pointer-events-none" style="color:#E5E7EB;font-size:11px;">${s.name}</td>
                 <td class="px-6 py-4 font-mono font-bold text-[10px] pointer-events-none" style="color:#00D4FF;">${s.nisn||'-'}/${s.ni||'-'}</td>
+                <td class="px-6 py-4 font-mono text-[10px] pointer-events-none" style="color:#9CA3AF;">${s.nik||'-'}</td>
                 <td class="px-6 py-4 italic text-[10px] whitespace-nowrap pointer-events-none" style="color:#9CA3AF;">${s.tempat_lahir||'-'}, ${s.tanggal_lahir||'-'}</td>
                 <td class="px-6 py-4 font-black text-[9px] uppercase tracking-widest pointer-events-none" style="color:#00D4FF;">${s.agama}</td>
                 <td class="px-6 py-4 italic text-[10px] pointer-events-none" style="color:#9CA3AF;">${s.alamat||'-'}</td>
-                <td class="px-6 py-4 font-bold text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ayah||'-'}</td>
-                <td class="px-6 py-4 font-bold text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ibu||'-'}</td>
+                <td class="px-6 py-4 text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ayah||'-'}<br><span style="color:#9CA3AF;font-size:9px;">${s.lulusan_ayah||''} ${s.pekerjaan_ayah||''}</span></td>
+                <td class="px-6 py-4 text-[10px] pointer-events-none" style="color:#E5E7EB;">${s.ibu||'-'}<br><span style="color:#9CA3AF;font-size:9px;">${s.lulusan_ibu||''} ${s.pekerjaan_ibu||''}</span></td>
+                <td class="px-6 py-4 text-[10px] pointer-events-none">${s.keterangan && s.keterangan !== '-' ? `<span style="font-size:9px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);">${s.keterangan}</span>` : '<span style="color:rgba(255,255,255,0.2);">—</span>'}</td>
+                <td class="px-6 py-4 text-center">
+                    ${s.wa ? `<a href="https://wa.me/62${s.wa}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-all" style="background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.3);" onmouseover="this.style.background='rgba(37,211,102,0.25)'" onmouseout="this.style.background='rgba(37,211,102,0.12)'" title="Chat WhatsApp"><svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='#25D366'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z'/><path d='M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L.057 23.882l6.186-1.443A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.5-5.2-1.373l-.373-.22-3.673.857.896-3.564-.242-.386A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z'/></svg></a>` : `<span style="color:rgba(255,255,255,0.15);font-size:9px;">—</span>`}
+                </td>
                 <td class="px-6 py-4">
                     <div class="flex items-center justify-center gap-2">
                         <button onclick="editSiswa('${s.id}')" class="bg-amber-500/20 hover:bg-amber-500 text-amber-400 hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all border border-amber-500/30 flex items-center gap-1"><i data-lucide="edit" class="w-3 h-3"></i> Edit</button>
@@ -2412,13 +2469,13 @@
             const today = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
             const tempatCetak = config.sekolah.tempat || 'Pengkol';
             
-            let finalY = startY + 15;
+            let finalY = startY + 10;
             const pageHeight = doc.internal.pageSize.getHeight();
             
-            // Check for enough space, if not add page
-            if (finalY + 80 > pageHeight) {
-                doc.addPage();
-                finalY = 25;
+            // Jangan addPage - paksa tanda tangan di halaman yang sama
+            // Kalau tidak muat, geser ke posisi yang masih ada di halaman ini
+            if (finalY + 45 > pageHeight) {
+                finalY = pageHeight - 50;
             }
             
             doc.setFontSize(9); doc.setFont("helvetica", "normal");
@@ -2473,19 +2530,37 @@
         }
 
         function downloadStudentPDF() {
-            const { jsPDF } = window.jspdf; 
+            const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', 'a4');
             getPdfHeader(doc, "DATABASE INDUK SISWA");
-            doc.autoTable({ 
-                head: [['NO', 'NAMA LENGKAP', 'NISN/NI', 'TEMPAT, TGL LAHIR', 'AGAMA', 'ALAMAT', 'AYAH', 'IBU']],
-                body: students.map(s => [s.no, s.name, `${s.nisn}/${s.ni}`, `${s.tempat_lahir || '-'}, ${s.tanggal_lahir || '-'}`, s.agama, s.alamat, s.ayah, s.ibu]),
-                startY: 48, 
-                styles: { fontSize: 8, cellPadding: 3 },
-                headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: 'bold' },
-                alternateRowStyles: { fillColor: [248, 250, 252] },
-                margin: { left: 20, right: 20 }
+
+            doc.autoTable({
+                head: [['NO','NAMA','NISN/NI','NIK','TGL LAHIR','AGAMA','ALAMAT','AYAH','LLS AYAH','PKJ AYAH','IBU','LLS IBU','PKJ IBU','NO.WA','KET']],
+                body: students.map(s => [
+                    s.no||'',
+                    s.name||'',
+                    `${s.nisn||'-'}/${s.ni||'-'}`,
+                    s.nik||'-',
+                    `${s.tempat_lahir||'-'}, ${s.tanggal_lahir||'-'}`,
+                    s.agama||'-',
+                    s.alamat||'-',
+                    s.ayah||'-',
+                    s.lulusan_ayah||'-',
+                    s.pekerjaan_ayah||'-',
+                    s.ibu||'-',
+                    s.lulusan_ibu||'-',
+                    s.pekerjaan_ibu||'-',
+                    s.wa ? '0'+s.wa : '-',
+                    s.keterangan && s.keterangan !== '-' ? s.keterangan : '-'
+                ]),
+                startY: 48,
+                styles: { fontSize: 7, cellPadding: 2.5, overflow: 'linebreak' },
+                headStyles: { fillColor: [30, 41, 59], textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+                alternateRowStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255] },
+                margin: { top: 10, left: 6.35, right: 6.35, bottom: 58 },
+                tableWidth: 'auto'
             });
-            addPdfFooter(doc, doc.lastAutoTable.finalY, 'general');
+            addPdfFooter(doc, doc.lastAutoTable.finalY);
             window.open(doc.output('bloburl'), '_blank');
         }
 
