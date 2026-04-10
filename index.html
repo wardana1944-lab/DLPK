@@ -288,6 +288,7 @@
             0%, 100% { transform: translateY(0) rotate(0deg); } 
             50% { transform: translateY(-20px) rotate(2deg); } 
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes loadingSweep { 
             0% { left: -100%; } 
             100% { left: 100%; } 
@@ -774,74 +775,95 @@
 
         <div class="flex-1 overflow-auto p-4 md:p-8 hidden" id="main-scroll-area">
             
-            <div id="page-dashboard" class="space-y-6 page-transition">
+            <div id="page-dashboard" class="space-y-5 page-transition">
 
-                <!-- Hero Banner -->
-                <div class="relative overflow-hidden rounded-3xl p-8 md:p-12" style="background:linear-gradient(135deg,#0d1829 0%,#0a1628 50%,#0f1f3d 100%);border:1px solid rgba(0,212,255,0.15);">
+                <!-- Hero Banner — foto guru + sapaan -->
+                <div class="relative overflow-hidden rounded-3xl p-7 md:p-10" style="background:linear-gradient(135deg,#0d1829 0%,#0a1628 50%,#0f1f3d 100%);border:1px solid rgba(0,212,255,0.15);">
                     <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 70% 30%,rgba(0,212,255,0.1),transparent 55%),radial-gradient(ellipse at 10% 90%,rgba(124,58,237,0.08),transparent 50%);"></div>
                     <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:40px 40px;"></div>
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5" style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" style="animation:pulse 2s infinite;"></span>
-                            <span class="text-[9px] font-black uppercase tracking-[.2em]" style="color:#00D4FF;">Sistem Aktif</span>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-7">
+
+                        <!-- Foto Guru -->
+                        <div class="flex flex-col items-center gap-3 flex-shrink-0">
+                            <div class="relative">
+                                <!-- Ring animasi -->
+                                <div class="absolute inset-0 rounded-full" style="background:conic-gradient(#00D4FF,#A855F7,#00D4FF);padding:2px;border-radius:50%;animation:spin 6s linear infinite;">
+                                    <div class="w-full h-full rounded-full" style="background:#0d1829;"></div>
+                                </div>
+                                <!-- Avatar / Foto -->
+                                <div id="dash-guru-avatar" class="relative w-24 h-24 rounded-full flex items-center justify-center overflow-hidden" style="background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(124,58,237,0.15));border:2px solid rgba(0,212,255,0.3);box-shadow:0 0 30px rgba(0,212,255,0.2);">
+                                    <i data-lucide="user" class="w-10 h-10" style="color:rgba(0,212,255,0.6);"></i>
+                                </div>
+                            </div>
+                            <!-- Nama, NIP, Jabatan -->
+                            <div class="text-center">
+                                <div id="dash-guru-nama" class="font-black text-sm leading-tight" style="color:#E5E7EB;">...</div>
+                                <div id="dash-guru-nip" class="text-[9px] font-bold font-mono mt-1" style="color:#9CA3AF;">...</div>
+                                <div id="dash-guru-kelas" class="inline-block mt-2 px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:#00D4FF;">...</div>
+                            </div>
                         </div>
-                        <h1 id="dash-welcome" class="text-3xl md:text-4xl font-black tracking-tight leading-tight mb-3" style="color:#E5E7EB;">
-                            Selamat Datang, <span style="background:linear-gradient(135deg,#00D4FF,#A855F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">...</span>
-                        </h1>
-                        <p class="text-sm leading-relaxed" style="color:#9CA3AF;max-width:520px;">Platform administrasi kelas digital yang cerdas, terstruktur, dan profesional.</p>
+
+                        <!-- Sapaan -->
+                        <div class="flex-1 md:pt-2">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4" style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" style="animation:pulse 2s infinite;"></span>
+                                <span class="text-[9px] font-black uppercase tracking-[.2em]" style="color:#00D4FF;">Sistem Aktif</span>
+                            </div>
+                            <h1 id="dash-welcome" class="text-2xl md:text-3xl font-black tracking-tight leading-tight mb-2" style="color:#E5E7EB;">
+                                Selamat Datang, <span style="background:linear-gradient(135deg,#00D4FF,#A855F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">...</span>
+                            </h1>
+                            <p class="text-xs leading-relaxed" style="color:#9CA3AF;max-width:420px;">Platform administrasi kelas digital yang cerdas, terstruktur, dan profesional.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Info Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                    <!-- Identitas Guru -->
-                    <div class="relative overflow-hidden rounded-2xl p-6" style="background:rgba(13,24,41,0.9);border:1px solid rgba(0,212,255,0.12);">
-                        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent);"></div>
-                        <div class="flex items-center gap-3 mb-5">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;">
-                                <i data-lucide="user" class="w-4 h-4"></i>
-                            </div>
-                            <span class="text-[10px] font-black uppercase tracking-[.15em]" style="color:#00D4FF;">Identitas Guru</span>
+                <!-- Jadwal Hari Ini — selalu tampil -->
+                <div id="dash-jadwal-hari-ini" class="relative overflow-hidden rounded-2xl" style="background:rgba(13,24,41,0.9);border:1px solid rgba(0,212,255,0.15);">
+                    <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
+                    <div class="flex items-center gap-3 px-5 py-4" style="border-bottom:1px solid rgba(0,212,255,0.08);">
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
                         </div>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center py-2.5 border-b" style="border-color:rgba(255,255,255,0.05);">
-                                <span class="text-[10px] font-bold uppercase tracking-wider" style="color:#9CA3AF;">Nama</span>
-                                <span id="dash-guru-nama" class="text-xs font-bold text-right" style="color:#E5E7EB;">...</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2.5 border-b" style="border-color:rgba(255,255,255,0.05);">
-                                <span class="text-[10px] font-bold uppercase tracking-wider" style="color:#9CA3AF;">NIP</span>
-                                <span id="dash-guru-nip" class="text-xs font-bold font-mono" style="color:#E5E7EB;">...</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2.5">
-                                <span class="text-[10px] font-bold uppercase tracking-wider" style="color:#9CA3AF;">Jabatan</span>
-                                <span id="dash-guru-kelas" class="text-xs font-black uppercase" style="color:#00D4FF;">...</span>
-                            </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-[9px] font-black uppercase tracking-[.2em]" style="color:rgba(0,212,255,0.5);">Jadwal Hari Ini</div>
+                            <div id="dash-jadwal-hari" class="text-xs font-black uppercase tracking-wide" style="color:#E5E7EB;">—</div>
+                        </div>
+                        <div id="dash-jadwal-now-badge" class="hidden flex-shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider" style="background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:#00D4FF;">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#00D4FF]" style="animation:pulse 2s infinite;"></span> Sedang Berlangsung
                         </div>
                     </div>
+                    <div id="dash-jadwal-list" class="px-5 py-3 space-y-2"></div>
+                </div>
 
-                    <!-- Identitas Sekolah -->
-                    <div class="relative overflow-hidden rounded-2xl p-6" style="background:rgba(13,24,41,0.9);border:1px solid rgba(168,85,247,0.12);">
-                        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(168,85,247,0.4),transparent);"></div>
-                        <div class="flex items-center gap-3 mb-5">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#A855F7;">
-                                <i data-lucide="school" class="w-4 h-4"></i>
-                            </div>
-                            <span class="text-[10px] font-black uppercase tracking-[.15em]" style="color:#A855F7;">Identitas Sekolah</span>
+                <!-- Identitas Sekolah -->
+                <div class="relative overflow-hidden rounded-2xl" style="background:rgba(13,24,41,0.9);border:1px solid rgba(168,85,247,0.12);">
+                    <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(168,85,247,0.4),transparent);"></div>
+                    <div class="flex items-center gap-3 px-5 py-4" style="border-bottom:1px solid rgba(168,85,247,0.07);">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(124,58,237,0.1));border:1px solid rgba(168,85,247,0.2);color:#A855F7;">
+                            <i data-lucide="school" class="w-5 h-5"></i>
                         </div>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center py-2.5 border-b" style="border-color:rgba(255,255,255,0.05);">
-                                <span class="text-[10px] font-bold uppercase tracking-wider" style="color:#9CA3AF;">Sekolah</span>
-                                <span id="dash-sch-nama" class="text-xs font-bold text-right" style="color:#E5E7EB;">...</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2.5 border-b" style="border-color:rgba(255,255,255,0.05);">
-                                <span class="text-[10px] font-bold uppercase tracking-wider" style="color:#9CA3AF;">NPSN</span>
-                                <span id="dash-sch-npsn" class="text-xs font-bold font-mono" style="color:#E5E7EB;">...</span>
-                            </div>
-                            <div class="flex justify-between items-start py-2.5">
-                                <span class="text-[10px] font-bold uppercase tracking-wider shrink-0" style="color:#9CA3AF;">Alamat</span>
-                                <span id="dash-sch-alamat" class="text-xs font-medium text-right leading-relaxed italic ml-4" style="color:#9CA3AF;">...</span>
-                            </div>
+                        <div>
+                            <div class="text-[8px] font-black uppercase tracking-[.2em]" style="color:rgba(168,85,247,0.5);">Institusi</div>
+                            <div class="text-[10px] font-black uppercase tracking-wider" style="color:#A855F7;">Identitas Sekolah</div>
+                        </div>
+                    </div>
+                    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="space-y-1">
+                            <div class="text-[8px] font-black uppercase tracking-wider" style="color:rgba(156,163,175,0.6);">Nama Sekolah</div>
+                            <div id="dash-sch-nama" class="text-xs font-bold" style="color:#E5E7EB;">...</div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="text-[8px] font-black uppercase tracking-wider" style="color:rgba(156,163,175,0.6);">NPSN</div>
+                            <div id="dash-sch-npsn" class="text-xs font-bold font-mono" style="color:#E5E7EB;">...</div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="text-[8px] font-black uppercase tracking-wider" style="color:rgba(156,163,175,0.6);">Kepala Sekolah</div>
+                            <div id="dash-sch-ks-nama" class="text-xs font-bold" style="color:#E5E7EB;">...</div>
+                            <div id="dash-sch-ks-nip" class="text-[9px] font-bold font-mono" style="color:#9CA3AF;">...</div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="text-[8px] font-black uppercase tracking-wider" style="color:rgba(156,163,175,0.6);">Alamat</div>
+                            <div id="dash-sch-alamat" class="text-xs font-medium italic leading-relaxed" style="color:rgba(156,163,175,0.8);">...</div>
                         </div>
                     </div>
                 </div>
@@ -1048,7 +1070,7 @@
                             <div>
                                 <div class="text-[9px] font-black uppercase tracking-[.2em] mb-1" style="color:rgba(0,212,255,0.6);">Manajemen Waktu</div>
                                 <h2 class="text-2xl font-black tracking-tight" style="color:#E5E7EB;">Jadwal Pelajaran</h2>
-                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Atur jadwal mengajar per hari dalam seminggu</p>
+                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Kelola jadwal mengajar per hari dalam seminggu</p>
                             </div>
                         </div>
                         <button onclick="bukaModalJadwal()" class="flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[11px] uppercase tracking-wider border-none cursor-pointer transition-all flex-shrink-0" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.25);" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,212,255,0.4)'" onmouseout="this.style.boxShadow='0 4px 14px rgba(0,212,255,0.25)'">
@@ -1242,6 +1264,22 @@
                             <h4 class="text-xs font-black text-[var(--text-main)] uppercase tracking-widest">Identitas Pendidik</h4>
                         </div>
                         <div class="space-y-6">
+                            <!-- Upload Foto Guru -->
+                            <div>
+                                <label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-3 block ml-1">Foto Guru</label>
+                                <div class="flex items-center gap-4">
+                                    <div id="set-foto-preview" class="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden" style="background:rgba(0,212,255,0.1);border:2px solid rgba(0,212,255,0.25);">
+                                        <i data-lucide="user" class="w-7 h-7" style="color:rgba(0,212,255,0.5);"></i>
+                                    </div>
+                                    <div class="flex-1 space-y-2">
+                                        <label for="set-foto-input" class="flex items-center gap-2 px-4 py-2.5 rounded-xl cursor-pointer text-[10px] font-black uppercase tracking-wider transition-all w-fit" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:#00D4FF;" onmouseover="this.style.background='rgba(0,212,255,0.18)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">
+                                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Pilih Foto
+                                        </label>
+                                        <input type="file" id="set-foto-input" accept="image/*" class="hidden" onchange="previewFotoGuru(this)">
+                                        <p class="text-[9px] ml-1" style="color:#9CA3AF;">JPG/PNG, maks 500KB. Foto tersimpan di database.</p>
+                                    </div>
+                                </div>
+                            </div>
                             <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Nama Lengkap & Gelar</label><input type="text" id="set-guru-nama" class="modern-input font-bold text-[var(--text-main)]"></div>
                             <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">NIP / ID Pegawai</label><input type="text" id="set-guru-nip" class="modern-input font-bold text-[var(--text-main)]"></div>
                             <div><label class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 block ml-1">Jabatan / Wali Kelas</label><input type="text" id="set-guru-kelas" class="modern-input font-bold text-[var(--text-main)]"></div>
@@ -1337,16 +1375,14 @@
 
     <!-- Modal Jadwal -->
     <div id="m-jadwal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);">
-        <div class="relative w-full max-w-md rounded-3xl p-8 space-y-6" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.5);">
+        <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.5);">
             <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;">
-                        <i data-lucide="clock" class="w-4 h-4"></i>
-                    </div>
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;"><i data-lucide="clock" class="w-4 h-4"></i></div>
                     <span id="m-jadwal-title" class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Tambah Jadwal</span>
                 </div>
-                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.05);color:#9CA3AF;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -1355,32 +1391,22 @@
                 <div>
                     <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Hari</label>
                     <select id="jdw-hari" class="modern-input font-bold">
-                        <option value="Senin">Senin</option>
-                        <option value="Selasa">Selasa</option>
-                        <option value="Rabu">Rabu</option>
-                        <option value="Kamis">Kamis</option>
-                        <option value="Jumat">Jumat</option>
+                        <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
-                    <input type="text" id="jdw-mapel" class="modern-input font-bold" placeholder="Contoh: Matematika">
+                    <input type="text" id="jdw-mapel" class="modern-input font-bold" placeholder="Contoh: Matematika" onkeydown="if(event.key==='Enter')document.getElementById('jdw-jam').focus()">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Jam Mulai</label>
-                        <input type="time" id="jdw-mulai" class="modern-input font-bold" value="07:00">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Jam Selesai</label>
-                        <input type="time" id="jdw-selesai" class="modern-input font-bold" value="08:00">
-                    </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Jam</label>
+                    <input type="text" id="jdw-jam" class="modern-input font-bold" placeholder="Contoh: 07.00 - 08.30" onkeydown="if(event.key==='Enter')simpanJadwal()">
                 </div>
             </div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">Batal</button>
-                <button onclick="saveJadwal()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer transition-all" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.2);">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Jadwal
+            <div class="flex gap-3 pt-1">
+                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                <button onclick="simpanJadwal()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.2);">
+                    <i data-lucide="save" class="w-4 h-4"></i> Simpan
                 </button>
             </div>
         </div>
@@ -1490,38 +1516,39 @@
                 screen.style.transform = 'scale(1.05)';
                 setTimeout(() => {
                     screen.style.display = 'none';
-                    document.getElementById('login-screen').classList.remove('hidden');
-                    document.getElementById('login-password').focus();
+                    // Cek session — jika sudah login sebelumnya, langsung masuk
+                    if (sessionStorage.getItem('dlpk_logged_in') === '1') {
+                        masukDashboard();
+                    } else {
+                        document.getElementById('login-screen').classList.remove('hidden');
+                        document.getElementById('login-password').focus();
+                    }
                     lucide.createIcons();
                 }, 500);
-            }, 1200); // Dipercepat dari 2500ms
+            }, 1200);
         };
+
+        function masukDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.querySelectorAll('main > div > div').forEach(d => d.classList.add('hidden'));
+            const dashPage = document.getElementById('page-dashboard');
+            if (dashPage) { dashPage.classList.remove('hidden'); dashPage.classList.add('page-transition'); }
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+            document.getElementById('main-sidebar').classList.remove('hidden');
+            document.querySelector('header').classList.remove('hidden');
+            document.getElementById('main-scroll-area').classList.remove('hidden');
+            lucide.createIcons();
+        }
 
         function attemptLogin() {
             const input = document.getElementById('login-password').value;
             const correctPassword = (config.auth && config.auth.password) ? config.auth.password : "guru123";
             
             if (input === correctPassword) {
-                // Sembunyikan login screen
+                sessionStorage.setItem('dlpk_logged_in', '1');
                 document.getElementById('login-screen').classList.add('hidden');
-                
-                // Siapkan halaman dashboard dulu sebelum area konten ditampilkan
-                const targetPage = 'dashboard';
-                document.querySelectorAll('main > div > div').forEach(d => d.classList.add('hidden'));
-                const dashPage = document.getElementById('page-'+targetPage);
-                if(dashPage) {
-                    dashPage.classList.remove('hidden');
-                    dashPage.classList.add('page-transition');
-                }
-                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                const sideLink = document.querySelector(`[data-page="${targetPage}"]`);
-                if(sideLink) sideLink.classList.add('active');
-
-                // Tampilkan semua elemen utama setelah halaman siap
-                document.getElementById('main-sidebar').classList.remove('hidden');
-                document.querySelector('header').classList.remove('hidden');
-                document.getElementById('main-scroll-area').classList.remove('hidden');
-                
+                masukDashboard();
                 showToast('Login Berhasil', 'success');
                 document.getElementById('login-password').value = "";
                 lucide.createIcons();
@@ -1534,6 +1561,7 @@
 
         function logout() {
             if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
+                sessionStorage.removeItem('dlpk_logged_in');
                 // Sembunyikan elemen utama
                 document.getElementById('main-sidebar').classList.add('hidden');
                 document.querySelector('header').classList.add('hidden');
@@ -1588,6 +1616,10 @@
                 if (data.gradeConfigs) Object.assign(gradeConfigs, data.gradeConfigs);
                 
                 updateUIFromConfig();
+                // Muat foto guru dari Firebase
+                if (data.config && data.config.guru && data.config.guru.foto) {
+                    applyFotoGuru(data.config.guru.foto);
+                }
                 if (document.getElementById('page-students').classList.contains('hidden') === false) renderSiswa();
                 if (document.getElementById('page-attendance').classList.contains('hidden') === false) renderAbsen();
                 if (document.getElementById('page-grades').classList.contains('hidden') === false) renderNilai();
@@ -1622,6 +1654,11 @@
             const dashSchAlamat = document.getElementById('dash-sch-alamat');
             if (dashSchAlamat) dashSchAlamat.innerText = config.sekolah.alamat;
 
+            const dashKsNama = document.getElementById('dash-sch-ks-nama');
+            if (dashKsNama) dashKsNama.innerText = config.sekolah.ks_nama || '-';
+            const dashKsNip = document.getElementById('dash-sch-ks-nip');
+            if (dashKsNip) dashKsNip.innerText = config.sekolah.ks_nip ? 'NIP. ' + config.sekolah.ks_nip : '-';
+
             // Stat cards
             const statSiswa = document.getElementById('dash-stat-siswa');
             if (statSiswa) statSiswa.innerText = students.length || 0;
@@ -1639,6 +1676,31 @@
             document.getElementById('set-sch-ks-nip').value = config.sekolah.ks_nip || '';
             document.getElementById('set-sch-tempat').value = config.sekolah.tempat || 'Pengkol';
             document.getElementById('set-sch-alamat').value = config.sekolah.alamat;
+        }
+
+        // ── FOTO GURU ──
+        function previewFotoGuru(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            if (file.size > 512 * 1024) { showToast('Ukuran foto maks 500KB!', 'error'); input.value = ''; return; }
+            const reader = new FileReader();
+            reader.onload = e => {
+                const b64 = e.target.result;
+                applyFotoGuru(b64);
+                // Simpan ke Firebase
+                db.ref('config/guru/foto').set(b64).then(() => showToast('Foto berhasil disimpan!'));
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function applyFotoGuru(b64) {
+            if (!b64) return;
+            // Preview di settings
+            const prev = document.getElementById('set-foto-preview');
+            if (prev) prev.innerHTML = `<img src="${b64}" style="width:100%;height:100%;object-fit:cover;">`;
+            // Avatar di dashboard
+            const avatar = document.getElementById('dash-guru-avatar');
+            if (avatar) avatar.innerHTML = `<img src="${b64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
         }
 
         function saveSettings() {
@@ -2159,105 +2221,164 @@
         let scheduleData = {};
 
         function bukaModalJadwal(id) {
+            const combo = document.getElementById('jdw-hari');
             if (id) {
-                const entry = scheduleData[id];
+                const v = scheduleData[id];
                 document.getElementById('m-jadwal-title').innerText = 'Edit Jadwal';
                 document.getElementById('jdw-edit-id').value = id;
-                document.getElementById('jdw-hari').value = entry.hari;
-                document.getElementById('jdw-mapel').value = entry.mapel;
-                document.getElementById('jdw-mulai').value = entry.mulai;
-                document.getElementById('jdw-selesai').value = entry.selesai;
+                combo.value = v.hari;
+                document.getElementById('jdw-mapel').value = v.mapel;
+                document.getElementById('jdw-jam').value = v.jam || '';
             } else {
                 document.getElementById('m-jadwal-title').innerText = 'Tambah Jadwal';
                 document.getElementById('jdw-edit-id').value = '';
+                combo.value = 'Senin';
                 document.getElementById('jdw-mapel').value = '';
-                document.getElementById('jdw-mulai').value = '07:00';
-                document.getElementById('jdw-selesai').value = '08:00';
+                document.getElementById('jdw-jam').value = '';
             }
             document.getElementById('m-jadwal').classList.remove('hidden');
+            document.getElementById('jdw-mapel').focus();
             lucide.createIcons();
         }
 
-        function saveJadwal() {
+        function simpanJadwal() {
             const id = document.getElementById('jdw-edit-id').value;
             const data = {
                 hari: document.getElementById('jdw-hari').value,
-                mapel: document.getElementById('jdw-mapel').value,
-                mulai: document.getElementById('jdw-mulai').value,
-                selesai: document.getElementById('jdw-selesai').value
+                mapel: document.getElementById('jdw-mapel').value.trim(),
+                jam: document.getElementById('jdw-jam').value.trim()
             };
-            if (!data.mapel) { showToast('Pilih mata pelajaran!', 'error'); return; }
-            const ref = id ? db.ref(`schedule/${id}`) : db.ref('schedule').push();
+            if (!data.mapel || !data.jam) { showToast('Isi mapel dan jam!', 'error'); return; }
+            const ref = id ? db.ref('schedule/' + id) : db.ref('schedule').push();
             (id ? ref.update(data) : ref.set(data)).then(() => {
                 document.getElementById('m-jadwal').classList.add('hidden');
-                showToast(id ? 'Jadwal diperbarui!' : 'Jadwal disimpan!');
+                showToast(id ? 'Jadwal diperbarui!' : 'Jadwal ditambahkan!');
             });
         }
 
         function hapusJadwal(id) {
             if (confirm('Hapus jadwal ini?')) {
-                db.ref(`schedule/${id}`).remove().then(() => showToast('Jadwal dihapus!', 'info'));
+                db.ref('schedule/' + id).remove().then(() => showToast('Jadwal dihapus!', 'info'));
             }
         }
 
         function renderSchedule() {
             const hariList = ['Senin','Selasa','Rabu','Kamis','Jumat'];
             const hariColor = {
-                'Senin':   ['rgba(0,212,255,0.12)','rgba(0,212,255,0.3)','#00D4FF'],
-                'Selasa':  ['rgba(59,130,246,0.12)','rgba(59,130,246,0.3)','#3B82F6'],
-                'Rabu':    ['rgba(168,85,247,0.12)','rgba(168,85,247,0.3)','#A855F7'],
-                'Kamis':   ['rgba(251,191,36,0.12)','rgba(251,191,36,0.3)','#fbbf24'],
-                'Jumat':   ['rgba(39,174,96,0.12)','rgba(39,174,96,0.3)','#27AE60'],
-                'Sabtu':   ['rgba(239,68,68,0.12)','rgba(239,68,68,0.3)','#f87171'],
+                'Senin':  ['rgba(0,212,255,0.12)','rgba(0,212,255,0.25)','#00D4FF'],
+                'Selasa': ['rgba(59,130,246,0.12)','rgba(59,130,246,0.25)','#3B82F6'],
+                'Rabu':   ['rgba(168,85,247,0.12)','rgba(168,85,247,0.25)','#A855F7'],
+                'Kamis':  ['rgba(251,191,36,0.12)','rgba(251,191,36,0.25)','#fbbf24'],
+                'Jumat':  ['rgba(39,174,96,0.12)','rgba(39,174,96,0.25)','#27AE60'],
             };
-            const bc = 'rgba(0,212,255,0.08)';
             const container = document.getElementById('schedule-grid');
             container.innerHTML = hariList.map(hari => {
                 const [bg, border, accent] = hariColor[hari];
                 const entries = Object.entries(scheduleData)
                     .filter(([,v]) => v.hari === hari)
-                    .sort(([,a],[,b]) => a.mulai.localeCompare(b.mulai));
+                    .sort(([,a],[,b]) => (a.jam||a.mulai||'').localeCompare(b.jam||b.mulai||''));
 
                 const rows = entries.length === 0
-                    ? `<div class="text-center py-6 text-[10px] font-bold uppercase tracking-widest" style="color:rgba(255,255,255,0.15);">Tidak ada jadwal</div>`
-                    : entries.map(([id, v]) => `
-                        <div class="flex items-center gap-3 py-3 border-b" style="border-color:rgba(255,255,255,0.05);">
-                            <div class="flex-shrink-0 text-center px-2 py-1.5 rounded-lg" style="background:${bg};min-width:100px;">
-                                <div class="text-[9px] font-black whitespace-nowrap" style="color:${accent};">${v.mulai} – ${v.selesai}</div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-xs font-black truncate" style="color:#E5E7EB;">${v.mapel}</div>
-                            </div>
-                            <div class="flex gap-1 flex-shrink-0">
-                                <button onclick="bukaModalJadwal('${id}')" class="w-7 h-7 rounded-lg flex items-center justify-center transition-all" style="background:rgba(251,191,36,0.1);color:#fbbf24;" onmouseover="this.style.background='rgba(251,191,36,0.2)'" onmouseout="this.style.background='rgba(251,191,36,0.1)'"><i data-lucide="edit" class="w-3 h-3"></i></button>
-                                <button onclick="hapusJadwal('${id}')" class="w-7 h-7 rounded-lg flex items-center justify-center transition-all" style="background:rgba(239,68,68,0.1);color:#f87171;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-                            </div>
-                        </div>`).join('');
+                    ? '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.15);">Belum ada jadwal</div>'
+                    : entries.map(([id, v]) =>
+                        '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);">' +
+                            '<div style="flex-shrink:0;padding:4px 10px;border-radius:8px;background:' + bg + ';white-space:nowrap;">' +
+                                '<span style="font-size:9px;font-weight:800;color:' + accent + ';">' + (v.jam || (v.mulai + ' \u2013 ' + v.selesai)) + '</span>' +
+                            '</div>' +
+                            '<div style="flex:1;min-width:0;font-size:11px;font-weight:700;color:#E5E7EB;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + v.mapel + '</div>' +
+                            '<div style="display:flex;gap:4px;flex-shrink:0;">' +
+                                '<button onclick="bukaModalJadwal(\'' + id + '\')" title="Edit Jadwal" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(0,212,255,0.3);cursor:pointer;background:rgba(0,212,255,0.1);color:#00D4FF;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background=\'rgba(0,212,255,0.25)\';this.style.boxShadow=\'0 0 10px rgba(0,212,255,0.3)\'" onmouseout="this.style.background=\'rgba(0,212,255,0.1)\';this.style.boxShadow=\'none\'"><i data-lucide="pencil" style="width:12px;height:12px;"></i></button>' +
+                                '<button onclick="hapusJadwal(\'' + id + '\')" title="Hapus Jadwal" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(239,68,68,0.3);cursor:pointer;background:rgba(239,68,68,0.1);color:#f87171;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background=\'rgba(239,68,68,0.25)\';this.style.boxShadow=\'0 0 10px rgba(239,68,68,0.3)\'" onmouseout="this.style.background=\'rgba(239,68,68,0.1)\';this.style.boxShadow=\'none\'"><i data-lucide="trash-2" style="width:12px;height:12px;"></i></button>' +
+                            '</div>' +
+                        '</div>'
+                    ).join('');
 
-                return `<div class="relative overflow-hidden rounded-2xl" style="background:rgba(13,24,41,0.9);border:1px solid ${border};">
-                    <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,${accent},transparent);opacity:0.5;"></div>
-                    <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color:rgba(255,255,255,0.05);">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2 h-2 rounded-full" style="background:${accent};box-shadow:0 0 6px ${accent};"></div>
-                            <span class="text-xs font-black uppercase tracking-widest" style="color:${accent};">${hari}</span>
-                        </div>
-                        <span class="text-[9px] font-bold uppercase tracking-wider" style="color:rgba(255,255,255,0.25);">${entries.length} Sesi</span>
-                    </div>
-                    <div class="px-5 pb-2">${rows}</div>
-                </div>`;
+                return '<div style="position:relative;overflow:hidden;border-radius:16px;background:rgba(13,24,41,0.9);border:1px solid ' + border + ';">' +
+                    '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,' + accent + ',transparent);opacity:0.5;"></div>' +
+                    '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);">' +
+                        '<div style="display:flex;align-items:center;gap:8px;">' +
+                            '<div style="width:8px;height:8px;border-radius:50%;background:' + accent + ';box-shadow:0 0 6px ' + accent + ';"></div>' +
+                            '<span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:' + accent + ';">' + hari + '</span>' +
+                        '</div>' +
+                        '<span style="font-size:9px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.25);">' + entries.length + ' Sesi</span>' +
+                    '</div>' +
+                    '<div style="padding:0 16px;">' + rows + '</div>' +
+                '</div>';
             }).join('');
             lucide.createIcons();
         }
 
-        // Load schedule dari Firebase
         db.ref('schedule').on('value', snap => {
             scheduleData = snap.val() || {};
             if (document.getElementById('page-schedule') && !document.getElementById('page-schedule').classList.contains('hidden')) {
                 renderSchedule();
             }
+            // Update jadwal hari ini di dashboard setiap kali data berubah
+            renderDashJadwal();
         });
 
-        function populatePrintMenu() {
+        function renderDashJadwal() {
+            const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+            const now = new Date();
+            const hariIni = hariNames[now.getDay()];
+            const jamNow = now.getHours() * 60 + now.getMinutes();
+
+            const entries = Object.entries(scheduleData)
+                .filter(([,v]) => v.hari === hariIni)
+                .sort(([,a],[,b]) => (a.jam||a.mulai||'').localeCompare(b.jam||b.mulai||''));
+
+            const box = document.getElementById('dash-jadwal-hari-ini');
+            if (!box) return;
+
+            if (entries.length === 0) {
+                box.style.display = 'block';
+                document.getElementById('dash-jadwal-hari').innerText = hariIni;
+                document.getElementById('dash-jadwal-list').innerHTML =
+                    '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,255,0.25);">Tidak ada jadwal hari ini</div>';
+                document.getElementById('dash-jadwal-now-badge').classList.add('hidden');
+                return;
+            }
+
+            box.style.display = 'block';
+            document.getElementById('dash-jadwal-hari').innerText = hariIni;
+
+            const parseJam = str => {
+                const m = (str||'').replace('.', ':').match(/(\d{1,2}):(\d{2})/);
+                return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : -1;
+            };
+
+            let adaNow = false;
+            const listEl = document.getElementById('dash-jadwal-list');
+            listEl.innerHTML = entries.map(([id, v]) => {
+                const jamStr = v.jam || (v.mulai + ' – ' + v.selesai);
+                let isNow = false;
+                const parts = jamStr.split(/[-–]/);
+                if (parts.length === 2) {
+                    const s = parseJam(parts[0].trim()), e = parseJam(parts[1].trim());
+                    if (s >= 0 && e >= 0 && jamNow >= s && jamNow <= e) { isNow = true; adaNow = true; }
+                }
+
+                // Warna sesuai tema: aktif = cyan glow, lainnya = subtle dark
+                const rowBg    = isNow ? 'rgba(0,212,255,0.08)'  : 'rgba(255,255,255,0.03)';
+                const rowBdr   = isNow ? 'rgba(0,212,255,0.3)'   : 'rgba(255,255,255,0.06)';
+                const jamClr   = isNow ? '#00D4FF'               : '#9CA3AF';
+                const mapelClr = isNow ? '#E5E7EB'               : '#9CA3AF';
+                const glow     = isNow ? 'box-shadow:0 0 12px rgba(0,212,255,0.15);' : '';
+                const nowTag   = isNow
+                    ? '<span style="font-size:8px;font-weight:900;padding:2px 8px;border-radius:100px;background:rgba(0,212,255,0.15);color:#00D4FF;margin-left:8px;text-transform:uppercase;letter-spacing:.08em;border:1px solid rgba(0,212,255,0.25);">Sekarang</span>'
+                    : '';
+
+                return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${rowBg};border:1px solid ${rowBdr};${glow}transition:all 0.2s;">
+                    <span style="font-size:9px;font-weight:800;color:${jamClr};white-space:nowrap;min-width:95px;font-family:monospace;">${jamStr}</span>
+                    <span style="font-size:11px;font-weight:700;color:${mapelClr};flex:1;">${v.mapel}${nowTag}</span>
+                </div>`;
+            }).join('');
+
+            const badge = document.getElementById('dash-jadwal-now-badge');
+            if (adaNow) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+        }
+
+                function populatePrintMenu() {
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             document.getElementById('print-month-absen').innerHTML = months.map((m, i) => `<option value="${i}">${m}</option>`).join('');
             document.getElementById('print-month-jurnal').innerHTML = months.map((m, i) => `<option value="${i}">${m}</option>`).join('');
