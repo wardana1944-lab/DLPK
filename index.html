@@ -1464,7 +1464,7 @@
         let journalData = {};
         let currentJournalDate = new Date();
 
-        let currentMonth = new Date(2026, 0, 1);
+        let currentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         const subjects = ["BAHASA INDONESIA", "PENDIDIKAN PANCASILA", "MATEMATIKA", "SENI RUPA", "IPAS", "BAHASA JAWA"];
         const gradeConfigs = {};
         subjects.forEach(s => gradeConfigs[s] = { ph: ['PH 1'] });
