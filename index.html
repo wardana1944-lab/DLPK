@@ -300,6 +300,14 @@
         @keyframes shimmer {
             to { background-position: 200% center; }
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(.96); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to   { opacity: 0; transform: scale(.96); }
+        }
         
         .header-glass {
             background: rgba(11,18,32,0.85);
@@ -817,22 +825,77 @@
                     </div>
                 </div>
 
-                <!-- Jadwal Hari Ini — selalu tampil -->
-                <div id="dash-jadwal-hari-ini" class="relative overflow-hidden rounded-2xl" style="background:rgba(13,24,41,0.9);border:1px solid rgba(0,212,255,0.15);">
-                    <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
-                    <div class="flex items-center gap-3 px-5 py-4" style="border-bottom:1px solid rgba(0,212,255,0.08);">
-                        <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
+                <!-- Jadwal Hari Ini -->
+                <div id="dash-jadwal-hari-ini" class="relative rounded-2xl" style="background:#07101F;border:1px solid rgba(0,212,255,0.12);margin-top:28px;overflow:visible;">
+                    <!-- Top accent -->
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#00D4FF,#7C3AED,#00D4FF);background-size:200%;animation:shimmer 3s linear infinite;z-index:2;"></div>
+                    <!-- Glow -->
+                    <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.05),transparent 65%);top:-100px;right:-80px;pointer-events:none;z-index:0;"></div>
+
+                    <!-- Jam digital — memotong border atas, tengah -->
+                    <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;">
+                        <div style="position:relative;display:inline-flex;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;background:#07101F;border:1px solid rgba(0,212,255,0.3);box-shadow:0 0 20px rgba(0,212,255,0.15),0 4px 16px rgba(0,0,0,0.5);">
+                            <!-- Corner accents -->
+                            <div style="position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:2px solid #00D4FF;border-left:2px solid #00D4FF;border-radius:2px 0 0 0;"></div>
+                            <div style="position:absolute;top:-1px;right:-1px;width:8px;height:8px;border-top:2px solid #00D4FF;border-right:2px solid #00D4FF;border-radius:0 2px 0 0;"></div>
+                            <div style="position:absolute;bottom:-1px;left:-1px;width:8px;height:8px;border-bottom:2px solid #00D4FF;border-left:2px solid #00D4FF;border-radius:0 0 0 2px;"></div>
+                            <div style="position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-bottom:2px solid #00D4FF;border-right:2px solid #00D4FF;border-radius:0 0 2px 0;"></div>
+                            <div id="dash-clock-hh" style="font-size:20px;font-weight:900;font-family:monospace;color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6);min-width:26px;text-align:center;line-height:1;">00</div>
+                            <div style="display:flex;flex-direction:column;gap:4px;margin:0 1px;">
+                                <div style="width:4px;height:4px;border-radius:50%;background:#00D4FF;box-shadow:0 0 6px #00D4FF;animation:pulse 1s infinite;"></div>
+                                <div style="width:4px;height:4px;border-radius:50%;background:#00D4FF;box-shadow:0 0 6px #00D4FF;animation:pulse 1s infinite;"></div>
+                            </div>
+                            <div id="dash-clock-mm" style="font-size:20px;font-weight:900;font-family:monospace;color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6);min-width:26px;text-align:center;line-height:1;">00</div>
+                            <div style="display:flex;flex-direction:column;gap:4px;margin:0 1px;">
+                                <div style="width:4px;height:4px;border-radius:50%;background:rgba(0,212,255,0.35);animation:pulse 1s infinite;"></div>
+                                <div style="width:4px;height:4px;border-radius:50%;background:rgba(0,212,255,0.35);animation:pulse 1s infinite;"></div>
+                            </div>
+                            <div id="dash-clock-ss" style="font-size:20px;font-weight:900;font-family:monospace;color:rgba(0,212,255,0.45);min-width:26px;text-align:center;line-height:1;">00</div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-[9px] font-black uppercase tracking-[.2em]" style="color:rgba(0,212,255,0.5);">Jadwal Hari Ini</div>
-                            <div id="dash-jadwal-hari" class="text-xs font-black uppercase tracking-wide" style="color:#E5E7EB;">—</div>
+                        <div id="dash-clock-date" style="font-size:7.5px;font-weight:700;color:rgba(0,212,255,0.35);text-transform:uppercase;letter-spacing:.15em;margin-top:4px;white-space:nowrap;background:#07101F;padding:0 6px;"></div>
+                    </div>
+
+                    <!-- Header -->
+                    <div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:32px 18px 10px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,212,255,0.18),rgba(124,58,237,0.12));border:1px solid rgba(0,212,255,0.25);flex-shrink:0;">
+                                <i data-lucide="calendar-clock" style="width:16px;height:16px;color:#00D4FF;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.3em;color:rgba(0,212,255,0.4);margin-bottom:1px;">Jadwal Hari Ini</div>
+                                <div id="dash-jadwal-hari" style="font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#E5E7EB;">—</div>
+                            </div>
                         </div>
-                        <div id="dash-jadwal-now-badge" class="hidden flex-shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider" style="background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:#00D4FF;">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#00D4FF]" style="animation:pulse 2s infinite;"></span> Sedang Berlangsung
+                        <div id="dash-jadwal-now-badge" style="display:none;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:#00D4FF;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;">
+                            <span style="width:6px;height:6px;border-radius:50%;background:#00D4FF;box-shadow:0 0 8px #00D4FF;display:inline-block;animation:pulse 1s infinite;"></span>LIVE
                         </div>
                     </div>
-                    <div id="dash-jadwal-list" class="px-5 py-3 space-y-2"></div>
+
+                    <!-- Active headline — hanya muncul saat jam berlaku -->
+                    <div id="dash-jadwal-active-block" style="display:none;position:relative;z-index:2;margin:0 14px 10px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,rgba(0,212,255,0.09),rgba(124,58,237,0.07));border:1px solid rgba(0,212,255,0.18);">
+                        <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,#00D4FF,#7C3AED);"></div>
+                        <div style="padding:12px 14px 10px 18px;">
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+                                <span style="width:5px;height:5px;border-radius:50%;background:#00D4FF;box-shadow:0 0 8px #00D4FF;display:inline-block;animation:pulse 1s infinite;flex-shrink:0;"></span>
+                                <span style="font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.3em;color:rgba(0,212,255,0.55);">Sedang Berlangsung</span>
+                            </div>
+                            <div id="dash-jadwal-active-name" style="font-size:22px;font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:4px;background:linear-gradient(90deg,#FDE68A,#FBBF24 55%,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></div>
+                            <div id="dash-jadwal-active-jam" style="font-size:9px;font-weight:700;color:rgba(0,212,255,0.5);font-family:monospace;letter-spacing:.06em;margin-bottom:10px;"></div>
+                            <div style="height:3px;border-radius:100px;background:rgba(0,212,255,0.08);overflow:hidden;margin-bottom:4px;">
+                                <div id="dash-jadwal-progress" style="height:100%;width:0%;background:linear-gradient(90deg,#00D4FF,#7C3AED);border-radius:100px;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(0,212,255,0.5);"></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span id="dash-jadwal-prog-start" style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;"></span>
+                                <span id="dash-jadwal-prog-pct" style="font-size:8px;font-weight:900;color:rgba(0,212,255,0.6);font-family:monospace;"></span>
+                                <span id="dash-jadwal-prog-end" style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scroll Cards -->
+                    <div id="dash-jadwal-rail-wrap" style="position:relative;z-index:2;padding:0 14px 14px;">
+                        <div id="dash-jadwal-list"></div>
+                    </div>
                 </div>
 
                 <!-- Identitas Sekolah -->
@@ -2460,12 +2523,17 @@
         });
 
         function renderDashJadwal() {
+            // Force hide headline dulu sebelum apapun
+            const _ab = document.getElementById('dash-jadwal-active-block');
+            if (_ab) _ab.classList.add('hidden');
+            const _nb = document.getElementById('dash-jadwal-now-badge');
+            if (_nb) _nb.classList.add('hidden');
+
             const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
             const now = new Date();
             const hariIni = hariNames[now.getDay()];
             const jamNow = now.getHours() * 60 + now.getMinutes();
 
-            // Baca dari scheduleData (slots) + scheduleMapel
             const entries = Object.entries(scheduleData)
                 .map(([slotId, s]) => {
                     const mapel = scheduleMapel[slotId + '_' + hariIni] || '';
@@ -2480,44 +2548,262 @@
             box.style.display = 'block';
             document.getElementById('dash-jadwal-hari').innerText = hariIni;
 
+            const parseJam = str => {
+                if (!str) return -1;
+                const clean = str.trim().replace(/\./g, ':');
+                const m = clean.match(/^(\d{1,2}):(\d{2})$/);
+                if (!m) return -1;
+                const h = parseInt(m[1]), min = parseInt(m[2]);
+                if (h < 0 || h > 23 || min < 0 || min > 59) return -1;
+                return h * 60 + min;
+            };
+
             if (entries.length === 0) {
                 document.getElementById('dash-jadwal-list').innerHTML =
-                    '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,255,0.25);">Tidak ada jadwal hari ini</div>';
+                    '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,255,0.2);">Tidak ada jadwal hari ini</div>';
                 document.getElementById('dash-jadwal-now-badge').classList.add('hidden');
+                document.getElementById('dash-jadwal-active-block').classList.add('hidden');
                 return;
             }
 
+            // Cari yang sedang aktif — jamNow HARUS >= mulai DAN < selesai (strict)
+            let activeEntry = null;
+            entries.forEach(e => {
+                const s = parseJam(e.mulai), en = parseJam(e.selesai);
+                console.log('[JADWAL] slot:', e.mapel, '| mulai:', e.mulai, '=', s, '| selesai:', e.selesai, '=', en, '| jamNow:', jamNow, '| aktif:', s >= 0 && en >= 0 && jamNow >= s && jamNow < en);
+                if (s >= 0 && en > s && jamNow >= s && jamNow < en) activeEntry = e;
+            });
+
+            // Active headline — hanya tampil jika ada jam yang berlaku saat ini
+            const activeBlock = document.getElementById('dash-jadwal-active-block');
+            // Double-check: pastikan jamNow benar-benar dalam range slot aktif
+            const _s = activeEntry ? parseJam(activeEntry.mulai) : -1;
+            const _en = activeEntry ? parseJam(activeEntry.selesai) : -1;
+            const isReallyActive = activeEntry && _s >= 0 && _en > _s && jamNow >= _s && jamNow < _en;
+            if (isReallyActive) {
+                activeBlock.classList.remove('hidden');
+                document.getElementById('dash-jadwal-active-name').innerText = activeEntry.mapel;
+                document.getElementById('dash-jadwal-active-jam').innerText = '⏱  ' + activeEntry.mulai + ' – ' + activeEntry.selesai;
+                document.getElementById('dash-jadwal-prog-start').innerText = activeEntry.mulai;
+                document.getElementById('dash-jadwal-prog-end').innerText = activeEntry.selesai;
+                const s = parseJam(activeEntry.mulai), en = parseJam(activeEntry.selesai);
+                const pct = Math.min(100, Math.max(0, Math.round(((jamNow - s) / (en - s)) * 100)));
+                document.getElementById('dash-jadwal-progress').style.width = pct + '%';
+                document.getElementById('dash-jadwal-prog-pct').innerText = pct + '%';
+                document.getElementById('dash-jadwal-now-badge').classList.remove('hidden');
+            } else {
+                activeBlock.classList.add('hidden');
+                document.getElementById('dash-jadwal-now-badge').classList.add('hidden');
+            }
+
+            const listEl = document.getElementById('dash-jadwal-list');
+
+            // Horizontal Scroll Cards
+            let html = `<div style="display:flex;gap:10px;padding:4px 2px 8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.2) transparent;">`;
+
+            entries.forEach((e, idx) => {
+                const s = parseJam(e.mulai), en = parseJam(e.selesai);
+                const isNow = s >= 0 && en >= 0 && jamNow >= s && jamNow < en;
+                const isPast = en >= 0 && jamNow >= en;
+                const isNext = !isNow && !isPast && entries.slice(0, idx).every(prev => {
+                    const pe = parseJam(prev.selesai); return pe < 0 || jamNow >= pe;
+                });
+                const pct = isNow ? Math.min(100, Math.max(0, Math.round(((jamNow-s)/(en-s))*100))) : 0;
+
+                if (isNow) {
+                    // Kartu AKTIF — biru tema
+                    html += `<div style="position:relative;flex-shrink:0;width:160px;border-radius:18px;padding:0;background:linear-gradient(145deg,rgba(0,212,255,0.13),rgba(59,130,246,0.1));border:1px solid rgba(0,212,255,0.4);box-shadow:0 0 30px rgba(0,212,255,0.18),0 8px 32px rgba(0,0,0,0.5);overflow:hidden;transform:scale(1.05);">
+                        <div style="height:3px;background:linear-gradient(90deg,#00D4FF,#3B82F6,#00D4FF);background-size:200%;animation:shimmer 2s linear infinite;"></div>
+                        <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.1),transparent 70%);top:-30px;right:-30px;pointer-events:none;"></div>
+                        <div style="padding:12px 14px 12px;">
+                            <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:100px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.35);margin-bottom:10px;">
+                                <span style="width:5px;height:5px;border-radius:50%;background:#00D4FF;box-shadow:0 0 8px #00D4FF;display:inline-block;animation:pulse 1s infinite;"></span>
+                                <span style="font-size:7px;font-weight:900;color:#00D4FF;text-transform:uppercase;letter-spacing:.2em;">Sekarang</span>
+                            </div>
+                            <!-- Nama mapel -->
+                            <div style="font-size:15px;font-weight:900;line-height:1.2;margin-bottom:8px;background:linear-gradient(90deg,#FDE68A,#FBBF24 55%,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.01em;">${e.mapel}</div>
+                            <!-- Jam -->
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                                <div style="font-size:12px;font-weight:900;color:#00D4FF;font-family:monospace;">${e.mulai}</div>
+                                <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,0.4),transparent);"></div>
+                                <div style="font-size:12px;font-weight:900;color:rgba(0,212,255,0.6);font-family:monospace;">${e.selesai}</div>
+                            </div>
+                            <!-- Progress -->
+                            <div style="height:3px;border-radius:100px;background:rgba(0,212,255,0.1);overflow:hidden;margin-bottom:4px;">
+                                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#00D4FF,#3B82F6);border-radius:100px;box-shadow:0 0 8px rgba(0,212,255,0.5);transition:width .8s ease;"></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;">
+                                <span style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;">0%</span>
+                                <span style="font-size:7px;font-weight:900;color:rgba(0,212,255,0.6);font-family:monospace;">${pct}%</span>
+                                <span style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;">100%</span>
+                            </div>
+                        </div>
+                    </div>`;
+                } else {
+                    // Kartu biasa
+                    const cardBg = isPast ? 'rgba(255,255,255,0.02)' : 'rgba(0,212,255,0.03)';
+                    const cardBdr = isPast ? '1px solid rgba(255,255,255,0.05)' : isNext ? '1px solid rgba(168,85,247,0.2)' : '1px solid rgba(0,212,255,0.08)';
+                    const cardOp = isPast ? 'opacity:.4;' : '';
+                    const nameClr = isPast ? 'color:rgba(255,255,255,0.4);' : isNext ? 'color:rgba(229,231,235,0.9);' : 'color:rgba(229,231,235,0.5);';
+                    const jamClr = isPast ? 'rgba(255,255,255,0.2)' : isNext ? '#A855F7' : 'rgba(0,212,255,0.35)';
+                    const numClr = isPast ? 'rgba(255,255,255,0.1)' : isNext ? 'rgba(168,85,247,0.3)' : 'rgba(0,212,255,0.1)';
+                    const badge = isPast
+                        ? `<div style="display:inline-flex;padding:2px 8px;border-radius:100px;background:rgba(255,255,255,0.04);font-size:6.5px;font-weight:700;color:rgba(255,255,255,0.2);margin-bottom:8px;">✓ Selesai</div>`
+                        : isNext
+                        ? `<div style="display:inline-flex;padding:2px 8px;border-radius:100px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);font-size:6.5px;font-weight:900;color:#A855F7;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Next</div>`
+                        : `<div style="height:18px;margin-bottom:8px;"></div>`;
+
+                    html += `<div style="position:relative;flex-shrink:0;width:130px;border-radius:16px;padding:12px 12px 12px;background:${cardBg};border:${cardBdr};box-shadow:0 2px 12px rgba(0,0,0,0.3);${cardOp}overflow:hidden;transition:all .3s;">
+                        <!-- Nomor urut -->
+                        <div style="position:absolute;top:10px;right:12px;font-size:22px;font-weight:900;color:${numClr};font-family:monospace;line-height:1;">${String(idx+1).padStart(2,'0')}</div>
+                        ${badge}
+                        <div style="font-size:12px;font-weight:900;line-height:1.25;margin-bottom:10px;${nameClr}padding-right:20px;">${e.mapel}</div>
+                        <div style="display:flex;flex-direction:column;gap:2px;">
+                            <div style="font-size:11px;font-weight:800;color:${jamClr};font-family:monospace;letter-spacing:.02em;">${e.mulai}</div>
+                            <div style="font-size:9px;font-weight:600;color:${jamClr};font-family:monospace;opacity:.7;">– ${e.selesai}</div>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            html += `</div>`;
+            listEl.innerHTML = html;
+        }
+
+        // ── POPUP PERGANTIAN JAM ──
+        let _lastActiveSlot = null;
+        let _popupTimer = null;
+        let _popupCountdown = null;
+
+        function showJadwalPopup(mapel, jam) {
+            // Hapus popup lama jika ada
+            const old = document.getElementById('popup-jadwal');
+            if (old) old.remove();
+            clearTimeout(_popupTimer);
+            clearInterval(_popupCountdown);
+
+            const popup = document.createElement('div');
+            popup.id = 'popup-jadwal';
+            popup.style.cssText = 'position:fixed;inset:0;z-index:9990;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);animation:fadeIn .3s ease;';
+            popup.innerHTML = `
+                <div style="position:relative;width:100%;max-width:360px;border-radius:24px;overflow:hidden;background:#060D1F;border:1px solid rgba(0,212,255,0.25);box-shadow:0 0 60px rgba(0,212,255,0.15),0 30px 60px rgba(0,0,0,0.6);">
+                    <!-- Top accent -->
+                    <div style="height:3px;background:linear-gradient(90deg,#00D4FF,#7C3AED,#00D4FF);background-size:200% 100%;animation:shimmer 2s linear infinite;"></div>
+                    <!-- Glow orb -->
+                    <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.08),transparent 70%);top:-60px;right:-60px;pointer-events:none;"></div>
+                    <div style="padding:28px 28px 24px;">
+                        <!-- Icon + label -->
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                            <div style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(124,58,237,0.15));border:1px solid rgba(0,212,255,0.3);box-shadow:0 0 20px rgba(0,212,255,0.2);flex-shrink:0;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.3em;color:rgba(0,212,255,0.5);margin-bottom:2px;">Pergantian Jam</div>
+                                <div style="font-size:11px;font-weight:900;color:rgba(229,231,235,0.6);text-transform:uppercase;letter-spacing:.1em;">Pelajaran Dimulai</div>
+                            </div>
+                        </div>
+                        <!-- Mapel name -->
+                        <div style="font-size:26px;font-weight:900;line-height:1.1;margin-bottom:8px;background:linear-gradient(90deg,#ffffff,#00D4FF 55%,#A855F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;">${mapel}</div>
+                        <!-- Jam -->
+                        <div style="font-size:11px;font-weight:700;color:rgba(0,212,255,0.55);font-family:monospace;letter-spacing:.08em;margin-bottom:24px;">⏱  ${jam}</div>
+                        <!-- Progress countdown -->
+                        <div style="height:2px;border-radius:100px;background:rgba(0,212,255,0.1);overflow:hidden;margin-bottom:6px;">
+                            <div id="popup-progress" style="height:100%;width:100%;background:linear-gradient(90deg,#00D4FF,#7C3AED);border-radius:100px;transition:width .9s linear;box-shadow:0 0 8px rgba(0,212,255,0.4);"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                            <span style="font-size:8px;font-weight:700;color:rgba(0,212,255,0.3);text-transform:uppercase;letter-spacing:.1em;">Menutup otomatis</span>
+                            <span id="popup-countdown" style="font-size:10px;font-weight:900;color:#00D4FF;font-family:monospace;">30</span>
+                        </div>
+                        <!-- Button -->
+                        <button onclick="tutupJadwalPopup()" style="width:100%;padding:13px;border-radius:14px;border:none;cursor:pointer;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#060D1F;box-shadow:0 4px 20px rgba(0,212,255,0.3);transition:all .2s;" onmouseover="this.style.boxShadow='0 6px 28px rgba(0,212,255,0.5)'" onmouseout="this.style.boxShadow='0 4px 20px rgba(0,212,255,0.3)'">
+                            OK, Siap Mengajar
+                        </button>
+                    </div>
+                </div>`;
+            document.body.appendChild(popup);
+
+            // Countdown 30 detik
+            let sisa = 30;
+            const progEl = document.getElementById('popup-progress');
+            const cdEl = document.getElementById('popup-countdown');
+            _popupCountdown = setInterval(() => {
+                sisa--;
+                if (cdEl) cdEl.innerText = sisa;
+                if (progEl) progEl.style.width = (sisa / 30 * 100) + '%';
+                if (sisa <= 0) tutupJadwalPopup();
+            }, 1000);
+
+            _popupTimer = setTimeout(tutupJadwalPopup, 30500);
+        }
+
+        function tutupJadwalPopup() {
+            clearTimeout(_popupTimer);
+            clearInterval(_popupCountdown);
+            const popup = document.getElementById('popup-jadwal');
+            if (popup) {
+                popup.style.animation = 'fadeOut .25s ease forwards';
+                setTimeout(() => popup.remove(), 260);
+            }
+        }
+
+        // Cek pergantian jam setiap menit
+        function cekPergantianJam() {
+            const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+            const now = new Date();
+            const hariIni = hariNames[now.getDay()];
+            const jamNow = now.getHours() * 60 + now.getMinutes();
             const parseJam = str => {
-                const m = (str||'').replace('.', ':').match(/(\d{1,2}):(\d{2})/);
-                return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : -1;
+                if (!str) return -1;
+                const clean = str.trim().replace(/\./g, ':');
+                const m = clean.match(/^(\d{1,2}):(\d{2})$/);
+                if (!m) return -1;
+                const h = parseInt(m[1]), min = parseInt(m[2]);
+                if (h < 0 || h > 23 || min < 0 || min > 59) return -1;
+                return h * 60 + min;
             };
 
-            let adaNow = false;
-            const listEl = document.getElementById('dash-jadwal-list');
-            listEl.innerHTML = entries.map(e => {
-                const jamStr = e.mulai + ' – ' + e.selesai;
-                let isNow = false;
-                const s = parseJam(e.mulai), en = parseJam(e.selesai);
-                if (s >= 0 && en >= 0 && jamNow >= s && jamNow <= en) { isNow = true; adaNow = true; }
+            let currentSlot = null;
+            Object.entries(scheduleData).forEach(([slotId, s]) => {
+                const mapel = scheduleMapel[slotId + '_' + hariIni] || '';
+                if (!mapel) return;
+                const st = parseJam(s.mulai), en = parseJam(s.selesai);
+                if (st >= 0 && en >= 0 && jamNow >= st && jamNow < en) {
+                    currentSlot = { slotId, mapel, jam: s.mulai + ' – ' + s.selesai };
+                }
+            });
 
-                const rowBg    = isNow ? 'rgba(0,212,255,0.08)'  : 'rgba(255,255,255,0.03)';
-                const rowBdr   = isNow ? 'rgba(0,212,255,0.3)'   : 'rgba(255,255,255,0.06)';
-                const jamClr   = isNow ? '#00D4FF'               : '#9CA3AF';
-                const mapelClr = isNow ? '#E5E7EB'               : '#9CA3AF';
-                const glow     = isNow ? 'box-shadow:0 0 12px rgba(0,212,255,0.15);' : '';
-                const nowTag   = isNow
-                    ? '<span style="font-size:8px;font-weight:900;padding:2px 8px;border-radius:100px;background:rgba(0,212,255,0.15);color:#00D4FF;margin-left:8px;text-transform:uppercase;letter-spacing:.08em;border:1px solid rgba(0,212,255,0.25);">Sekarang</span>'
-                    : '';
-
-                return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${rowBg};border:1px solid ${rowBdr};${glow}transition:all 0.2s;">
-                    <span style="font-size:9px;font-weight:800;color:${jamClr};white-space:nowrap;min-width:95px;font-family:monospace;">${jamStr}</span>
-                    <span style="font-size:11px;font-weight:700;color:${mapelClr};flex:1;">${e.mapel}${nowTag}</span>
-                </div>`;
-            }).join('');
-
-            const badge = document.getElementById('dash-jadwal-now-badge');
-            if (adaNow) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+            const currentId = currentSlot ? currentSlot.slotId : null;
+            if (currentId && currentId !== _lastActiveSlot) {
+                showJadwalPopup(currentSlot.mapel, currentSlot.jam);
+            }
+            _lastActiveSlot = currentId;
+            renderDashJadwal();
         }
+
+        // Jalankan setiap 30 detik
+        setInterval(cekPergantianJam, 30000);
+
+        // Jam digital real-time di dashboard
+        function updateDashClock() {
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2,'0');
+            const mm = String(now.getMinutes()).padStart(2,'0');
+            const ss = String(now.getSeconds()).padStart(2,'0');
+            const elHH = document.getElementById('dash-clock-hh');
+            const elMM = document.getElementById('dash-clock-mm');
+            const elSS = document.getElementById('dash-clock-ss');
+            const elDate = document.getElementById('dash-clock-date');
+            if (elHH) elHH.innerText = hh;
+            if (elMM) elMM.innerText = mm;
+            if (elSS) elSS.innerText = ss;
+            if (elDate) {
+                const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                const bulanNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                elDate.innerText = `${hariNames[now.getDay()]}, ${now.getDate()} ${bulanNames[now.getMonth()]} ${now.getFullYear()}`;
+            }
+        }
+        updateDashClock();
+        setInterval(updateDashClock, 1000);
 
                 function populatePrintMenu() {
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
