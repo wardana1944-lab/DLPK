@@ -1073,17 +1073,53 @@
                             <div>
                                 <div class="text-[9px] font-black uppercase tracking-[.2em] mb-1" style="color:rgba(0,212,255,0.6);">Manajemen Waktu</div>
                                 <h2 class="text-2xl font-black tracking-tight" style="color:#E5E7EB;">Jadwal Pelajaran</h2>
-                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Kelola jadwal mengajar per hari dalam seminggu</p>
+                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Atur slot jam lalu isi mata pelajaran per hari</p>
                             </div>
                         </div>
-                        <button onclick="bukaModalJadwal()" class="flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[11px] uppercase tracking-wider border-none cursor-pointer transition-all flex-shrink-0" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.25);" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,212,255,0.4)'" onmouseout="this.style.boxShadow='0 4px 14px rgba(0,212,255,0.25)'">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Jadwal
-                        </button>
                     </div>
                 </div>
 
-                <!-- Grid Jadwal per Hari -->
-                <div id="schedule-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                <!-- Tab -->
+                <div class="flex gap-2">
+                    <button id="tab-slot-btn" onclick="switchScheduleTab('slot')" class="px-5 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider border-none cursor-pointer transition-all" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;">
+                        <i data-lucide="settings-2" class="w-3.5 h-3.5 inline mr-1"></i> Setelan Jam
+                    </button>
+                    <button id="tab-grid-btn" onclick="switchScheduleTab('grid')" class="px-5 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider border-none cursor-pointer transition-all" style="background:rgba(255,255,255,0.06);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">
+                        <i data-lucide="layout-grid" class="w-3.5 h-3.5 inline mr-1"></i> Isi Jadwal
+                    </button>
+                </div>
+
+                <!-- Panel Setelan Jam -->
+                <div id="panel-slot" class="space-y-4">
+                    <div class="glass-card p-5">
+                        <div class="text-[10px] font-black uppercase tracking-widest mb-4" style="color:#9CA3AF;">Tambah Slot Jam Pelajaran</div>
+                        <div class="flex gap-3 items-end flex-wrap">
+                            <div class="flex-1 min-w-[120px]">
+                                <label class="text-[9px] font-black uppercase tracking-widest mb-1.5 block" style="color:#9CA3AF;">Jam Mulai</label>
+                                <input type="text" id="slot-mulai" class="modern-input font-bold text-sm" placeholder="07:00" maxlength="5" oninput="this.value=this.value.replace(/[^0-9:]/g,'')">
+                            </div>
+                            <div class="flex-1 min-w-[120px]">
+                                <label class="text-[9px] font-black uppercase tracking-widest mb-1.5 block" style="color:#9CA3AF;">Jam Selesai</label>
+                                <input type="text" id="slot-selesai" class="modern-input font-bold text-sm" placeholder="08:00" maxlength="5" oninput="this.value=this.value.replace(/[^0-9:]/g,'')">
+                            </div>
+                            <div class="flex-1 min-w-[120px]">
+                                <label class="text-[9px] font-black uppercase tracking-widest mb-1.5 block" style="color:#9CA3AF;">Label (opsional)</label>
+                                <input type="text" id="slot-label" class="modern-input font-bold text-sm" placeholder="Cth: Istirahat">
+                            </div>
+                            <button onclick="tambahSlot()" class="px-5 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider border-none cursor-pointer flex-shrink-0" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.25);">
+                                <i data-lucide="plus" class="w-4 h-4 inline"></i> Tambah
+                            </button>
+                        </div>
+                    </div>
+                    <div id="slot-list" class="space-y-2"></div>
+                </div>
+
+                <!-- Panel Grid Jadwal -->
+                <div id="panel-grid" class="hidden">
+                    <div class="overflow-x-auto rounded-2xl" style="border:1px solid rgba(0,212,255,0.12);">
+                        <table id="schedule-table" class="w-full border-collapse" style="min-width:600px;"></table>
+                    </div>
+                </div>
 
             </div>
 
@@ -1404,38 +1440,30 @@
 
     <div id="toast-container"></div>
 
-    <!-- Modal Jadwal -->
+    <!-- Modal Input Mapel per Sel -->
     <div id="m-jadwal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);">
-        <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.5);">
+        <div class="relative w-full max-w-sm rounded-3xl p-7 space-y-5" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.5);">
             <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;"><i data-lucide="clock" class="w-4 h-4"></i></div>
-                    <span id="m-jadwal-title" class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Tambah Jadwal</span>
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;"><i data-lucide="book-open" class="w-4 h-4"></i></div>
+                    <div>
+                        <div id="m-jadwal-title" class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Isi Mata Pelajaran</div>
+                        <div id="m-jadwal-sub" class="text-[10px] font-bold mt-0.5" style="color:#9CA3AF;"></div>
+                    </div>
                 </div>
-                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
-            <input type="hidden" id="jdw-edit-id">
-            <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Hari</label>
-                    <select id="jdw-hari" class="modern-input font-bold">
-                        <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
-                    <input type="text" id="jdw-mapel" class="modern-input font-bold" placeholder="Contoh: Matematika" onkeydown="if(event.key==='Enter')document.getElementById('jdw-jam').focus()">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Jam</label>
-                    <input type="text" id="jdw-jam" class="modern-input font-bold" placeholder="Contoh: 07.00 - 08.30" onkeydown="if(event.key==='Enter')simpanJadwal()">
-                </div>
+            <input type="hidden" id="jdw-slot-id">
+            <input type="hidden" id="jdw-hari">
+            <div>
+                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
+                <input type="text" id="jdw-mapel" class="modern-input font-bold" placeholder="Contoh: Matematika" onkeydown="if(event.key==='Enter')simpanJadwal()">
             </div>
             <div class="flex gap-3 pt-1">
-                <button onclick="document.getElementById('m-jadwal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                <button onclick="hapusJadwalSel()" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">Kosongkan</button>
                 <button onclick="simpanJadwal()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.2);">
                     <i data-lucide="save" class="w-4 h-4"></i> Simpan
                 </button>
@@ -1813,7 +1841,7 @@
             document.getElementById('breadcrumb-active').innerText = crumbs[p] || 'Overview';
             
             if(p === 'students') renderSiswa();
-            if(p === 'schedule') renderSchedule();
+            if(p === 'schedule') { switchScheduleTab('grid'); renderSchedule(); }
             if(p === 'attendance') renderAbsen();
             if(p === 'journal') renderJournalDay();
             if(p === 'grades') renderNilai();
@@ -2275,41 +2303,103 @@
         }
 
         // ── JADWAL PELAJARAN ──
-        let scheduleData = {};
+        let scheduleData = {};   // { slotId: { mulai, selesai, label } }
+        let scheduleMapel = {};  // { slotId_hari: 'Matematika' }
 
-        function bukaModalJadwal(id) {
-            const combo = document.getElementById('jdw-hari');
-            if (id) {
-                const v = scheduleData[id];
-                document.getElementById('m-jadwal-title').innerText = 'Edit Jadwal';
-                document.getElementById('jdw-edit-id').value = id;
-                combo.value = v.hari;
-                document.getElementById('jdw-mapel').value = v.mapel;
-                document.getElementById('jdw-jam').value = v.jam || '';
+        function switchScheduleTab(tab) {
+            const isSlot = tab === 'slot';
+            document.getElementById('panel-slot').classList.toggle('hidden', !isSlot);
+            document.getElementById('panel-grid').classList.toggle('hidden', isSlot);
+            const btnSlot = document.getElementById('tab-slot-btn');
+            const btnGrid = document.getElementById('tab-grid-btn');
+            if (isSlot) {
+                btnSlot.style.cssText = 'background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;padding:10px 20px;border-radius:12px;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer;';
+                btnGrid.style.cssText = 'background:rgba(255,255,255,0.06);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);padding:10px 20px;border-radius:12px;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;';
             } else {
-                document.getElementById('m-jadwal-title').innerText = 'Tambah Jadwal';
-                document.getElementById('jdw-edit-id').value = '';
-                combo.value = 'Senin';
-                document.getElementById('jdw-mapel').value = '';
-                document.getElementById('jdw-jam').value = '';
+                btnGrid.style.cssText = 'background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;padding:10px 20px;border-radius:12px;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer;';
+                btnSlot.style.cssText = 'background:rgba(255,255,255,0.06);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);padding:10px 20px;border-radius:12px;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;';
+                renderScheduleGrid();
             }
+        }
+
+        function tambahSlot() {
+            const mulai = document.getElementById('slot-mulai').value.trim();
+            const selesai = document.getElementById('slot-selesai').value.trim();
+            const label = document.getElementById('slot-label').value.trim();
+            const jamRe = /^([01]?\d|2[0-3]):([0-5]\d)$/;
+            if (!jamRe.test(mulai) || !jamRe.test(selesai)) { showToast('Format jam harus HH:MM (contoh: 07:00)', 'error'); return; }
+            if (mulai >= selesai) { showToast('Jam selesai harus lebih dari jam mulai!', 'error'); return; }
+            db.ref('scheduleSlots').push({ mulai, selesai, label }).then(() => {
+                document.getElementById('slot-mulai').value = '';
+                document.getElementById('slot-selesai').value = '';
+                document.getElementById('slot-label').value = '';
+                showToast('Slot jam ditambahkan!');
+            });
+        }
+
+        function hapusSlot(id) {
+            if (!confirm('Hapus slot jam ini? Data mapel yang terkait juga akan terhapus.')) return;
+            const updates = {};
+            updates['scheduleSlots/' + id] = null;
+            ['Senin','Selasa','Rabu','Kamis','Jumat'].forEach(h => { updates['scheduleMapel/' + id + '_' + h] = null; });
+            db.ref().update(updates).then(() => showToast('Slot dihapus!', 'info'));
+        }
+
+        function renderSlotList() {
+            const container = document.getElementById('slot-list');
+            const slots = Object.entries(scheduleData).sort(([,a],[,b]) => a.mulai.localeCompare(b.mulai));
+            if (!slots.length) {
+                container.innerHTML = '<div class="text-center py-8 text-xs font-bold uppercase tracking-widest" style="color:rgba(255,255,255,0.15);">Belum ada slot jam — tambahkan di atas</div>';
+                return;
+            }
+            container.innerHTML = slots.map(([id, s]) =>
+                `<div class="flex items-center gap-4 px-5 py-3.5 rounded-2xl" style="background:rgba(15,23,42,0.7);border:1px solid rgba(0,212,255,0.1);">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">
+                        <i data-lucide="clock" style="width:16px;height:16px;color:#00D4FF;"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-black text-sm" style="color:#E5E7EB;">${s.mulai} – ${s.selesai}</div>
+                        ${s.label ? `<div class="text-[10px] font-bold mt-0.5" style="color:#9CA3AF;">${s.label}</div>` : ''}
+                    </div>
+                    <button onclick="hapusSlot('${id}')" class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;cursor:pointer;">
+                        <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                    </button>
+                </div>`
+            ).join('');
+            lucide.createIcons();
+        }
+
+        function bukaModalJadwal(slotId, hari) {
+            const slot = scheduleData[slotId];
+            if (!slot) return;
+            document.getElementById('jdw-slot-id').value = slotId;
+            document.getElementById('jdw-hari').value = hari;
+            document.getElementById('m-jadwal-title').innerText = hari;
+            document.getElementById('m-jadwal-sub').innerText = slot.mulai + ' – ' + slot.selesai + (slot.label ? ' · ' + slot.label : '');
+            const existing = scheduleMapel[slotId + '_' + hari] || '';
+            document.getElementById('jdw-mapel').value = existing;
             document.getElementById('m-jadwal').classList.remove('hidden');
-            document.getElementById('jdw-mapel').focus();
+            setTimeout(() => document.getElementById('jdw-mapel').focus(), 100);
             lucide.createIcons();
         }
 
         function simpanJadwal() {
-            const id = document.getElementById('jdw-edit-id').value;
-            const data = {
-                hari: document.getElementById('jdw-hari').value,
-                mapel: document.getElementById('jdw-mapel').value.trim(),
-                jam: document.getElementById('jdw-jam').value.trim()
-            };
-            if (!data.mapel || !data.jam) { showToast('Isi mapel dan jam!', 'error'); return; }
-            const ref = id ? db.ref('schedule/' + id) : db.ref('schedule').push();
-            (id ? ref.update(data) : ref.set(data)).then(() => {
+            const slotId = document.getElementById('jdw-slot-id').value;
+            const hari = document.getElementById('jdw-hari').value;
+            const mapel = document.getElementById('jdw-mapel').value.trim();
+            if (!mapel) { hapusJadwalSel(); return; }
+            db.ref('scheduleMapel/' + slotId + '_' + hari).set(mapel).then(() => {
                 document.getElementById('m-jadwal').classList.add('hidden');
-                showToast(id ? 'Jadwal diperbarui!' : 'Jadwal ditambahkan!');
+                showToast('Jadwal disimpan!');
+            });
+        }
+
+        function hapusJadwalSel() {
+            const slotId = document.getElementById('jdw-slot-id').value;
+            const hari = document.getElementById('jdw-hari').value;
+            db.ref('scheduleMapel/' + slotId + '_' + hari).remove().then(() => {
+                document.getElementById('m-jadwal').classList.add('hidden');
+                showToast('Jadwal dikosongkan!', 'info');
             });
         }
 
@@ -2319,58 +2409,53 @@
             }
         }
 
-        function renderSchedule() {
+        function renderScheduleGrid() {
             const hariList = ['Senin','Selasa','Rabu','Kamis','Jumat'];
-            const hariColor = {
-                'Senin':  ['rgba(0,212,255,0.12)','rgba(0,212,255,0.25)','#00D4FF'],
-                'Selasa': ['rgba(59,130,246,0.12)','rgba(59,130,246,0.25)','#3B82F6'],
-                'Rabu':   ['rgba(168,85,247,0.12)','rgba(168,85,247,0.25)','#A855F7'],
-                'Kamis':  ['rgba(251,191,36,0.12)','rgba(251,191,36,0.25)','#fbbf24'],
-                'Jumat':  ['rgba(39,174,96,0.12)','rgba(39,174,96,0.25)','#27AE60'],
-            };
-            const container = document.getElementById('schedule-grid');
-            container.innerHTML = hariList.map(hari => {
-                const [bg, border, accent] = hariColor[hari];
-                const entries = Object.entries(scheduleData)
-                    .filter(([,v]) => v.hari === hari)
-                    .sort(([,a],[,b]) => (a.jam||a.mulai||'').localeCompare(b.jam||b.mulai||''));
-
-                const rows = entries.length === 0
-                    ? '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.15);">Belum ada jadwal</div>'
-                    : entries.map(([id, v]) =>
-                        '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);">' +
-                            '<div style="flex-shrink:0;padding:4px 10px;border-radius:8px;background:' + bg + ';white-space:nowrap;">' +
-                                '<span style="font-size:9px;font-weight:800;color:' + accent + ';">' + (v.jam || (v.mulai + ' \u2013 ' + v.selesai)) + '</span>' +
-                            '</div>' +
-                            '<div style="flex:1;min-width:0;font-size:11px;font-weight:700;color:#E5E7EB;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + v.mapel + '</div>' +
-                            '<div style="display:flex;gap:4px;flex-shrink:0;">' +
-                                '<button onclick="bukaModalJadwal(\'' + id + '\')" title="Edit Jadwal" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(0,212,255,0.3);cursor:pointer;background:rgba(0,212,255,0.1);color:#00D4FF;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background=\'rgba(0,212,255,0.25)\';this.style.boxShadow=\'0 0 10px rgba(0,212,255,0.3)\'" onmouseout="this.style.background=\'rgba(0,212,255,0.1)\';this.style.boxShadow=\'none\'"><i data-lucide="pencil" style="width:12px;height:12px;"></i></button>' +
-                                '<button onclick="hapusJadwal(\'' + id + '\')" title="Hapus Jadwal" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(239,68,68,0.3);cursor:pointer;background:rgba(239,68,68,0.1);color:#f87171;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.background=\'rgba(239,68,68,0.25)\';this.style.boxShadow=\'0 0 10px rgba(239,68,68,0.3)\'" onmouseout="this.style.background=\'rgba(239,68,68,0.1)\';this.style.boxShadow=\'none\'"><i data-lucide="trash-2" style="width:12px;height:12px;"></i></button>' +
-                            '</div>' +
-                        '</div>'
-                    ).join('');
-
-                return '<div style="position:relative;overflow:hidden;border-radius:16px;background:rgba(13,24,41,0.9);border:1px solid ' + border + ';">' +
-                    '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,' + accent + ',transparent);opacity:0.5;"></div>' +
-                    '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);">' +
-                        '<div style="display:flex;align-items:center;gap:8px;">' +
-                            '<div style="width:8px;height:8px;border-radius:50%;background:' + accent + ';box-shadow:0 0 6px ' + accent + ';"></div>' +
-                            '<span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:' + accent + ';">' + hari + '</span>' +
-                        '</div>' +
-                        '<span style="font-size:9px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,0.25);">' + entries.length + ' Sesi</span>' +
-                    '</div>' +
-                    '<div style="padding:0 16px;">' + rows + '</div>' +
-                '</div>';
-            }).join('');
-            lucide.createIcons();
+            const hariColor = ['#00D4FF','#3B82F6','#A855F7','#fbbf24','#27AE60'];
+            const slots = Object.entries(scheduleData).sort(([,a],[,b]) => a.mulai.localeCompare(b.mulai));
+            const table = document.getElementById('schedule-table');
+            if (!slots.length) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.2);">Belum ada slot jam — buat dulu di tab Setelan Jam</td></tr>';
+                return;
+            }
+            const thead = `<thead><tr>
+                <th style="padding:12px 14px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,255,0.6);background:rgba(0,212,255,0.05);border-bottom:1px solid rgba(0,212,255,0.12);white-space:nowrap;">Jam</th>
+                ${hariList.map((h,i) => `<th style="padding:12px 14px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:${hariColor[i]};background:rgba(0,212,255,0.03);border-bottom:1px solid rgba(0,212,255,0.12);text-align:center;">${h}</th>`).join('')}
+            </tr></thead>`;
+            const tbody = '<tbody>' + slots.map(([slotId, s]) => {
+                const jamLabel = s.mulai + '–' + s.selesai + (s.label ? '<br><span style="font-size:8px;color:#9CA3AF;">' + s.label + '</span>' : '');
+                const cells = hariList.map((h, i) => {
+                    const mapel = scheduleMapel[slotId + '_' + h] || '';
+                    const filled = !!mapel;
+                    return `<td onclick="bukaModalJadwal('${slotId}','${h}')" style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);border-left:1px solid rgba(255,255,255,0.04);text-align:center;cursor:pointer;transition:background .15s;${filled ? 'background:rgba(' + (i===0?'0,212,255':i===1?'59,130,246':i===2?'168,85,247':i===3?'251,191,36':'39,174,96') + ',0.08);' : ''}" onmouseover="this.style.background='rgba(0,212,255,0.1)'" onmouseout="this.style.background='${filled ? 'rgba(' + (i===0?'0,212,255':i===1?'59,130,246':i===2?'168,85,247':i===3?'251,191,36':'39,174,96') + ',0.08)' : 'transparent'}'">
+                        ${filled ? `<span style="font-size:10px;font-weight:800;color:${hariColor[i]};">${mapel}</span>` : `<span style="font-size:16px;color:rgba(255,255,255,0.1);">+</span>`}
+                    </td>`;
+                }).join('');
+                return `<tr>
+                    <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);white-space:nowrap;font-size:9px;font-weight:800;color:#00D4FF;background:rgba(0,212,255,0.03);">${jamLabel}</td>
+                    ${cells}
+                </tr>`;
+            }).join('') + '</tbody>';
+            table.innerHTML = thead + tbody;
         }
 
-        db.ref('schedule').on('value', snap => {
-            scheduleData = snap.val() || {};
-            if (document.getElementById('page-schedule') && !document.getElementById('page-schedule').classList.contains('hidden')) {
-                renderSchedule();
+        function renderSchedule() {
+            renderSlotList();
+            if (!document.getElementById('panel-grid').classList.contains('hidden')) {
+                renderScheduleGrid();
             }
-            // Update jadwal hari ini di dashboard setiap kali data berubah
+        }
+
+        db.ref('scheduleSlots').on('value', snap => {
+            scheduleData = snap.val() || {};
+            renderSlotList();
+            if (document.getElementById('panel-grid') && !document.getElementById('panel-grid').classList.contains('hidden')) renderScheduleGrid();
+            renderDashJadwal();
+        });
+
+        db.ref('scheduleMapel').on('value', snap => {
+            scheduleMapel = snap.val() || {};
+            if (document.getElementById('panel-grid') && !document.getElementById('panel-grid').classList.contains('hidden')) renderScheduleGrid();
             renderDashJadwal();
         });
 
@@ -2380,24 +2465,27 @@
             const hariIni = hariNames[now.getDay()];
             const jamNow = now.getHours() * 60 + now.getMinutes();
 
+            // Baca dari scheduleData (slots) + scheduleMapel
             const entries = Object.entries(scheduleData)
-                .filter(([,v]) => v.hari === hariIni)
-                .sort(([,a],[,b]) => (a.jam||a.mulai||'').localeCompare(b.jam||b.mulai||''));
+                .map(([slotId, s]) => {
+                    const mapel = scheduleMapel[slotId + '_' + hariIni] || '';
+                    return { slotId, mulai: s.mulai, selesai: s.selesai, label: s.label, mapel };
+                })
+                .filter(e => e.mapel)
+                .sort((a, b) => a.mulai.localeCompare(b.mulai));
 
             const box = document.getElementById('dash-jadwal-hari-ini');
             if (!box) return;
 
+            box.style.display = 'block';
+            document.getElementById('dash-jadwal-hari').innerText = hariIni;
+
             if (entries.length === 0) {
-                box.style.display = 'block';
-                document.getElementById('dash-jadwal-hari').innerText = hariIni;
                 document.getElementById('dash-jadwal-list').innerHTML =
                     '<div style="padding:16px 0;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(0,212,255,0.25);">Tidak ada jadwal hari ini</div>';
                 document.getElementById('dash-jadwal-now-badge').classList.add('hidden');
                 return;
             }
-
-            box.style.display = 'block';
-            document.getElementById('dash-jadwal-hari').innerText = hariIni;
 
             const parseJam = str => {
                 const m = (str||'').replace('.', ':').match(/(\d{1,2}):(\d{2})/);
@@ -2406,16 +2494,12 @@
 
             let adaNow = false;
             const listEl = document.getElementById('dash-jadwal-list');
-            listEl.innerHTML = entries.map(([id, v]) => {
-                const jamStr = v.jam || (v.mulai + ' – ' + v.selesai);
+            listEl.innerHTML = entries.map(e => {
+                const jamStr = e.mulai + ' – ' + e.selesai;
                 let isNow = false;
-                const parts = jamStr.split(/[-–]/);
-                if (parts.length === 2) {
-                    const s = parseJam(parts[0].trim()), e = parseJam(parts[1].trim());
-                    if (s >= 0 && e >= 0 && jamNow >= s && jamNow <= e) { isNow = true; adaNow = true; }
-                }
+                const s = parseJam(e.mulai), en = parseJam(e.selesai);
+                if (s >= 0 && en >= 0 && jamNow >= s && jamNow <= en) { isNow = true; adaNow = true; }
 
-                // Warna sesuai tema: aktif = cyan glow, lainnya = subtle dark
                 const rowBg    = isNow ? 'rgba(0,212,255,0.08)'  : 'rgba(255,255,255,0.03)';
                 const rowBdr   = isNow ? 'rgba(0,212,255,0.3)'   : 'rgba(255,255,255,0.06)';
                 const jamClr   = isNow ? '#00D4FF'               : '#9CA3AF';
@@ -2427,7 +2511,7 @@
 
                 return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${rowBg};border:1px solid ${rowBdr};${glow}transition:all 0.2s;">
                     <span style="font-size:9px;font-weight:800;color:${jamClr};white-space:nowrap;min-width:95px;font-family:monospace;">${jamStr}</span>
-                    <span style="font-size:11px;font-weight:700;color:${mapelClr};flex:1;">${v.mapel}${nowTag}</span>
+                    <span style="font-size:11px;font-weight:700;color:${mapelClr};flex:1;">${e.mapel}${nowTag}</span>
                 </div>`;
             }).join('');
 
