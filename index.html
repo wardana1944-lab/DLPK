@@ -628,26 +628,32 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         .overflow-auto, #main-scroll-area { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
         .modern-table { contain: layout style; }
+
+        /* Fix 300ms tap delay di semua browser mobile */
+        * { touch-action: manipulation; }
+        a, button, label, [onclick] { touch-action: manipulation; cursor: pointer; }
+
         @media (max-width: 768px) {
             body { background-image: none; }
             .glass-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(13,20,35,0.98) !important; }
             #main-sidebar { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
             .header-glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(11,18,32,0.99) !important; }
             #opening-screen::before { display: none; }
-            /* Matikan animasi berat di HP */
+            /* Matikan semua transisi berat di HP */
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
-                transition-duration: 0.15s !important;
+                transition-duration: 0.05s !important;
+                transition-delay: 0ms !important;
             }
-            /* Kecuali pulse untuk indikator live */
-            .keep-pulse { animation-duration: 1s !important; animation-iteration-count: infinite !important; }
             /* Hapus glow orb dan radial gradient berat */
             [style*="radial-gradient"] { background: transparent !important; }
-            /* Sederhanakan shadow */
+            /* Matikan box-shadow kompleks */
             [style*="box-shadow"] { box-shadow: none !important; }
-            /* Matikan transform hover */
-            [onmouseover] { transform: none !important; }
+            /* Sidebar transition cepat */
+            #main-sidebar { transition: transform 0.15s ease !important; }
+            /* Hapus hover transform */
+            .glass-card:hover { transform: none !important; }
         }
     </style>
 </head>
@@ -2036,11 +2042,12 @@
             });
             const targetPage = document.getElementById('page-'+p);
             if (!targetPage) return;
-            
             targetPage.classList.remove('hidden');
-            // Trigger reflow to restart animation
-            void targetPage.offsetWidth;
-            targetPage.classList.add('page-transition');
+            // Hanya trigger reflow di desktop, skip di mobile untuk kecepatan
+            if (window.innerWidth > 768) {
+                void targetPage.offsetWidth;
+                targetPage.classList.add('page-transition');
+            }
             
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.querySelector(`[data-page="${p}"]`)?.classList.add('active');
