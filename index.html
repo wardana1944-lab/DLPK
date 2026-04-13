@@ -634,6 +634,20 @@
             #main-sidebar { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
             .header-glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(11,18,32,0.99) !important; }
             #opening-screen::before { display: none; }
+            /* Matikan animasi berat di HP */
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.15s !important;
+            }
+            /* Kecuali pulse untuk indikator live */
+            .keep-pulse { animation-duration: 1s !important; animation-iteration-count: infinite !important; }
+            /* Hapus glow orb dan radial gradient berat */
+            [style*="radial-gradient"] { background: transparent !important; }
+            /* Sederhanakan shadow */
+            [style*="box-shadow"] { box-shadow: none !important; }
+            /* Matikan transform hover */
+            [onmouseover] { transform: none !important; }
         }
     </style>
 </head>
@@ -1206,24 +1220,8 @@
                             </div>
                         </div>
                         <button onclick="bukaModalUploadBA()" class="flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[11px] uppercase tracking-wider cursor-pointer flex-shrink-0 border-none" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.25);">
-                            <i data-lucide="upload" class="w-4 h-4"></i> Upload Bahan Ajar
+                            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Bahan Ajar
                         </button>
-                    </div>
-                </div>
-
-                <!-- Upload progress -->
-                <div id="ba-upload-progress" style="display:none;" class="glass-card p-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">
-                            <i data-lucide="loader" class="w-4 h-4" style="color:#00D4FF;animation:spin 1s linear infinite;"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div id="ba-upload-filename" class="text-xs font-bold mb-1.5" style="color:#E5E7EB;"></div>
-                            <div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(0,212,255,0.1);">
-                                <div id="ba-upload-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#00D4FF,#3B82F6);border-radius:100px;transition:width .3s ease;"></div>
-                            </div>
-                        </div>
-                        <div id="ba-upload-pct" class="text-xs font-black ml-3" style="color:#00D4FF;font-family:monospace;">0%</div>
                     </div>
                 </div>
 
@@ -1247,17 +1245,12 @@
                         </button>
                     </div>
 
-                    <!-- Drop zone -->
-                    <label for="ba-upload-input" id="ba-dropzone" class="flex flex-col items-center justify-center gap-3 rounded-2xl cursor-pointer transition-all" style="border:2px dashed rgba(0,212,255,0.25);padding:28px;background:rgba(0,212,255,0.03);" onmouseover="this.style.borderColor='rgba(0,212,255,0.5)';this.style.background='rgba(0,212,255,0.06)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.25)';this.style.background='rgba(0,212,255,0.03)'">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">
-                            <i data-lucide="file-up" class="w-6 h-6" style="color:#00D4FF;"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-sm font-black" style="color:#E5E7EB;">Pilih atau seret file PDF</div>
-                            <div id="ba-selected-name" class="text-[10px] mt-1 font-bold" style="color:#9CA3AF;">Belum ada file dipilih</div>
-                        </div>
-                    </label>
-                    <input type="file" id="ba-upload-input" accept=".pdf" class="hidden" onchange="onBAFileSelected(this)">
+                    <!-- Link input -->
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Link PDF (Google Drive / URL)</label>
+                        <input type="url" id="ba-form-url" class="modern-input font-bold" placeholder="https://drive.google.com/...">
+                        <div class="text-[9px] mt-1.5 font-bold" style="color:rgba(0,212,255,0.4);">💡 Pastikan link Google Drive sudah diset "Anyone with the link can view"</div>
+                    </div>
 
                     <div class="space-y-4">
                         <div>
@@ -2939,19 +2932,22 @@
         setInterval(cekPergantianJam, 30000);
 
         // Jam digital real-time di dashboard
+        // Jam digital real-time — pakai requestAnimationFrame agar efisien
+        let _lastHH = '', _lastMM = '', _lastSS = '';
         function updateDashClock() {
             const now = new Date();
             const hh = String(now.getHours()).padStart(2,'0');
             const mm = String(now.getMinutes()).padStart(2,'0');
             const ss = String(now.getSeconds()).padStart(2,'0');
+            // Hanya update DOM jika nilai berubah
             const elHH = document.getElementById('dash-clock-hh');
             const elMM = document.getElementById('dash-clock-mm');
             const elSS = document.getElementById('dash-clock-ss');
             const elDate = document.getElementById('dash-clock-date');
-            if (elHH) elHH.innerText = hh;
-            if (elMM) elMM.innerText = mm;
-            if (elSS) elSS.innerText = ss;
-            if (elDate) {
+            if (elHH && hh !== _lastHH) { elHH.innerText = hh; _lastHH = hh; }
+            if (elMM && mm !== _lastMM) { elMM.innerText = mm; _lastMM = mm; }
+            if (elSS && ss !== _lastSS) { elSS.innerText = ss; _lastSS = ss; }
+            if (elDate && mm !== _lastMM) {
                 const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                 const bulanNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
                 elDate.innerText = `${hariNames[now.getDay()]}, ${now.getDate()} ${bulanNames[now.getMonth()]} ${now.getFullYear()}`;
@@ -2962,12 +2958,9 @@
 
         // ── BAHAN AJAR ──
         let bahanAjarData = {};
-        let _baFile = null;
-        const storage = firebase.storage();
 
         function bukaModalUploadBA() {
-            _baFile = null;
-            document.getElementById('ba-selected-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('ba-form-url').value = '';
             document.getElementById('ba-form-judul').value = '';
             document.getElementById('ba-form-mapel').value = '';
             document.getElementById('ba-form-kelas').value = '';
@@ -2976,63 +2969,29 @@
             lucide.createIcons();
         }
 
-        function onBAFileSelected(input) {
-            const file = input.files[0];
-            if (!file) return;
-            _baFile = file;
-            document.getElementById('ba-selected-name').innerText = file.name;
-            // Auto-isi judul dari nama file
-            if (!document.getElementById('ba-form-judul').value) {
-                document.getElementById('ba-form-judul').value = file.name.replace('.pdf','');
-            }
-        }
-
         function uploadBahanAjar() {
-            if (!_baFile) { showToast('Pilih file PDF terlebih dahulu!', 'error'); return; }
+            const url = document.getElementById('ba-form-url').value.trim();
             const judul = document.getElementById('ba-form-judul').value.trim();
             const mapel = document.getElementById('ba-form-mapel').value.trim();
             const kelas = document.getElementById('ba-form-kelas').value.trim();
             const semester = document.getElementById('ba-form-semester').value;
+            if (!url) { showToast('Masukkan link PDF!', 'error'); return; }
             if (!judul) { showToast('Isi judul bahan ajar!', 'error'); return; }
             if (!mapel) { showToast('Isi mata pelajaran!', 'error'); return; }
 
-            document.getElementById('m-ba-upload').classList.add('hidden');
-            const progressWrap = document.getElementById('ba-upload-progress');
-            const bar = document.getElementById('ba-upload-bar');
-            const pct = document.getElementById('ba-upload-pct');
-            const fname = document.getElementById('ba-upload-filename');
-            progressWrap.style.display = 'block';
-            fname.innerText = _baFile.name;
+            // Konversi Google Drive share link ke direct view link
+            let finalUrl = url;
+            const gdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (gdMatch) finalUrl = `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
 
-            const storageRef = storage.ref('bahan-ajar/' + Date.now() + '_' + _baFile.name);
-            const uploadTask = storageRef.put(_baFile);
-
-            uploadTask.on('state_changed',
-                snap => {
-                    const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-                    bar.style.width = p + '%';
-                    pct.innerText = p + '%';
-                },
-                err => {
-                    progressWrap.style.display = 'none';
-                    showToast('Upload gagal: ' + err.message, 'error');
-                },
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then(url => {
-                        db.ref('bahanAjar').push({
-                            judul, mapel, kelas, semester, url,
-                            nama: _baFile.name,
-                            ukuran: (_baFile.size / 1024).toFixed(0),
-                            tanggal: new Date().toLocaleDateString('id-ID')
-                        }).then(() => {
-                            progressWrap.style.display = 'none';
-                            bar.style.width = '0%';
-                            _baFile = null;
-                            showToast('Bahan ajar berhasil diupload!');
-                        });
-                    });
-                }
-            );
+            db.ref('bahanAjar').push({
+                judul, mapel, kelas, semester,
+                url: finalUrl,
+                tanggal: new Date().toLocaleDateString('id-ID')
+            }).then(() => {
+                document.getElementById('m-ba-upload').classList.add('hidden');
+                showToast('Bahan ajar berhasil ditambahkan!');
+            });
         }
 
         function renderBahanAjar() {
@@ -3046,46 +3005,62 @@
                 return;
             }
 
-            grid.innerHTML = items.map(([id, v]) => `
-                <div class="relative overflow-hidden rounded-2xl flex flex-col" style="background:rgba(13,24,41,0.9);border:1px solid rgba(0,212,255,0.1);transition:all .3s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.1)';this.style.transform='none'">
-                    <!-- Top accent -->
-                    <div style="height:2px;background:linear-gradient(90deg,#00D4FF,#3B82F6);"></div>
-                    <!-- PDF preview area -->
-                    <div class="flex items-center justify-center" style="height:100px;background:linear-gradient(135deg,rgba(0,212,255,0.05),rgba(59,130,246,0.03));">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(220,38,38,0.08));border:1px solid rgba(239,68,68,0.2);">
-                                <i data-lucide="file-text" style="width:22px;height:22px;color:#f87171;"></i>
+            grid.innerHTML = items.map(([id, v], idx) => {
+                const colors = [
+                    ['rgba(0,212,255,0.15)','rgba(0,212,255,0.3)','#00D4FF'],
+                    ['rgba(124,58,237,0.15)','rgba(124,58,237,0.3)','#A855F7'],
+                    ['rgba(59,130,246,0.15)','rgba(59,130,246,0.3)','#3B82F6'],
+                    ['rgba(39,174,96,0.15)','rgba(39,174,96,0.3)','#27AE60'],
+                    ['rgba(251,191,36,0.15)','rgba(251,191,36,0.3)','#FBBF24'],
+                ];
+                const [bg, bdr, accent] = colors[idx % colors.length];
+                return `
+                <div class="relative overflow-hidden rounded-2xl flex flex-col" style="background:#07101F;border:1px solid ${bdr};box-shadow:0 4px 24px rgba(0,0,0,0.4);transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.5),0 0 20px ${accent}22'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.4)'">
+                    <!-- Top gradient bar -->
+                    <div style="height:3px;background:linear-gradient(90deg,${accent},transparent);"></div>
+                    <!-- Glow orb -->
+                    <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,${bg},transparent 70%);top:-30px;right:-30px;pointer-events:none;"></div>
+
+                    <!-- Header area -->
+                    <div style="padding:18px 18px 12px;position:relative;">
+                        <div style="display:flex;align-items:flex-start;gap:12px;">
+                            <!-- PDF icon -->
+                            <div style="width:44px;height:52px;border-radius:10px;background:linear-gradient(145deg,rgba(239,68,68,0.18),rgba(220,38,38,0.08));border:1px solid rgba(239,68,68,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;">
+                                <i data-lucide="file-text" style="width:18px;height:18px;color:#f87171;"></i>
+                                <span style="font-size:6px;font-weight:900;color:rgba(239,68,68,0.7);letter-spacing:.05em;margin-top:2px;">PDF</span>
+                                <!-- Fold corner -->
+                                <div style="position:absolute;top:0;right:0;width:10px;height:10px;background:#07101F;clip-path:polygon(100% 0,0 0,100% 100%);"></div>
                             </div>
-                            <span class="text-[8px] font-black uppercase tracking-widest" style="color:rgba(239,68,68,0.5);">PDF</span>
+                            <!-- Title & meta -->
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:13px;font-weight:900;color:#E5E7EB;line-height:1.3;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.judul}</div>
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                    ${v.mapel ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:${bg};color:${accent};border:1px solid ${bdr};">${v.mapel}</span>` : ''}
+                                    ${v.kelas ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,0.1);color:#A855F7;border:1px solid rgba(124,58,237,0.2);">${v.kelas}</span>` : ''}
+                                    ${v.semester ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(39,174,96,0.1);color:#27AE60;border:1px solid rgba(39,174,96,0.2);">${v.semester}</span>` : ''}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- Info -->
-                    <div class="p-4 flex flex-col gap-3 flex-1">
-                        <div>
-                            <div class="font-black text-sm leading-tight mb-1" style="color:#E5E7EB;">${v.judul}</div>
-                            <div class="flex flex-wrap gap-1.5 mt-2">
-                                ${v.mapel ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">${v.mapel}</span>` : ''}
-                                ${v.kelas ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(124,58,237,0.1);color:#A855F7;border:1px solid rgba(124,58,237,0.2);">${v.kelas}</span>` : ''}
-                                ${v.semester ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(39,174,96,0.1);color:#27AE60;border:1px solid rgba(39,174,96,0.2);">${v.semester}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 mt-auto" style="border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;">
-                            <span class="text-[9px] font-bold" style="color:rgba(255,255,255,0.2);">${v.ukuran} KB · ${v.tanggal||''}</span>
-                        </div>
-                        <!-- Actions -->
-                        <div class="flex gap-2">
-                            <a href="${v.url}" target="_blank" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 no-underline" style="background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">
-                                <i data-lucide="eye" style="width:12px;height:12px;"></i> Buka
-                            </a>
-                            <button onclick="bukaEditBahanAjar('${id}')" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 border-none cursor-pointer" style="background:rgba(59,130,246,0.1);color:#3B82F6;border:1px solid rgba(59,130,246,0.2);">
-                                <i data-lucide="pencil" style="width:12px;height:12px;"></i> Edit
-                            </button>
-                            <button onclick="hapusBahanAjar('${id}','${encodeURIComponent(v.nama||'')}')" class="py-2 px-3 rounded-xl border-none cursor-pointer" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
-                                <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
-                            </button>
-                        </div>
+
+                    <!-- Divider -->
+                    <div style="height:1px;background:linear-gradient(90deg,${bdr},transparent);margin:0 18px;"></div>
+
+                    <!-- Footer -->
+                    <div style="padding:10px 14px 14px;display:flex;align-items:center;gap:8px;margin-top:auto;">
+                        <span style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.2);flex:1;">${v.tanggal||''}</span>
+                        <a href="${v.url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:${bg};color:${accent};border:1px solid ${bdr};font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='${bdr}'" onmouseout="this.style.background='${bg}'">
+                            <i data-lucide="external-link" style="width:11px;height:11px;"></i> Buka
+                        </a>
+                        <button onclick="bukaEditBahanAjar('${id}')" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;border:1px solid rgba(59,130,246,0.2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'">
+                            <i data-lucide="pencil" style="width:11px;height:11px;"></i> Edit
+                        </button>
+                        <button onclick="hapusBahanAjar('${id}','')" style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                        </button>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
             lucide.createIcons();
         }
 
