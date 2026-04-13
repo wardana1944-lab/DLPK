@@ -639,21 +639,16 @@
             #main-sidebar { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
             .header-glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(11,18,32,0.99) !important; }
             #opening-screen::before { display: none; }
-            /* Matikan semua transisi berat di HP */
+            /* Matikan SEMUA transisi dan animasi di HP */
             *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.05s !important;
-                transition-delay: 0ms !important;
+                animation: none !important;
+                transition: none !important;
             }
-            /* Hapus glow orb dan radial gradient berat */
+            /* Hapus efek visual berat */
             [style*="radial-gradient"] { background: transparent !important; }
-            /* Matikan box-shadow kompleks */
             [style*="box-shadow"] { box-shadow: none !important; }
-            /* Sidebar transition cepat */
-            #main-sidebar { transition: transform 0.15s ease !important; }
-            /* Hapus hover transform */
             .glass-card:hover { transform: none !important; }
+            #main-sidebar { transition: none !important; }
         }
     </style>
 </head>
@@ -2021,18 +2016,12 @@
             }
         }
 
+        let _switchingPage = false;
         function switchPage(p) {
-            const currentActive = document.querySelector('main > div > div:not(.hidden)');
-            if (currentActive && currentActive.id !== 'page-'+p) {
-                currentActive.classList.add('page-exit');
-                setTimeout(() => {
-                    currentActive.classList.add('hidden');
-                    currentActive.classList.remove('page-exit');
-                    showNewPage(p);
-                }, 150);
-            } else {
-                showNewPage(p);
-            }
+            if (_switchingPage) return;
+            _switchingPage = true;
+            showNewPage(p);
+            setTimeout(() => { _switchingPage = false; }, 300);
         }
 
         function showNewPage(p) {
