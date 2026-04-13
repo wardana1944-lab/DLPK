@@ -23,6 +23,7 @@
     <!-- Tambahan Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         
@@ -721,6 +722,9 @@
             <button onclick="switchPage('schedule')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="schedule">
                 <i data-lucide="clock"></i> <span>Jadwal Pelajaran</span>
             </button>
+            <button onclick="switchPage('bahan-ajar')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="bahan-ajar">
+                <i data-lucide="file-text"></i> <span>Bahan Ajar</span>
+            </button>
             
             <div class="pt-4 pb-1">
                 <p class="px-4 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">System</p>
@@ -1184,6 +1188,156 @@
                     </div>
                 </div>
 
+            </div>
+
+            <div id="page-bahan-ajar" class="hidden space-y-6 page-transition">
+                <!-- Header -->
+                <div class="relative overflow-hidden rounded-3xl p-8" style="background:linear-gradient(135deg,#0d1829,#0a1628,#0f1f3d);border:1px solid rgba(0,212,255,0.15);">
+                    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 80% 40%,rgba(0,212,255,0.08),transparent 55%);"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(59,130,246,0.15));border:1px solid rgba(0,212,255,0.3);">
+                                <i data-lucide="book-marked" class="w-7 h-7" style="color:#00D4FF;"></i>
+                            </div>
+                            <div>
+                                <div class="text-[9px] font-black uppercase tracking-[.2em] mb-1" style="color:rgba(0,212,255,0.6);">Manajemen Konten</div>
+                                <h2 class="text-2xl font-black tracking-tight" style="color:#E5E7EB;">Bahan Ajar</h2>
+                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Upload dan kelola file PDF bahan ajar per mata pelajaran</p>
+                            </div>
+                        </div>
+                        <button onclick="bukaModalUploadBA()" class="flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[11px] uppercase tracking-wider cursor-pointer flex-shrink-0 border-none" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.25);">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Upload Bahan Ajar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload progress -->
+                <div id="ba-upload-progress" style="display:none;" class="glass-card p-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">
+                            <i data-lucide="loader" class="w-4 h-4" style="color:#00D4FF;animation:spin 1s linear infinite;"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div id="ba-upload-filename" class="text-xs font-bold mb-1.5" style="color:#E5E7EB;"></div>
+                            <div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(0,212,255,0.1);">
+                                <div id="ba-upload-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#00D4FF,#3B82F6);border-radius:100px;transition:width .3s ease;"></div>
+                            </div>
+                        </div>
+                        <div id="ba-upload-pct" class="text-xs font-black ml-3" style="color:#00D4FF;font-family:monospace;">0%</div>
+                    </div>
+                </div>
+
+                <!-- Grid bahan ajar -->
+                <div id="ba-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Modal Upload Bahan Ajar -->
+            <div id="m-ba-upload" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);">
+                <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.6);">
+                    <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                            </div>
+                            <span class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Upload Bahan Ajar</span>
+                        </div>
+                        <button onclick="document.getElementById('m-ba-upload').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Drop zone -->
+                    <label for="ba-upload-input" id="ba-dropzone" class="flex flex-col items-center justify-center gap-3 rounded-2xl cursor-pointer transition-all" style="border:2px dashed rgba(0,212,255,0.25);padding:28px;background:rgba(0,212,255,0.03);" onmouseover="this.style.borderColor='rgba(0,212,255,0.5)';this.style.background='rgba(0,212,255,0.06)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.25)';this.style.background='rgba(0,212,255,0.03)'">
+                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">
+                            <i data-lucide="file-up" class="w-6 h-6" style="color:#00D4FF;"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm font-black" style="color:#E5E7EB;">Pilih atau seret file PDF</div>
+                            <div id="ba-selected-name" class="text-[10px] mt-1 font-bold" style="color:#9CA3AF;">Belum ada file dipilih</div>
+                        </div>
+                    </label>
+                    <input type="file" id="ba-upload-input" accept=".pdf" class="hidden" onchange="onBAFileSelected(this)">
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Judul Bahan Ajar</label>
+                            <input type="text" id="ba-form-judul" class="modern-input font-bold" placeholder="Contoh: Modul Bilangan Bulat">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
+                                <input type="text" id="ba-form-mapel" class="modern-input font-bold" placeholder="Matematika">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Kelas</label>
+                                <input type="text" id="ba-form-kelas" class="modern-input font-bold" placeholder="IV A">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Semester</label>
+                            <select id="ba-form-semester" class="modern-input font-bold">
+                                <option value="Semester 1">Semester 1</option>
+                                <option value="Semester 2">Semester 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-1">
+                        <button onclick="document.getElementById('m-ba-upload').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                        <button onclick="uploadBahanAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;box-shadow:0 4px 14px rgba(0,212,255,0.2);">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Upload
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Edit Bahan Ajar -->
+            <div id="m-ba-edit" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);">
+                <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(0,212,255,0.2);box-shadow:0 30px 60px rgba(0,0,0,0.6);">
+                    <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#3B82F6;">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </div>
+                            <span class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Edit Bahan Ajar</span>
+                        </div>
+                        <button onclick="document.getElementById('m-ba-edit').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" id="ba-edit-id">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Judul</label>
+                            <input type="text" id="ba-edit-judul" class="modern-input font-bold">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
+                                <input type="text" id="ba-edit-mapel" class="modern-input font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Kelas</label>
+                                <input type="text" id="ba-edit-kelas" class="modern-input font-bold">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Semester</label>
+                            <select id="ba-edit-semester" class="modern-input font-bold">
+                                <option value="Semester 1">Semester 1</option>
+                                <option value="Semester 2">Semester 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 pt-1">
+                        <button onclick="document.getElementById('m-ba-edit').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                        <button onclick="simpanEditBahanAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;">
+                            <i data-lucide="save" class="w-4 h-4"></i> Simpan
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div id="page-print" class="hidden space-y-6 page-transition">
@@ -1898,13 +2052,14 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.querySelector(`[data-page="${p}"]`)?.classList.add('active');
             
-            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'PRESENSI DIGITAL', 'journal': 'JURNAL HARIAN', 'grades': 'E-RAPOR & NILAI', 'schedule': 'JADWAL PELAJARAN', 'print': 'PUSAT DOKUMEN', 'settings': 'SYSTEM SETTINGS' };
+            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'PRESENSI DIGITAL', 'journal': 'JURNAL HARIAN', 'grades': 'E-RAPOR & NILAI', 'schedule': 'JADWAL PELAJARAN', 'bahan-ajar': 'BAHAN AJAR', 'print': 'PUSAT DOKUMEN', 'settings': 'SYSTEM SETTINGS' };
             const crumbs = { 'dashboard': 'Overview', 'students': 'Student List', 'attendance': 'Daily Log', 'journal': 'KBM Activities', 'grades': 'Academic Report', 'schedule': 'Weekly Schedule', 'print': 'Print Center', 'settings': 'Identity' };
             document.getElementById('page-title').innerText = titles[p] || p.toUpperCase();
             document.getElementById('breadcrumb-active').innerText = crumbs[p] || 'Overview';
             
             if(p === 'students') renderSiswa();
             if(p === 'schedule') { switchScheduleTab('grid'); renderSchedule(); }
+            if(p === 'bahan-ajar') renderBahanAjar();
             if(p === 'attendance') renderAbsen();
             if(p === 'journal') renderJournalDay();
             if(p === 'grades') renderNilai();
@@ -2804,6 +2959,177 @@
         }
         updateDashClock();
         setInterval(updateDashClock, 1000);
+
+        // ── BAHAN AJAR ──
+        let bahanAjarData = {};
+        let _baFile = null;
+        const storage = firebase.storage();
+
+        function bukaModalUploadBA() {
+            _baFile = null;
+            document.getElementById('ba-selected-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('ba-form-judul').value = '';
+            document.getElementById('ba-form-mapel').value = '';
+            document.getElementById('ba-form-kelas').value = '';
+            document.getElementById('ba-form-semester').value = 'Semester 1';
+            document.getElementById('m-ba-upload').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function onBAFileSelected(input) {
+            const file = input.files[0];
+            if (!file) return;
+            _baFile = file;
+            document.getElementById('ba-selected-name').innerText = file.name;
+            // Auto-isi judul dari nama file
+            if (!document.getElementById('ba-form-judul').value) {
+                document.getElementById('ba-form-judul').value = file.name.replace('.pdf','');
+            }
+        }
+
+        function uploadBahanAjar() {
+            if (!_baFile) { showToast('Pilih file PDF terlebih dahulu!', 'error'); return; }
+            const judul = document.getElementById('ba-form-judul').value.trim();
+            const mapel = document.getElementById('ba-form-mapel').value.trim();
+            const kelas = document.getElementById('ba-form-kelas').value.trim();
+            const semester = document.getElementById('ba-form-semester').value;
+            if (!judul) { showToast('Isi judul bahan ajar!', 'error'); return; }
+            if (!mapel) { showToast('Isi mata pelajaran!', 'error'); return; }
+
+            document.getElementById('m-ba-upload').classList.add('hidden');
+            const progressWrap = document.getElementById('ba-upload-progress');
+            const bar = document.getElementById('ba-upload-bar');
+            const pct = document.getElementById('ba-upload-pct');
+            const fname = document.getElementById('ba-upload-filename');
+            progressWrap.style.display = 'block';
+            fname.innerText = _baFile.name;
+
+            const storageRef = storage.ref('bahan-ajar/' + Date.now() + '_' + _baFile.name);
+            const uploadTask = storageRef.put(_baFile);
+
+            uploadTask.on('state_changed',
+                snap => {
+                    const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                    bar.style.width = p + '%';
+                    pct.innerText = p + '%';
+                },
+                err => {
+                    progressWrap.style.display = 'none';
+                    showToast('Upload gagal: ' + err.message, 'error');
+                },
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(url => {
+                        db.ref('bahanAjar').push({
+                            judul, mapel, kelas, semester, url,
+                            nama: _baFile.name,
+                            ukuran: (_baFile.size / 1024).toFixed(0),
+                            tanggal: new Date().toLocaleDateString('id-ID')
+                        }).then(() => {
+                            progressWrap.style.display = 'none';
+                            bar.style.width = '0%';
+                            _baFile = null;
+                            showToast('Bahan ajar berhasil diupload!');
+                        });
+                    });
+                }
+            );
+        }
+
+        function renderBahanAjar() {
+            const grid = document.getElementById('ba-grid');
+            if (!grid) return;
+            const items = Object.entries(bahanAjarData)
+                .sort(([,a],[,b]) => (b.tanggal||'').localeCompare(a.tanggal||''));
+
+            if (!items.length) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-16" style="color:rgba(255,255,255,0.15);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Belum ada bahan ajar — klik Upload untuk menambahkan</div>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(([id, v]) => `
+                <div class="relative overflow-hidden rounded-2xl flex flex-col" style="background:rgba(13,24,41,0.9);border:1px solid rgba(0,212,255,0.1);transition:all .3s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.1)';this.style.transform='none'">
+                    <!-- Top accent -->
+                    <div style="height:2px;background:linear-gradient(90deg,#00D4FF,#3B82F6);"></div>
+                    <!-- PDF preview area -->
+                    <div class="flex items-center justify-center" style="height:100px;background:linear-gradient(135deg,rgba(0,212,255,0.05),rgba(59,130,246,0.03));">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(220,38,38,0.08));border:1px solid rgba(239,68,68,0.2);">
+                                <i data-lucide="file-text" style="width:22px;height:22px;color:#f87171;"></i>
+                            </div>
+                            <span class="text-[8px] font-black uppercase tracking-widest" style="color:rgba(239,68,68,0.5);">PDF</span>
+                        </div>
+                    </div>
+                    <!-- Info -->
+                    <div class="p-4 flex flex-col gap-3 flex-1">
+                        <div>
+                            <div class="font-black text-sm leading-tight mb-1" style="color:#E5E7EB;">${v.judul}</div>
+                            <div class="flex flex-wrap gap-1.5 mt-2">
+                                ${v.mapel ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">${v.mapel}</span>` : ''}
+                                ${v.kelas ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(124,58,237,0.1);color:#A855F7;border:1px solid rgba(124,58,237,0.2);">${v.kelas}</span>` : ''}
+                                ${v.semester ? `<span class="text-[9px] font-black px-2 py-0.5 rounded-full" style="background:rgba(39,174,96,0.1);color:#27AE60;border:1px solid rgba(39,174,96,0.2);">${v.semester}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mt-auto" style="border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;">
+                            <span class="text-[9px] font-bold" style="color:rgba(255,255,255,0.2);">${v.ukuran} KB · ${v.tanggal||''}</span>
+                        </div>
+                        <!-- Actions -->
+                        <div class="flex gap-2">
+                            <a href="${v.url}" target="_blank" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 no-underline" style="background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">
+                                <i data-lucide="eye" style="width:12px;height:12px;"></i> Buka
+                            </a>
+                            <button onclick="bukaEditBahanAjar('${id}')" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 border-none cursor-pointer" style="background:rgba(59,130,246,0.1);color:#3B82F6;border:1px solid rgba(59,130,246,0.2);">
+                                <i data-lucide="pencil" style="width:12px;height:12px;"></i> Edit
+                            </button>
+                            <button onclick="hapusBahanAjar('${id}','${encodeURIComponent(v.nama||'')}')" class="py-2 px-3 rounded-xl border-none cursor-pointer" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+                                <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            lucide.createIcons();
+        }
+
+        function bukaEditBahanAjar(id) {
+            const v = bahanAjarData[id];
+            if (!v) return;
+            document.getElementById('ba-edit-id').value = id;
+            document.getElementById('ba-edit-judul').value = v.judul || '';
+            document.getElementById('ba-edit-mapel').value = v.mapel || '';
+            document.getElementById('ba-edit-kelas').value = v.kelas || '';
+            document.getElementById('ba-edit-semester').value = v.semester || 'Semester 1';
+            document.getElementById('m-ba-edit').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function simpanEditBahanAjar() {
+            const id = document.getElementById('ba-edit-id').value;
+            const data = {
+                judul: document.getElementById('ba-edit-judul').value.trim(),
+                mapel: document.getElementById('ba-edit-mapel').value.trim(),
+                kelas: document.getElementById('ba-edit-kelas').value.trim(),
+                semester: document.getElementById('ba-edit-semester').value
+            };
+            if (!data.judul) { showToast('Judul tidak boleh kosong!', 'error'); return; }
+            db.ref('bahanAjar/' + id).update(data).then(() => {
+                document.getElementById('m-ba-edit').classList.add('hidden');
+                showToast('Bahan ajar diperbarui!');
+            });
+        }
+
+        function hapusBahanAjar(id, namaEncoded) {
+            if (!confirm('Hapus bahan ajar ini?')) return;
+            const nama = decodeURIComponent(namaEncoded);
+            db.ref('bahanAjar/' + id).remove();
+            if (nama) storage.ref('bahan-ajar/' + nama).delete().catch(() => {});
+            showToast('Bahan ajar dihapus!', 'info');
+        }
+
+        db.ref('bahanAjar').on('value', snap => {
+            bahanAjarData = snap.val() || {};
+            if (document.getElementById('page-bahan-ajar') && !document.getElementById('page-bahan-ajar').classList.contains('hidden')) {
+                renderBahanAjar();
+            }
+        });
 
                 function populatePrintMenu() {
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
