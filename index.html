@@ -629,7 +629,20 @@
         .overflow-auto, #main-scroll-area { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
         .modern-table { contain: layout style; }
 
-        /* Fix 300ms tap delay di semua browser mobile */
+        /* 7-Segment Display Clock */
+        .seg-display { display:inline-flex; align-items:center; gap:4px; }
+        .seg-digit { position:relative; width:18px; height:30px; }
+        .seg { position:absolute; background:#00D4FF; border-radius:1.5px; box-shadow:0 0 4px rgba(0,212,255,0.5); }
+        .seg.off { background:rgba(0,212,255,0.07); box-shadow:none; }
+        .seg-a { top:0;    left:2px; right:2px; height:3px; }
+        .seg-g { top:50%;  left:2px; right:2px; height:3px; margin-top:-1.5px; }
+        .seg-d { bottom:0; left:2px; right:2px; height:3px; }
+        .seg-f { top:3px;  left:0;   width:3px; height:calc(50% - 3px); }
+        .seg-b { top:3px;  right:0;  width:3px; height:calc(50% - 3px); }
+        .seg-e { bottom:3px; left:0; width:3px; height:calc(50% - 3px); }
+        .seg-c { bottom:3px; right:0;width:3px; height:calc(50% - 3px); }
+        .seg-colon { display:flex; flex-direction:column; gap:5px; align-items:center; justify-content:center; height:30px; }
+        .seg-dot { width:4px; height:4px; border-radius:50%; background:#00D4FF; box-shadow:0 0 5px #00D4FF; }
         * { touch-action: manipulation; }
         a, button, label, [onclick] { touch-action: manipulation; cursor: pointer; }
 
@@ -703,72 +716,78 @@
     <!-- Add Overlay for Mobile -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
 
-    <aside id="main-sidebar" class="hidden w-72 bg-[rgba(11,18,32,0.95)] border-r border-[var(--border)] flex flex-col z-50 shadow-sm absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 h-full">
-        <div class="p-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white shadow-lg rotate-3 transition-transform hover:rotate-0">
-                <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+    <aside id="main-sidebar" class="hidden w-64 flex flex-col z-50 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 h-full" style="background:#060D1F;border-right:1px solid rgba(0,212,255,0.1);">
+        <!-- Logo -->
+        <div style="padding:20px 20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,212,255,0.08);">
+            <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(59,130,246,0.15));border:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i data-lucide="graduation-cap" style="width:20px;height:20px;color:#00D4FF;"></i>
             </div>
-            <div class="flex flex-col">
-                <span class="text-lg font-extrabold text-[var(--text-main)] tracking-tight leading-none uppercase">DLPK</span>
+            <div>
+                <div style="font-size:16px;font-weight:900;color:#E5E7EB;letter-spacing:.05em;line-height:1;">DLPK</div>
+                <div style="font-size:8px;font-weight:700;color:rgba(0,212,255,0.5);text-transform:uppercase;letter-spacing:.2em;margin-top:2px;">Kelas Digital</div>
             </div>
-        </div>
-        
-        <div class="px-6">
-            <div class="h-[1px] bg-[var(--border)]"></div>
         </div>
 
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            <p class="px-4 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Main Menu</p>
-            <button onclick="switchPage('dashboard')" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="dashboard">
-                <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+        <nav class="flex-1 overflow-y-auto" style="padding:12px 10px;">
+            <!-- Label -->
+            <div style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:.25em;padding:0 10px;margin-bottom:6px;margin-top:4px;">Menu Utama</div>
+
+            <button onclick="switchPage('dashboard')" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="dashboard">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i><span>Dashboard</span>
             </button>
-            <button onclick="switchPage('students')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="students">
-                <i data-lucide="users"></i> <span>Database Siswa</span>
+            <button onclick="switchPage('students')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="students">
+                <i data-lucide="users" class="w-4 h-4 flex-shrink-0"></i><span>Database Siswa</span>
             </button>
-            <button onclick="switchPage('attendance')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="attendance">
-                <i data-lucide="calendar-check"></i> <span>Presensi Digital</span>
+            <button onclick="switchPage('attendance')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="attendance">
+                <i data-lucide="calendar-check" class="w-4 h-4 flex-shrink-0"></i><span>Presensi Digital</span>
             </button>
-            <button onclick="switchPage('journal')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="journal">
-                <i data-lucide="book-open"></i> <span>Jurnal Harian</span>
+            <button onclick="switchPage('journal')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="journal">
+                <i data-lucide="book-open" class="w-4 h-4 flex-shrink-0"></i><span>Jurnal Harian</span>
             </button>
-            <button onclick="switchPage('grades')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="grades">
-                <i data-lucide="award"></i> <span>E-Rapor & Nilai</span>
+            <button onclick="switchPage('grades')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="grades">
+                <i data-lucide="award" class="w-4 h-4 flex-shrink-0"></i><span>E-Rapor & Nilai</span>
             </button>
-            <button onclick="switchPage('schedule')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="schedule">
-                <i data-lucide="clock"></i> <span>Jadwal Pelajaran</span>
+            <button onclick="switchPage('schedule')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="schedule">
+                <i data-lucide="clock" class="w-4 h-4 flex-shrink-0"></i><span>Jadwal Pelajaran</span>
             </button>
-            <button onclick="switchPage('bahan-ajar')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="bahan-ajar">
-                <i data-lucide="file-text"></i> <span>Bahan Ajar</span>
+
+            <!-- Label konten -->
+            <div style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:.25em;padding:0 10px;margin-bottom:6px;margin-top:14px;">Konten Ajar</div>
+
+            <button onclick="switchPage('bahan-ajar')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="bahan-ajar">
+                <i data-lucide="file-text" class="w-4 h-4 flex-shrink-0"></i><span>Bahan Ajar</span>
             </button>
-            
-            <div class="pt-4 pb-1">
-                <p class="px-4 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">System</p>
-            </div>
-            
-            <button onclick="switchPage('print')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="print">
-                <i data-lucide="printer"></i> <span>Pusat Cetak</span>
+            <button onclick="switchPage('modul-ajar')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="modul-ajar">
+                <i data-lucide="book-marked" class="w-4 h-4 flex-shrink-0"></i><span>Modul Ajar</span>
             </button>
-            <button onclick="switchPage('settings')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold" data-page="settings">
-                <i data-lucide="settings"></i> <span>Pengaturan</span>
+
+            <!-- Label system -->
+            <div style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:.25em;padding:0 10px;margin-bottom:6px;margin-top:14px;">Sistem</div>
+
+            <button onclick="switchPage('print')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="print">
+                <i data-lucide="printer" class="w-4 h-4 flex-shrink-0"></i><span>Pusat Cetak</span>
+            </button>
+            <button onclick="switchPage('settings')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl mb-0.5" data-page="settings">
+                <i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i><span>Pengaturan</span>
             </button>
         </nav>
 
-        <div class="p-4 space-y-2">
-            <div class="bg-[rgba(0,212,255,0.06)] border border-[rgba(0,212,255,0.15)] p-3 rounded-xl flex items-center gap-3">
-                <div class="relative">
-                    <div class="w-8 h-8 bg-[rgba(0,212,255,0.12)] rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xs border border-[rgba(0,212,255,0.25)]">
-                        <i data-lucide="user" class="w-4 h-4"></i>
+        <!-- User info -->
+        <div style="padding:12px 10px;border-top:1px solid rgba(0,212,255,0.08);">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);margin-bottom:8px;">
+                <div style="position:relative;flex-shrink:0;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);display:flex;align-items:center;justify-content:center;">
+                        <i data-lucide="user" style="width:15px;height:15px;color:#00D4FF;"></i>
                     </div>
-                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--primary)] border-2 border-[var(--surface)] rounded-full"></div>
+                    <div style="position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;background:#00D4FF;border:2px solid #060D1F;border-radius:50%;"></div>
                 </div>
-                <div class="flex flex-col min-w-0">
-                    <span class="text-[10px] font-bold text-[var(--text-main)] truncate uppercase" id="side-guru-nama">...</span>
-                    <span class="text-[8px] font-bold text-[var(--primary)] uppercase tracking-wider opacity-70">Admin</span>
+                <div style="flex:1;min-width:0;">
+                    <div id="side-guru-nama" style="font-size:10px;font-weight:800;color:#E5E7EB;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">...</div>
+                    <div style="font-size:8px;font-weight:700;color:rgba(0,212,255,0.6);text-transform:uppercase;letter-spacing:.1em;">Admin</div>
                 </div>
             </div>
-            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 font-bold text-[11px] uppercase tracking-widest transition-all border border-transparent hover:border-rose-500/30">
-                <i data-lucide="log-out" class="w-4 h-4"></i>
-                <span>Keluar Sistem</span>
+            <button onclick="logout()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:12px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);color:#f87171;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;">
+                <i data-lucide="log-out" style="width:14px;height:14px;"></i> Keluar Sistem
             </button>
         </div>
     </aside>
@@ -851,28 +870,31 @@
                     <!-- Glow -->
                     <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.05),transparent 65%);top:-100px;right:-80px;pointer-events:none;z-index:0;"></div>
 
-                    <!-- Jam digital — memotong border atas, tengah -->
-                    <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;">
-                        <div style="position:relative;display:inline-flex;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;background:#07101F;border:1px solid rgba(0,212,255,0.3);box-shadow:0 0 20px rgba(0,212,255,0.15),0 4px 16px rgba(0,0,0,0.5);">
-                            <!-- Corner accents -->
-                            <div style="position:absolute;top:-1px;left:-1px;width:8px;height:8px;border-top:2px solid #00D4FF;border-left:2px solid #00D4FF;border-radius:2px 0 0 0;"></div>
-                            <div style="position:absolute;top:-1px;right:-1px;width:8px;height:8px;border-top:2px solid #00D4FF;border-right:2px solid #00D4FF;border-radius:0 2px 0 0;"></div>
-                            <div style="position:absolute;bottom:-1px;left:-1px;width:8px;height:8px;border-bottom:2px solid #00D4FF;border-left:2px solid #00D4FF;border-radius:0 0 0 2px;"></div>
-                            <div style="position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-bottom:2px solid #00D4FF;border-right:2px solid #00D4FF;border-radius:0 0 2px 0;"></div>
-                            <div id="dash-clock-hh" style="font-size:20px;font-weight:900;font-family:monospace;color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6);min-width:26px;text-align:center;line-height:1;">00</div>
-                            <div style="display:flex;flex-direction:column;gap:4px;margin:0 1px;">
-                                <div style="width:4px;height:4px;border-radius:50%;background:#00D4FF;box-shadow:0 0 6px #00D4FF;animation:pulse 1s infinite;"></div>
-                                <div style="width:4px;height:4px;border-radius:50%;background:#00D4FF;box-shadow:0 0 6px #00D4FF;animation:pulse 1s infinite;"></div>
+                    <!-- Jam digital 7-segment — memotong border atas, tengah -->
+                    <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;">
+                        <div style="position:relative;display:inline-flex;align-items:center;gap:0;padding:8px 14px 7px;border-radius:10px;background:#060D1F;border:1px solid rgba(0,212,255,0.25);box-shadow:0 0 20px rgba(0,212,255,0.1),0 4px 16px rgba(0,0,0,0.7);">
+                            <div style="position:absolute;inset:0;border-radius:10px;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.1) 3px,rgba(0,0,0,0.1) 4px);pointer-events:none;"></div>
+                            <!-- Digits -->
+                            <div class="seg-display" id="seg-clock-display">
+                                <!-- HH -->
+                                <div class="seg-digit" id="seg-h1"></div>
+                                <div class="seg-digit" id="seg-h2"></div>
+                                <!-- Colon -->
+                                <div class="seg-colon">
+                                    <div class="seg-dot" id="seg-dot1"></div>
+                                    <div class="seg-dot" id="seg-dot2"></div>
+                                </div>
+                                <!-- MM -->
+                                <div class="seg-digit" id="seg-m1"></div>
+                                <div class="seg-digit" id="seg-m2"></div>
                             </div>
-                            <div id="dash-clock-mm" style="font-size:20px;font-weight:900;font-family:monospace;color:#00D4FF;text-shadow:0 0 12px rgba(0,212,255,0.6);min-width:26px;text-align:center;line-height:1;">00</div>
-                            <div style="display:flex;flex-direction:column;gap:4px;margin:0 1px;">
-                                <div style="width:4px;height:4px;border-radius:50%;background:rgba(0,212,255,0.35);animation:pulse 1s infinite;"></div>
-                                <div style="width:4px;height:4px;border-radius:50%;background:rgba(0,212,255,0.35);animation:pulse 1s infinite;"></div>
-                            </div>
-                            <div id="dash-clock-ss" style="font-size:20px;font-weight:900;font-family:monospace;color:rgba(0,212,255,0.45);min-width:26px;text-align:center;line-height:1;">00</div>
                         </div>
-                        <div id="dash-clock-date" style="font-size:7.5px;font-weight:700;color:rgba(0,212,255,0.35);text-transform:uppercase;letter-spacing:.15em;margin-top:4px;white-space:nowrap;background:#07101F;padding:0 6px;"></div>
+                        <div id="dash-clock-date" style="font-size:7.5px;font-weight:700;color:rgba(0,212,255,0.4);text-transform:uppercase;letter-spacing:.15em;margin-top:5px;white-space:nowrap;background:#07101F;padding:0 8px;"></div>
                     </div>
+                    <!-- Hidden elements untuk JS compatibility -->
+                    <div id="dash-clock-hh" style="display:none;">00</div>
+                    <div id="dash-clock-mm" style="display:none;">00</div>
+                    <div id="dash-clock-ss" style="display:none;">00</div>
 
                     <!-- Header -->
                     <div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:32px 18px 10px;">
@@ -1226,8 +1248,8 @@
                     </div>
                 </div>
 
-                <!-- Grid bahan ajar -->
-                <div id="ba-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                <!-- Bahan ajar grid -->
+                <div id="ba-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
             </div>
 
             <!-- Modal Upload Bahan Ajar -->
@@ -1328,6 +1350,128 @@
                     <div class="flex gap-3 pt-1">
                         <button onclick="document.getElementById('m-ba-edit').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
                         <button onclick="simpanEditBahanAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;">
+                            <i data-lucide="save" class="w-4 h-4"></i> Simpan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-modul-ajar" class="hidden space-y-6 page-transition">
+                <!-- Header -->
+                <div class="relative overflow-hidden rounded-3xl p-8" style="background:linear-gradient(135deg,#0d1829,#0a1628,#0f1f3d);border:1px solid rgba(124,58,237,0.2);">
+                    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 80% 40%,rgba(124,58,237,0.08),transparent 55%);"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(168,85,247,0.15));border:1px solid rgba(124,58,237,0.3);">
+                                <i data-lucide="book-open-check" class="w-7 h-7" style="color:#A855F7;"></i>
+                            </div>
+                            <div>
+                                <div class="text-[9px] font-black uppercase tracking-[.2em] mb-1" style="color:rgba(168,85,247,0.6);">Manajemen Konten</div>
+                                <h2 class="text-2xl font-black tracking-tight" style="color:#E5E7EB;">Modul Ajar</h2>
+                                <p class="text-[11px] mt-1" style="color:#9CA3AF;">Kelola modul ajar per mata pelajaran</p>
+                            </div>
+                        </div>
+                        <button onclick="bukaModalUploadMA()" class="flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[11px] uppercase tracking-wider cursor-pointer flex-shrink-0 border-none" style="background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,0.25);">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Modul
+                        </button>
+                    </div>
+                </div>
+                <!-- Grid modul ajar -->
+                <div id="ma-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Modal Tambah Modul Ajar -->
+            <div id="m-ma-upload" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);">
+                <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(124,58,237,0.25);box-shadow:0 30px 60px rgba(0,0,0,0.6);">
+                    <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(168,85,247,0.5),transparent);"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);color:#A855F7;">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                            </div>
+                            <span class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Tambah Modul Ajar</span>
+                        </div>
+                        <button onclick="document.getElementById('m-ma-upload').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Link Modul (Google Drive / URL)</label>
+                            <input type="url" id="ma-form-url" class="modern-input font-bold" placeholder="https://drive.google.com/...">
+                            <div class="text-[9px] mt-1.5 font-bold" style="color:rgba(168,85,247,0.4);">💡 Pastikan link sudah diset "Anyone with the link can view"</div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Judul Modul</label>
+                            <input type="text" id="ma-form-judul" class="modern-input font-bold" placeholder="Contoh: Modul Bilangan Bulat">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
+                                <input type="text" id="ma-form-mapel" class="modern-input font-bold" placeholder="Matematika">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Kelas</label>
+                                <input type="text" id="ma-form-kelas" class="modern-input font-bold" placeholder="IV A">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Tahun Ajaran</label>
+                            <input type="text" id="ma-form-semester" class="modern-input font-bold" placeholder="Contoh: 2024/2025">
+                        </div>
+                    </div>
+                    <div class="flex gap-3 pt-1">
+                        <button onclick="document.getElementById('m-ma-upload').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                        <button onclick="simpanModulAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;">
+                            <i data-lucide="save" class="w-4 h-4"></i> Simpan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Edit Modul Ajar -->
+            <div id="m-ma-edit" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);">
+                <div class="relative w-full max-w-md rounded-3xl p-8 space-y-5" style="background:#0F172A;border:1px solid rgba(124,58,237,0.25);box-shadow:0 30px 60px rgba(0,0,0,0.6);">
+                    <div class="absolute top-0 left-0 right-0 h-px rounded-t-3xl" style="background:linear-gradient(90deg,transparent,rgba(168,85,247,0.5),transparent);"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);color:#A855F7;">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </div>
+                            <span class="font-black text-sm uppercase tracking-wider" style="color:#E5E7EB;">Edit Modul Ajar</span>
+                        </div>
+                        <button onclick="document.getElementById('m-ma-edit').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(255,255,255,0.05);color:#9CA3AF;">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" id="ma-edit-id">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Judul</label>
+                            <input type="text" id="ma-edit-judul" class="modern-input font-bold">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Link</label>
+                            <input type="url" id="ma-edit-url" class="modern-input font-bold">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Mata Pelajaran</label>
+                                <input type="text" id="ma-edit-mapel" class="modern-input font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Kelas</label>
+                                <input type="text" id="ma-edit-kelas" class="modern-input font-bold">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest mb-2 block" style="color:#9CA3AF;">Tahun Ajaran</label>
+                            <input type="text" id="ma-edit-semester" class="modern-input font-bold" placeholder="Contoh: 2024/2025">
+                        </div>
+                    </div>
+                    <div class="flex gap-3 pt-1">
+                        <button onclick="document.getElementById('m-ma-edit').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest" style="background:rgba(255,255,255,0.05);color:#9CA3AF;border:1px solid rgba(255,255,255,0.08);">Batal</button>
+                        <button onclick="simpanEditModulAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;">
                             <i data-lucide="save" class="w-4 h-4"></i> Simpan
                         </button>
                     </div>
@@ -2041,7 +2185,7 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.querySelector(`[data-page="${p}"]`)?.classList.add('active');
             
-            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'PRESENSI DIGITAL', 'journal': 'JURNAL HARIAN', 'grades': 'E-RAPOR & NILAI', 'schedule': 'JADWAL PELAJARAN', 'bahan-ajar': 'BAHAN AJAR', 'print': 'PUSAT DOKUMEN', 'settings': 'SYSTEM SETTINGS' };
+            const titles = { 'dashboard': 'DASHBOARD', 'students': 'STUDENT DATABASE', 'attendance': 'PRESENSI DIGITAL', 'journal': 'JURNAL HARIAN', 'grades': 'E-RAPOR & NILAI', 'schedule': 'JADWAL PELAJARAN', 'bahan-ajar': 'BAHAN AJAR', 'modul-ajar': 'MODUL AJAR', 'print': 'PUSAT DOKUMEN', 'settings': 'SYSTEM SETTINGS' };
             const crumbs = { 'dashboard': 'Overview', 'students': 'Student List', 'attendance': 'Daily Log', 'journal': 'KBM Activities', 'grades': 'Academic Report', 'schedule': 'Weekly Schedule', 'print': 'Print Center', 'settings': 'Identity' };
             document.getElementById('page-title').innerText = titles[p] || p.toUpperCase();
             document.getElementById('breadcrumb-active').innerText = crumbs[p] || 'Overview';
@@ -2049,6 +2193,7 @@
             if(p === 'students') renderSiswa();
             if(p === 'schedule') { switchScheduleTab('grid'); renderSchedule(); }
             if(p === 'bahan-ajar') renderBahanAjar();
+            if(p === 'modul-ajar') renderModulAjar();
             if(p === 'attendance') renderAbsen();
             if(p === 'journal') renderJournalDay();
             if(p === 'grades') renderNilai();
@@ -2741,77 +2886,58 @@
             }
 
             const listEl = document.getElementById('dash-jadwal-list');
-
-            // Horizontal Scroll Cards
-            let html = `<div style="display:flex;gap:10px;padding:4px 2px 8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.2) transparent;">`;
-
-            entries.forEach((e, idx) => {
+            listEl.innerHTML = entries.map((e, idx) => {
+                const jamStr = e.mulai + ' – ' + e.selesai;
                 const s = parseJam(e.mulai), en = parseJam(e.selesai);
                 const isNow = s >= 0 && en >= 0 && jamNow >= s && jamNow < en;
                 const isPast = en >= 0 && jamNow >= en;
                 const isNext = !isNow && !isPast && entries.slice(0, idx).every(prev => {
                     const pe = parseJam(prev.selesai); return pe < 0 || jamNow >= pe;
                 });
-                const pct = isNow ? Math.min(100, Math.max(0, Math.round(((jamNow-s)/(en-s))*100))) : 0;
 
                 if (isNow) {
-                    // Kartu AKTIF — biru tema
-                    html += `<div style="position:relative;flex-shrink:0;width:160px;border-radius:18px;padding:0;background:linear-gradient(145deg,rgba(0,212,255,0.13),rgba(59,130,246,0.1));border:1px solid rgba(0,212,255,0.4);box-shadow:0 0 30px rgba(0,212,255,0.18),0 8px 32px rgba(0,0,0,0.5);overflow:hidden;transform:scale(1.05);">
-                        <div style="height:3px;background:linear-gradient(90deg,#00D4FF,#3B82F6,#00D4FF);background-size:200%;animation:shimmer 2s linear infinite;"></div>
-                        <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.1),transparent 70%);top:-30px;right:-30px;pointer-events:none;"></div>
-                        <div style="padding:12px 14px 12px;">
-                            <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:100px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.35);margin-bottom:10px;">
-                                <span style="width:5px;height:5px;border-radius:50%;background:#00D4FF;box-shadow:0 0 8px #00D4FF;display:inline-block;animation:pulse 1s infinite;"></span>
-                                <span style="font-size:7px;font-weight:900;color:#00D4FF;text-transform:uppercase;letter-spacing:.2em;">Sekarang</span>
-                            </div>
-                            <!-- Nama mapel -->
-                            <div style="font-size:15px;font-weight:900;line-height:1.2;margin-bottom:8px;background:linear-gradient(90deg,#FDE68A,#FBBF24 55%,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.01em;">${e.mapel}</div>
-                            <!-- Jam -->
-                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
-                                <div style="font-size:12px;font-weight:900;color:#00D4FF;font-family:monospace;">${e.mulai}</div>
-                                <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,0.4),transparent);"></div>
-                                <div style="font-size:12px;font-weight:900;color:rgba(0,212,255,0.6);font-family:monospace;">${e.selesai}</div>
-                            </div>
-                            <!-- Progress -->
-                            <div style="height:3px;border-radius:100px;background:rgba(0,212,255,0.1);overflow:hidden;margin-bottom:4px;">
-                                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#00D4FF,#3B82F6);border-radius:100px;box-shadow:0 0 8px rgba(0,212,255,0.5);transition:width .8s ease;"></div>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;">
-                                <span style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;">0%</span>
-                                <span style="font-size:7px;font-weight:900;color:rgba(0,212,255,0.6);font-family:monospace;">${pct}%</span>
-                                <span style="font-size:7px;font-weight:700;color:rgba(0,212,255,0.3);font-family:monospace;">100%</span>
-                            </div>
+                    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.35);margin-bottom:5px;">
+                        <!-- Indikator aktif -->
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;">
+                            <div style="width:8px;height:8px;border-radius:50%;background:#00D4FF;box-shadow:0 0 10px #00D4FF;animation:pulse 1s infinite;"></div>
+                            <div style="width:1px;height:0;"></div>
                         </div>
-                    </div>`;
-                } else {
-                    // Kartu biasa
-                    const cardBg = isPast ? 'rgba(255,255,255,0.02)' : 'rgba(0,212,255,0.03)';
-                    const cardBdr = isPast ? '1px solid rgba(255,255,255,0.05)' : isNext ? '1px solid rgba(168,85,247,0.2)' : '1px solid rgba(0,212,255,0.08)';
-                    const cardOp = isPast ? 'opacity:.4;' : '';
-                    const nameClr = isPast ? 'color:rgba(255,255,255,0.4);' : isNext ? 'color:rgba(229,231,235,0.9);' : 'color:rgba(229,231,235,0.5);';
-                    const jamClr = isPast ? 'rgba(255,255,255,0.2)' : isNext ? '#A855F7' : 'rgba(0,212,255,0.35)';
-                    const numClr = isPast ? 'rgba(255,255,255,0.1)' : isNext ? 'rgba(168,85,247,0.3)' : 'rgba(0,212,255,0.1)';
-                    const badge = isPast
-                        ? `<div style="display:inline-flex;padding:2px 8px;border-radius:100px;background:rgba(255,255,255,0.04);font-size:6.5px;font-weight:700;color:rgba(255,255,255,0.2);margin-bottom:8px;">✓ Selesai</div>`
-                        : isNext
-                        ? `<div style="display:inline-flex;padding:2px 8px;border-radius:100px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);font-size:6.5px;font-weight:900;color:#A855F7;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Next</div>`
-                        : `<div style="height:18px;margin-bottom:8px;"></div>`;
-
-                    html += `<div style="position:relative;flex-shrink:0;width:130px;border-radius:16px;padding:12px 12px 12px;background:${cardBg};border:${cardBdr};box-shadow:0 2px 12px rgba(0,0,0,0.3);${cardOp}overflow:hidden;transition:all .3s;">
-                        <!-- Nomor urut -->
-                        <div style="position:absolute;top:10px;right:12px;font-size:22px;font-weight:900;color:${numClr};font-family:monospace;line-height:1;">${String(idx+1).padStart(2,'0')}</div>
-                        ${badge}
-                        <div style="font-size:12px;font-weight:900;line-height:1.25;margin-bottom:10px;${nameClr}padding-right:20px;">${e.mapel}</div>
-                        <div style="display:flex;flex-direction:column;gap:2px;">
-                            <div style="font-size:11px;font-weight:800;color:${jamClr};font-family:monospace;letter-spacing:.02em;">${e.mulai}</div>
-                            <div style="font-size:9px;font-weight:600;color:${jamClr};font-family:monospace;opacity:.7;">– ${e.selesai}</div>
+                        <!-- Jam -->
+                        <div style="flex-shrink:0;min-width:80px;">
+                            <div style="font-size:10px;font-weight:900;color:#00D4FF;font-family:monospace;letter-spacing:.03em;">${jamStr}</div>
                         </div>
+                        <!-- Mapel -->
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:16px;font-weight:900;color:#E5E7EB;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.mapel}</div>
+                        </div>
+                        <!-- Badge -->
+                        <div style="flex-shrink:0;padding:3px 10px;border-radius:100px;background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.4);font-size:8px;font-weight:900;color:#00D4FF;letter-spacing:.1em;text-transform:uppercase;">NOW</div>
                     </div>`;
                 }
-            });
 
-            html += `</div>`;
-            listEl.innerHTML = html;
+                const opacity = isPast ? '0.35' : isNext ? '1' : '0.5';
+                const dotClr  = isPast ? 'rgba(0,212,255,0.2)' : isNext ? '#A855F7' : 'rgba(0,212,255,0.15)';
+                const jamClr  = isPast ? 'rgba(255,255,255,0.2)' : isNext ? '#A855F7' : 'rgba(0,212,255,0.3)';
+                const textClr = isPast ? 'rgba(255,255,255,0.25)' : isNext ? '#E5E7EB' : 'rgba(229,231,235,0.45)';
+                const bdr     = isNext ? '1px solid rgba(168,85,247,0.2)' : '1px solid rgba(255,255,255,0.05)';
+                const bg      = isNext ? 'rgba(168,85,247,0.04)' : 'rgba(255,255,255,0.02)';
+                const suffix  = isPast
+                    ? `<span style="font-size:10px;color:rgba(0,212,255,0.2);flex-shrink:0;">✓</span>`
+                    : isNext
+                    ? `<span style="flex-shrink:0;padding:2px 8px;border-radius:100px;background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);font-size:7.5px;font-weight:900;color:#A855F7;letter-spacing:.08em;text-transform:uppercase;">Next</span>`
+                    : '';
+
+                return `<div style="display:flex;align-items:center;gap:12px;padding:8px 14px;border-radius:10px;background:${bg};border:${bdr};margin-bottom:3px;opacity:${opacity};">
+                    <div style="width:6px;height:6px;border-radius:50%;background:${dotClr};flex-shrink:0;"></div>
+                    <div style="flex-shrink:0;min-width:80px;">
+                        <div style="font-size:9px;font-weight:700;color:${jamClr};font-family:monospace;">${jamStr}</div>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:700;color:${textClr};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.mapel}</div>
+                    </div>
+                    ${suffix}
+                </div>`;
+            }).join('');
         }
 
         // ── POPUP PERGANTIAN JAM ──
@@ -2927,26 +3053,63 @@
         // Jalankan setiap 30 detik
         setInterval(cekPergantianJam, 30000);
 
-        // Jam digital real-time di dashboard
         // Jam digital real-time — pakai requestAnimationFrame agar efisien
+        // 7-segment: segs = [a,b,c,d,e,f,g]
+        const SEG_MAP = {
+            '0':[1,1,1,1,1,1,0], '1':[0,1,1,0,0,0,0], '2':[1,1,0,1,1,0,1],
+            '3':[1,1,1,1,0,0,1], '4':[0,1,1,0,0,1,1], '5':[1,0,1,1,0,1,1],
+            '6':[1,0,1,1,1,1,1], '7':[1,1,1,0,0,0,0], '8':[1,1,1,1,1,1,1],
+            '9':[1,1,1,1,0,1,1]
+        };
+        function renderSegDigit(el, ch) {
+            if (!el) return;
+            const s = SEG_MAP[ch] || SEG_MAP['0'];
+            el.innerHTML = `
+                <div class="seg seg-a ${s[0]?'':'off'}"></div>
+                <div class="seg seg-b ${s[1]?'':'off'}"></div>
+                <div class="seg seg-c ${s[2]?'':'off'}"></div>
+                <div class="seg seg-d ${s[3]?'':'off'}"></div>
+                <div class="seg seg-e ${s[4]?'':'off'}"></div>
+                <div class="seg seg-f ${s[5]?'':'off'}"></div>
+                <div class="seg seg-g ${s[6]?'':'off'}"></div>`;
+        }
         let _lastHH = '', _lastMM = '', _lastSS = '';
         function updateDashClock() {
             const now = new Date();
             const hh = String(now.getHours()).padStart(2,'0');
             const mm = String(now.getMinutes()).padStart(2,'0');
             const ss = String(now.getSeconds()).padStart(2,'0');
-            // Hanya update DOM jika nilai berubah
-            const elHH = document.getElementById('dash-clock-hh');
-            const elMM = document.getElementById('dash-clock-mm');
-            const elSS = document.getElementById('dash-clock-ss');
-            const elDate = document.getElementById('dash-clock-date');
-            if (elHH && hh !== _lastHH) { elHH.innerText = hh; _lastHH = hh; }
-            if (elMM && mm !== _lastMM) { elMM.innerText = mm; _lastMM = mm; }
-            if (elSS && ss !== _lastSS) { elSS.innerText = ss; _lastSS = ss; }
-            if (elDate && mm !== _lastMM) {
-                const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-                const bulanNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-                elDate.innerText = `${hariNames[now.getDay()]}, ${now.getDate()} ${bulanNames[now.getMonth()]} ${now.getFullYear()}`;
+            if (hh !== _lastHH) {
+                renderSegDigit(document.getElementById('seg-h1'), hh[0]);
+                renderSegDigit(document.getElementById('seg-h2'), hh[1]);
+                const elHH = document.getElementById('dash-clock-hh');
+                if (elHH) elHH.innerText = hh;
+                _lastHH = hh;
+            }
+            if (mm !== _lastMM) {
+                renderSegDigit(document.getElementById('seg-m1'), mm[0]);
+                renderSegDigit(document.getElementById('seg-m2'), mm[1]);
+                const elMM = document.getElementById('dash-clock-mm');
+                if (elMM) elMM.innerText = mm;
+                _lastMM = mm;
+                // Update tanggal saat menit berubah
+                const elDate = document.getElementById('dash-clock-date');
+                if (elDate) {
+                    const hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                    const bulanNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                    elDate.innerText = `${hariNames[now.getDay()]}, ${now.getDate()} ${bulanNames[now.getMonth()]} ${now.getFullYear()}`;
+                }
+            }
+            if (ss !== _lastSS) {
+                const elSS = document.getElementById('dash-clock-ss');
+                if (elSS) elSS.innerText = ss;
+                // Kedip titik dua
+                const d1 = document.getElementById('seg-dot1');
+                const d2 = document.getElementById('seg-dot2');
+                const on = parseInt(ss) % 2 === 0;
+                if (d1) d1.style.opacity = on ? '1' : '0.15';
+                if (d2) d2.style.opacity = on ? '1' : '0.15';
+                _lastSS = ss;
             }
         }
         updateDashClock();
@@ -3002,57 +3165,47 @@
             }
 
             grid.innerHTML = items.map(([id, v], idx) => {
-                const colors = [
-                    ['rgba(0,212,255,0.15)','rgba(0,212,255,0.3)','#00D4FF'],
-                    ['rgba(124,58,237,0.15)','rgba(124,58,237,0.3)','#A855F7'],
-                    ['rgba(59,130,246,0.15)','rgba(59,130,246,0.3)','#3B82F6'],
-                    ['rgba(39,174,96,0.15)','rgba(39,174,96,0.3)','#27AE60'],
-                    ['rgba(251,191,36,0.15)','rgba(251,191,36,0.3)','#FBBF24'],
+                const bookColors = [
+                    ['#00D4FF','rgba(0,212,255,0.12)','rgba(0,212,255,0.25)'],
+                    ['#A855F7','rgba(168,85,247,0.12)','rgba(168,85,247,0.25)'],
+                    ['#3B82F6','rgba(59,130,246,0.12)','rgba(59,130,246,0.25)'],
+                    ['#27AE60','rgba(39,174,96,0.12)','rgba(39,174,96,0.25)'],
+                    ['#FBBF24','rgba(251,191,36,0.12)','rgba(251,191,36,0.25)'],
+                    ['#f87171','rgba(239,68,68,0.12)','rgba(239,68,68,0.25)'],
                 ];
-                const [bg, bdr, accent] = colors[idx % colors.length];
+                const [accent, bg, bdr] = bookColors[idx % bookColors.length];
                 return `
-                <div class="relative overflow-hidden rounded-2xl flex flex-col" style="background:#07101F;border:1px solid ${bdr};box-shadow:0 4px 24px rgba(0,0,0,0.4);transition:all .3s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.5),0 0 20px ${accent}22'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.4)'">
-                    <!-- Top gradient bar -->
-                    <div style="height:3px;background:linear-gradient(90deg,${accent},transparent);"></div>
-                    <!-- Glow orb -->
-                    <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,${bg},transparent 70%);top:-30px;right:-30px;pointer-events:none;"></div>
-
-                    <!-- Header area -->
-                    <div style="padding:18px 18px 12px;position:relative;">
-                        <div style="display:flex;align-items:flex-start;gap:12px;">
-                            <!-- PDF icon -->
-                            <div style="width:44px;height:52px;border-radius:10px;background:linear-gradient(145deg,rgba(239,68,68,0.18),rgba(220,38,38,0.08));border:1px solid rgba(239,68,68,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;">
-                                <i data-lucide="file-text" style="width:18px;height:18px;color:#f87171;"></i>
-                                <span style="font-size:6px;font-weight:900;color:rgba(239,68,68,0.7);letter-spacing:.05em;margin-top:2px;">PDF</span>
-                                <!-- Fold corner -->
-                                <div style="position:absolute;top:0;right:0;width:10px;height:10px;background:#07101F;clip-path:polygon(100% 0,0 0,100% 100%);"></div>
-                            </div>
-                            <!-- Title & meta -->
-                            <div style="flex:1;min-width:0;">
-                                <div style="font-size:13px;font-weight:900;color:#E5E7EB;line-height:1.3;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.judul}</div>
-                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
-                                    ${v.mapel ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:${bg};color:${accent};border:1px solid ${bdr};">${v.mapel}</span>` : ''}
-                                    ${v.kelas ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,0.1);color:#A855F7;border:1px solid rgba(124,58,237,0.2);">${v.kelas}</span>` : ''}
-                                    ${v.semester ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(39,174,96,0.1);color:#27AE60;border:1px solid rgba(39,174,96,0.2);">${v.semester}</span>` : ''}
-                                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <!-- Icon buku besar -->
+                    <div style="position:relative;width:90px;height:110px;border-radius:6px 14px 14px 6px;background:${bg};border:1px solid ${bdr};border-left:none;overflow:hidden;cursor:pointer;" onclick="window.open('${v.url}','_blank')">
+                        <!-- Punggung buku -->
+                        <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:${accent};"></div>
+                        <!-- Garis halaman -->
+                        <div style="position:absolute;top:12px;left:18px;right:8px;height:1px;background:${accent};opacity:.2;"></div>
+                        <div style="position:absolute;top:17px;left:18px;right:12px;height:1px;background:${accent};opacity:.15;"></div>
+                        <div style="position:absolute;bottom:12px;left:18px;right:8px;height:1px;background:${accent};opacity:.2;"></div>
+                        <!-- Konten -->
+                        <div style="position:absolute;left:10px;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 6px;">
+                            <i data-lucide="book-open" style="width:28px;height:28px;color:${accent};flex-shrink:0;"></i>
+                            <div style="text-align:center;line-height:1.3;">
+                                <div style="font-size:8px;font-weight:900;color:${accent};text-transform:uppercase;letter-spacing:.04em;">${v.mapel||'—'}</div>
+                                ${v.kelas ? `<div style="font-size:7px;font-weight:700;color:rgba(255,255,255,0.45);margin-top:1px;">${v.kelas}</div>` : ''}
+                                ${v.semester ? `<div style="font-size:7px;font-weight:700;color:rgba(255,255,255,0.35);">${v.semester}</div>` : ''}
                             </div>
                         </div>
                     </div>
-
-                    <!-- Divider -->
-                    <div style="height:1px;background:linear-gradient(90deg,${bdr},transparent);margin:0 18px;"></div>
-
-                    <!-- Footer -->
-                    <div style="padding:10px 14px 14px;display:flex;align-items:center;gap:8px;margin-top:auto;">
-                        <span style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.2);flex:1;">${v.tanggal||''}</span>
-                        <a href="${v.url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:${bg};color:${accent};border:1px solid ${bdr};font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='${bdr}'" onmouseout="this.style.background='${bg}'">
-                            <i data-lucide="external-link" style="width:11px;height:11px;"></i> Buka
+                    <!-- Judul -->
+                    <div style="font-size:9px;font-weight:800;color:#E5E7EB;text-align:center;line-height:1.3;width:90px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.judul}</div>
+                    <!-- Tombol aksi kecil -->
+                    <div style="display:flex;gap:5px;">
+                        <a href="${v.url}" target="_blank" style="width:26px;height:26px;border-radius:8px;background:${bg};border:1px solid ${bdr};display:flex;align-items:center;justify-content:center;text-decoration:none;" title="Buka">
+                            <i data-lucide="external-link" style="width:12px;height:12px;color:${accent};"></i>
                         </a>
-                        <button onclick="bukaEditBahanAjar('${id}')" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;border:1px solid rgba(59,130,246,0.2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'">
-                            <i data-lucide="pencil" style="width:11px;height:11px;"></i> Edit
+                        <button onclick="bukaEditBahanAjar('${id}')" style="width:26px;height:26px;border-radius:8px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Edit">
+                            <i data-lucide="pencil" style="width:12px;height:12px;color:#3B82F6;"></i>
                         </button>
-                        <button onclick="hapusBahanAjar('${id}','')" style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
-                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                        <button onclick="hapusBahanAjar('${id}','')" style="width:26px;height:26px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Hapus">
+                            <i data-lucide="trash-2" style="width:12px;height:12px;color:#f87171;"></i>
                         </button>
                     </div>
                 </div>`;
@@ -3099,6 +3252,133 @@
             bahanAjarData = snap.val() || {};
             if (document.getElementById('page-bahan-ajar') && !document.getElementById('page-bahan-ajar').classList.contains('hidden')) {
                 renderBahanAjar();
+            }
+        });
+
+        // ── MODUL AJAR ──
+        let modulAjarData = {};
+
+        function bukaModalUploadMA() {
+            document.getElementById('ma-form-url').value = '';
+            document.getElementById('ma-form-judul').value = '';
+            document.getElementById('ma-form-mapel').value = '';
+            document.getElementById('ma-form-kelas').value = '';
+            document.getElementById('ma-form-semester').value = '';
+            document.getElementById('m-ma-upload').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function simpanModulAjar() {
+            const url = document.getElementById('ma-form-url').value.trim();
+            const judul = document.getElementById('ma-form-judul').value.trim();
+            const mapel = document.getElementById('ma-form-mapel').value.trim();
+            const kelas = document.getElementById('ma-form-kelas').value.trim();
+            const semester = document.getElementById('ma-form-semester').value;
+            if (!url) { showToast('Masukkan link modul!', 'error'); return; }
+            if (!judul) { showToast('Isi judul modul!', 'error'); return; }
+            if (!mapel) { showToast('Isi mata pelajaran!', 'error'); return; }
+            let finalUrl = url;
+            const gdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (gdMatch) finalUrl = `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
+            db.ref('modulAjar').push({ judul, mapel, kelas, semester, url: finalUrl, tanggal: new Date().toLocaleDateString('id-ID') }).then(() => {
+                document.getElementById('m-ma-upload').classList.add('hidden');
+                showToast('Modul ajar berhasil ditambahkan!');
+            });
+        }
+
+        function renderModulAjar() {
+            const grid = document.getElementById('ma-grid');
+            if (!grid) return;
+            const items = Object.entries(modulAjarData).sort(([,a],[,b]) => (b.tanggal||'').localeCompare(a.tanggal||''));
+            if (!items.length) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-16" style="color:rgba(255,255,255,0.15);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Belum ada modul ajar — klik Tambah Modul</div>`;
+                return;
+            }
+            const colors = [
+                ['rgba(168,85,247,0.15)','rgba(168,85,247,0.3)','#A855F7'],
+                ['rgba(124,58,237,0.15)','rgba(124,58,237,0.3)','#7C3AED'],
+                ['rgba(0,212,255,0.15)','rgba(0,212,255,0.3)','#00D4FF'],
+                ['rgba(59,130,246,0.15)','rgba(59,130,246,0.3)','#3B82F6'],
+                ['rgba(39,174,96,0.15)','rgba(39,174,96,0.3)','#27AE60'],
+            ];
+            grid.innerHTML = items.map(([id, v], idx) => {
+                const [bg, bdr, accent] = colors[idx % colors.length];
+                return `
+                <div class="relative overflow-hidden rounded-2xl flex flex-col" style="background:#07101F;border:1px solid ${bdr};">
+                    <div style="height:3px;background:linear-gradient(90deg,${accent},transparent);"></div>
+                    <div style="padding:18px 18px 12px;">
+                        <div style="display:flex;align-items:flex-start;gap:12px;">
+                            <div style="width:44px;height:52px;border-radius:10px;background:linear-gradient(145deg,rgba(168,85,247,0.18),rgba(124,58,237,0.08));border:1px solid rgba(168,85,247,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;">
+                                <i data-lucide="book-open-check" style="width:18px;height:18px;color:#A855F7;"></i>
+                                <span style="font-size:6px;font-weight:900;color:rgba(168,85,247,0.7);letter-spacing:.05em;margin-top:2px;">MODUL</span>
+                                <div style="position:absolute;top:0;right:0;width:10px;height:10px;background:#07101F;clip-path:polygon(100% 0,0 0,100% 100%);"></div>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:13px;font-weight:900;color:#E5E7EB;line-height:1.3;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.judul}</div>
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                    ${v.mapel ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:${bg};color:${accent};border:1px solid ${bdr};">${v.mapel}</span>` : ''}
+                                    ${v.kelas ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">${v.kelas}</span>` : ''}
+                                    ${v.semester ? `<span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(39,174,96,0.1);color:#27AE60;border:1px solid rgba(39,174,96,0.2);">TA ${v.semester}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:1px;background:linear-gradient(90deg,${bdr},transparent);margin:0 18px;"></div>
+                    <div style="padding:10px 14px 14px;display:flex;align-items:center;gap:8px;margin-top:auto;">
+                        <span style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.2);flex:1;">${v.tanggal||''}</span>
+                        <a href="${v.url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:${bg};color:${accent};border:1px solid ${bdr};font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;">
+                            <i data-lucide="external-link" style="width:11px;height:11px;"></i> Buka
+                        </a>
+                        <button onclick="bukaEditModulAjar('${id}')" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;border:1px solid rgba(59,130,246,0.2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;">
+                            <i data-lucide="pencil" style="width:11px;height:11px;"></i> Edit
+                        </button>
+                        <button onclick="hapusModulAjar('${id}')" style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function bukaEditModulAjar(id) {
+            const v = modulAjarData[id];
+            if (!v) return;
+            document.getElementById('ma-edit-id').value = id;
+            document.getElementById('ma-edit-judul').value = v.judul || '';
+            document.getElementById('ma-edit-url').value = v.url || '';
+            document.getElementById('ma-edit-mapel').value = v.mapel || '';
+            document.getElementById('ma-edit-kelas').value = v.kelas || '';
+            document.getElementById('ma-edit-semester').value = v.semester || '';
+            document.getElementById('m-ma-edit').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function simpanEditModulAjar() {
+            const id = document.getElementById('ma-edit-id').value;
+            const data = {
+                judul: document.getElementById('ma-edit-judul').value.trim(),
+                url: document.getElementById('ma-edit-url').value.trim(),
+                mapel: document.getElementById('ma-edit-mapel').value.trim(),
+                kelas: document.getElementById('ma-edit-kelas').value.trim(),
+                semester: document.getElementById('ma-edit-semester').value
+            };
+            if (!data.judul) { showToast('Judul tidak boleh kosong!', 'error'); return; }
+            db.ref('modulAjar/' + id).update(data).then(() => {
+                document.getElementById('m-ma-edit').classList.add('hidden');
+                showToast('Modul ajar diperbarui!');
+            });
+        }
+
+        function hapusModulAjar(id) {
+            if (!confirm('Hapus modul ajar ini?')) return;
+            db.ref('modulAjar/' + id).remove().then(() => showToast('Modul ajar dihapus!', 'info'));
+        }
+
+        db.ref('modulAjar').on('value', snap => {
+            modulAjarData = snap.val() || {};
+            if (document.getElementById('page-modul-ajar') && !document.getElementById('page-modul-ajar').classList.contains('hidden')) {
+                renderModulAjar();
             }
         });
 
