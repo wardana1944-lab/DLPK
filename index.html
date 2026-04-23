@@ -792,7 +792,10 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-hidden bg-[var(--background)]">
+    <main class="flex-1 flex flex-col overflow-hidden bg-[var(--background)]" style="position:relative;">
+        <!-- Background foto kelas dengan overlay -->
+        <div style="position:fixed;inset:0;z-index:0;background-image:url('Kelas.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;pointer-events:none;"></div>
+        <div style="position:fixed;inset:0;z-index:0;background:rgba(7,16,31,0.88);pointer-events:none;"></div>
         <header class="hidden h-20 header-glass flex items-center px-4 md:px-10 justify-between sticky top-0 z-20 shadow-sm">
             <div class="flex items-center gap-4">
                 <button onclick="toggleSidebar()" class="p-2 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(0,212,255,0.1)] rounded-lg md:hidden text-[var(--text-main)] border border-[var(--border)] transition-all active:scale-95">
@@ -819,7 +822,7 @@
             </div>
         </header>
 
-        <div class="flex-1 overflow-auto p-4 md:p-8 hidden" id="main-scroll-area">
+        <div class="flex-1 overflow-auto p-4 md:p-8 hidden" id="main-scroll-area" style="position:relative;z-index:1;">
             
             <div id="page-dashboard" class="space-y-5 page-transition">
 
@@ -1352,6 +1355,30 @@
                         <button onclick="simpanEditBahanAjar()" class="flex-[2] py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border-none cursor-pointer" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);color:#0B1220;">
                             <i data-lucide="save" class="w-4 h-4"></i> Simpan
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Preview Bahan Ajar -->
+            <div id="m-ba-preview" style="display:none;position:fixed;inset:0;z-index:9980;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);">
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:16px;">
+                    <!-- Header bar -->
+                    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;background:#07101F;border:1px solid rgba(0,212,255,0.2);margin-bottom:12px;flex-shrink:0;">
+                        <div style="width:8px;height:8px;border-radius:50%;background:#00D4FF;box-shadow:0 0 8px #00D4FF;flex-shrink:0;"></div>
+                        <div style="flex:1;min-width:0;">
+                            <div id="ba-preview-title" style="font-size:13px;font-weight:900;color:#E5E7EB;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+                            <div id="ba-preview-meta" style="font-size:9px;font-weight:700;color:rgba(0,212,255,0.5);margin-top:1px;"></div>
+                        </div>
+                        <a id="ba-preview-open" href="#" target="_blank" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:9px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00D4FF;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;flex-shrink:0;">
+                            <i data-lucide="external-link" style="width:12px;height:12px;"></i> Buka Tab
+                        </a>
+                        <button onclick="tutupPreviewBA()" style="width:34px;height:34px;border-radius:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i data-lucide="x" style="width:16px;height:16px;"></i>
+                        </button>
+                    </div>
+                    <!-- iframe -->
+                    <div style="flex:1;border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,255,0.12);background:#000;">
+                        <iframe id="ba-preview-frame" src="" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -3177,7 +3204,7 @@
                 return `
                 <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
                     <!-- Icon buku besar -->
-                    <div style="position:relative;width:90px;height:110px;border-radius:6px 14px 14px 6px;background:${bg};border:1px solid ${bdr};border-left:none;overflow:hidden;cursor:pointer;" onclick="window.open('${v.url}','_blank')">
+                    <div style="position:relative;width:90px;height:110px;border-radius:6px 14px 14px 6px;background:${bg};border:1px solid ${bdr};border-left:none;overflow:hidden;cursor:pointer;" onclick="bukaPreviewBA('${id}')">
                         <!-- Punggung buku -->
                         <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:${accent};"></div>
                         <!-- Garis halaman -->
@@ -3198,9 +3225,9 @@
                     <div style="font-size:9px;font-weight:800;color:#E5E7EB;text-align:center;line-height:1.3;width:90px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.judul}</div>
                     <!-- Tombol aksi kecil -->
                     <div style="display:flex;gap:5px;">
-                        <a href="${v.url}" target="_blank" style="width:26px;height:26px;border-radius:8px;background:${bg};border:1px solid ${bdr};display:flex;align-items:center;justify-content:center;text-decoration:none;" title="Buka">
-                            <i data-lucide="external-link" style="width:12px;height:12px;color:${accent};"></i>
-                        </a>
+                        <button onclick="bukaPreviewBA('${id}')" style="width:26px;height:26px;border-radius:8px;background:${bg};border:1px solid ${bdr};cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Preview">
+                            <i data-lucide="eye" style="width:12px;height:12px;color:${accent};"></i>
+                        </button>
                         <button onclick="bukaEditBahanAjar('${id}')" style="width:26px;height:26px;border-radius:8px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Edit">
                             <i data-lucide="pencil" style="width:12px;height:12px;color:#3B82F6;"></i>
                         </button>
@@ -3211,6 +3238,27 @@
                 </div>`;
             }).join('');
             lucide.createIcons();
+        }
+
+        function bukaPreviewBA(id) {
+            const v = bahanAjarData[id];
+            if (!v) return;
+            // Konversi URL Google Drive ke embed preview
+            let embedUrl = v.url;
+            const gdMatch = v.url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (gdMatch) embedUrl = `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
+            document.getElementById('ba-preview-title').innerText = v.judul || '';
+            const meta = [v.mapel, v.kelas, v.semester].filter(Boolean).join(' · ');
+            document.getElementById('ba-preview-meta').innerText = meta;
+            document.getElementById('ba-preview-open').href = v.url;
+            document.getElementById('ba-preview-frame').src = embedUrl;
+            document.getElementById('m-ba-preview').style.display = 'block';
+            lucide.createIcons();
+        }
+
+        function tutupPreviewBA() {
+            document.getElementById('m-ba-preview').style.display = 'none';
+            document.getElementById('ba-preview-frame').src = '';
         }
 
         function bukaEditBahanAjar(id) {
